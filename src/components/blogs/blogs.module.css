@@ -1,0 +1,145 @@
+/* .timeline-wrapper {
+    width: 100%;
+    position: relative;
+    overflow: auto;
+}
+
+.timeline-inner {
+    height: 100%;
+} */
+.timeline-block-left .timeline-content {
+    direction: ltr;
+}
+
+.timeline-block {
+    position: relative;
+    width: -webkit-calc(50% + 30px);
+    width: -moz-calc(50% + 30px);
+    width: calc(50% + 30px);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-box-pack: justify;
+    justify-content: space-between;
+    clear: both;
+    align-items: center;
+}
+
+.timeline-block.timeline-block-right:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30px;
+    margin-left: -1px;
+    width: 2px;
+    height: 100%;
+    background: #CCD1D9;
+    z-index: 1;
+}
+
+.timeline-block.timeline-block-left:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 30px;
+    margin-right: -1px;
+    width: 2px;
+    height: 100%;
+    background: #CCD1D9;
+    z-index: 1;
+}
+
+.timeline-block-right {
+    float: right;
+}
+
+.timeline-block-left {
+    float: left;
+    direction: rtl
+}
+
+.marker {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #F5F7FA;
+    background: #4FC1E9;
+    margin-top: 10px;
+    z-index: 40;
+    overflow: hidden;
+}
+.marker img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.timeline-content {
+    width: 85%;
+    padding: 0 15px;
+    color: #666;
+   @apply w-[85%] text-[#666] bg-[#1D1D1D] py-3 px-4
+}
+
+.timeline-content h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 25px;
+    font-weight: 500;
+    @apply text-3xl font-poppins font-medium leading-[25px] text-pink-100 relative my-1
+}
+
+.timeline-content span {
+    font-size: 15px;
+    color: #a4a4a4;
+}
+.image-box-inner{
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin-bottom: 16pxx;
+}
+
+.image-box-inner > img{
+    width: 100%;
+    max-width: 100%;
+    display: block;
+}
+@media screen and (max-width: 768px) {
+    .timeline-block {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .timeline-block-right {
+        float: none;
+    }
+
+    .timeline-block-left {
+        float: none;
+        direction: ltr;
+    }
+    .marker{
+        width: 30px;
+        height: 30px;
+    }
+    .timeline-block.timeline-block-right:before {
+        left: 17px;
+        margin: 0;
+        height: 106%;
+        background: #fff;
+    }
+    .timeline-block.timeline-block-left:before{
+        left: 17px;
+        height: 106%;
+        right: auto;
+        background: #fff;
+    }
+}
+@media screen and (max-width: 768px){
+    .image-box-inner{
+        flex-direction: column-reverse;
+    }
+}
