@@ -22,6 +22,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
             src="https://images.unsplash.com/photo-1682685797088-283404e24b9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
             alt="New Blog"
             className="w-full h-full object-cover"
+            fill={true}
           />
         </picture>
       </div>
@@ -34,6 +35,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
                 src="https://file.rendit.io/n/Z14BG1N5XdMogNlZjMZN.svg"
                 className="min-h-0 min-w-0 mr-px relative w-4 shrink-0"
                 alt="New Blog"
+                fill={true}
               />
               <div className="bg-white-circle bg-cover bg-50%_50% bg-blend-normal flex flex-row justify-start relative w-4 shrink-0 h-4 items-center px-1">
                 <div className="flex flex-col justify-start pt-px relative w-2 shrink-0 items-center">
@@ -42,6 +44,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
                       src="https://file.rendit.io/n/w8r4HzF1Iwrb840FSKur.svg"
                       className="min-h-0 min-w-0 relative w-1"
                       alt="test"
+                      fill={true}
                     />
                   </picture>
                 </div>
@@ -49,12 +52,14 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
                   src="https://file.rendit.io/n/7N4cWBOcUTHal1e6ncCv.svg"
                   className="min-h-0 min-w-0 relative w-0 shrink-0"
                   alt="test1"
+                  fill={true}
                 />
               </div>
               <Image
                 src="https://file.rendit.io/n/UdoN4dOxwSywXobzfzAu.svg"
                 className="min-h-0 min-w-0 relative w-3 shrink-0"
                 alt="test2"
+                fill={true}
               />
             </div>
             <div className="justify-start items-start gap-3 inline-flex mt-4 relative md:absolute bottom-0 left-0">
@@ -66,6 +71,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
                   src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
                   className="min-w-0 relative w-8"
                   alt="test3"
+                  fill={true}
                 />
               </button>
             </div>
@@ -73,7 +79,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
 
           {img && (
             <div className="w-full md:flex-1 md:ml-4 mt-3 md:mt-0">
-              <Image src={img} className="w-full rounded-[23px]" alt="test4" />
+              <Image fill={true} src={img} className="w-full rounded-[23px]" alt="test4" />
             </div>
           )}
         </div>

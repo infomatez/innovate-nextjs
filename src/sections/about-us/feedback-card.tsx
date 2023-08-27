@@ -25,7 +25,7 @@ export const FeedbackCard = ({ index, testimonial, name, designation, company, i
             <span className="blue-text-gradient">@</span> {name}
           </p>
         </div>
-        <Image src={image} alt={`feedback-by-${name}`} className="w-10 h-10 rounded-full object-cover" />
+        <Image fill={true} src={image} alt={`feedback-by-${name}`} className="w-10 h-10 rounded-full object-cover" />
       </div>
       <p className="mt-1 text-secondary text-[14px]">
         {designation} of {company}

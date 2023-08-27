@@ -1,4 +1,4 @@
-import BookmarkBorderIcon from "../components/icons/border/BookmarkIcon";
+import BookmarkBorderIcon from "/components/icons/border/BookmarkIcon";
 
 export const NAV_ITEM = ['Home', 'Trending', 'Blogs', 'About Us', 'Hall of Fame'];
 
@@ -6,20 +6,20 @@ export const owners = [
   {
     id: 1,
 
-    image: '../Yash.jpg',
+    image: '/Yash.jpg',
     name: 'Yash__HackZ',
     designation: 'Founder & CEO',
   },
   {
     id: 3,
 
-    image: '../Nikhil.jpg',
+    image: '/Nikhil.jpg',
     name: 'Nikhil Chaudhari',
     designation: 'Co-Founder',
   },
   {
     id: 4,
-    image: '../amartya.jpg',
+    image: '/amartya.jpg',
     name: 'Amartya Raj',
     designation: 'COO',
   },
@@ -29,7 +29,7 @@ export const developers = [
   {
     id: 1,
 
-    image: '../Ramit.jpg',
+    image: '/Ramit.jpg',
     name: 'Ramit',
     designation: 'Back-End Engineer',
   },
@@ -37,13 +37,13 @@ export const developers = [
   {
     id: 2,
 
-    image: '../Arjun.jpeg',
+    image: '/Arjun.jpeg',
     name: 'Abir',
     designation: 'Front-End Engineer',
   },
   {
     id: 3,
-    image: '../prakhar.jpg',
+    image: '/prakhar.jpg',
     name: 'Prakhar',
     designation: 'Product Manager',
   },
@@ -55,7 +55,7 @@ export const testimonials = [
     name: 'Yash__HackZ',
     designation: 'Founder and CEO',
     company: 'BlogerBase',
-    image: '../Yash.jpg',
+    image: '/Yash.jpg',
   },
   {
     testimonial:
@@ -63,7 +63,7 @@ export const testimonials = [
     name: 'Amartya Raj',
     designation: 'COO',
     company: 'BlogerBase',
-    image: '../amartya.jpg',
+    image: '/amartya.jpg',
   },
 ];
 
@@ -356,7 +356,7 @@ export const blogsData = [
     {
         "_id": "649ed0ac40b75788fa1bc13c",
         "title": "testing",
-        "img": "1688495954819_India.jpg",
+        "img": "/1688495954819_India.jpg",
         "content": "<p><span style=\"color: rgb(255,255,255);background-color: rgb(16,15,15);font-size: medium;font-family: montserrat, monospace;\">hiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fghhiii fgh</span></p>\r\n",
         "user": {
             "id": "6497d9c940b75788fa1babee",

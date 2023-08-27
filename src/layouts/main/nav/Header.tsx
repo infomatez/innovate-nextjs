@@ -79,11 +79,12 @@ const Header = () => {
             className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold p-2 rounded-full shadow-md text-sm flex gap-1"
             onClick={() => router.push(PATH_AUTH.login)}
           >
-            <Image
+            {/* <Image
               src="https://www.transparentpng.com/thumb/google-logo/google-logo-png-icon-free-download-SUF63j.png"
               className="w-5 rounded-full"
               alt="test5"
-            />
+              fill={true}
+            /> */}
             <p>Login</p>
           </motion.button>
         </div>

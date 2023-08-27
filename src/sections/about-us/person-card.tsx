@@ -19,7 +19,7 @@ const PersonCard = ({ index, image, name, designation }: PersonCardProps) => (
         className={`bg-black rounded-[20px] p-2 min-h-[200px]  flex justify-evenly items-center flex-col overflow-hidden relative`}
         id="card"
       >
-        <Image className="w-[100%] h-[26.5vh] rounded-3xl object-cover" src={image} alt={image} />
+        <Image fill={true} className="w-[100%] h-[26.5vh] rounded-3xl object-cover" src={image} alt={image} />
         <div
           className="dets w-[100%] h-[100%] bg-[#1919199d] absolute top-0 -right-[100%] backdrop-blur-sm rounded-3xl text-white flex flex-col justify-center items-center "
           id="card-body"
