@@ -16,7 +16,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
       }`}
       key={index}
     >
-      <div className={`${style['marker']}`}>
+      <div className={`${style['marker']} relative`}>
         <picture>
           <Image
             src="https://images.unsplash.com/photo-1682685797088-283404e24b9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
