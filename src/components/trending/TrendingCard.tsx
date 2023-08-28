@@ -21,7 +21,7 @@ const TrendingCard: FC<ITrendingCardProps> = ({ id, title, name, userImg, date, 
 
   return (
     <div className="sm:w-[40%] md:w-[30%] lg:w-[20%] w-[90%]">
-      <div className="card relative flex justify-center items-start h-full  border-grey-200 border-[0.25px] hover:border-transparent">
+      <div className="card relative flex justify-center items-start h-full  border-grey-200 border-[0.25px] hover:border-transparent rounded-[20px!important]">
         <p className="w-[10%] text-gray-400 text-lg font-bold">{id}</p>
         <div className="flex flex-col w-[80%] ml-2 pb-4">
           <span className="flex justify-start items-center">

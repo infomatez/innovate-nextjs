@@ -107,10 +107,12 @@ const ProfileEdit = () => {
             </div>
 
             <div className="flex sm:flex-row flex-col sm:mt-12 items-center gap-4 sm:ml-10 ">
-              <Image src={LogoIcon} height={24} width={100} alt="logo icon" className="sm:hidden block" />
+              <Image src={LogoIcon} fill={true} height={24} width={100} alt="logo icon" className="sm:hidden block" />
               {profileImage ? (
                 <Image
                   src={profileImage}
+                  fill={true}
+                  height={24} width={100}
                   className="rounded-lg object-contain sm:w-52 w-28 h-24 sm:h-52"
                   alt="profile image"
                 />

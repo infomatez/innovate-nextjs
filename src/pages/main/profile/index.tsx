@@ -15,6 +15,7 @@ export default function ProfilePage() {
         <div className="wrapper w-fit flex gap-1 items-center p-1 rounded-b-2xl">
           <div className="img">
             <Image
+            fill={true}
               alt="test1"
               src="https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c"
               className="xl:w-[2rem] rounded-3xl w-[25px]"
@@ -38,11 +39,13 @@ export default function ProfilePage() {
                 <div className="one flex flex-col w-full justify-evenly items-center">
                   <div className="imgdiv relative">
                     <Image
+                    fill={true}
                       alt="test1"
                       src="https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c"
                       className="rounded-full sm:w-[7vw] w-[20vw]"
                     />
                     <Image
+                    fill={true}
                       alt="test1"
                       src="/badge3.png"
                       className="rounded-full lg:w-[50px] md:w-[50px] w-[10vw] absolute right-[-10px] bottom-[-10px]"
@@ -136,6 +139,7 @@ export default function ProfilePage() {
                         <div className="flex w-full relative mb-1">
                           <div className="w-full md:flex-1 mt-0 md:mt-0">
                             <Image
+                            fill={true}
                               alt="test1"
                               src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
                               className="w-full h-[138px] object-cover rounded-[23px] "
@@ -185,6 +189,7 @@ export default function ProfilePage() {
                         <div className="flex w-full relative mb-1">
                           <div className="w-full md:flex-1 mt-0 md:mt-0">
                             <Image
+                            fill={true}
                               alt="test12"
                               src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
                               className="w-full h-[138px] object-cover rounded-[23px] "
@@ -233,6 +238,7 @@ export default function ProfilePage() {
                         <div className="flex w-full relative mb-1">
                           <div className="w-full md:flex-1 mt-0 md:mt-0">
                             <Image
+                            fill={true}
                               alt="test4"
                               src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
                               className="w-full h-[138px] object-cover rounded-[23px] "
@@ -281,6 +287,7 @@ export default function ProfilePage() {
                         <div className="flex w-full relative mb-1">
                           <div className="w-full md:flex-1 mt-0 md:mt-0">
                             <Image
+                            fill={true}
                               alt="test4"
                               src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
                               className="w-full h-[138px] object-cover rounded-[23px] "
@@ -329,6 +336,7 @@ export default function ProfilePage() {
                         <div className="flex w-full relative mb-1">
                           <div className="w-full md:flex-1 mt-0 md:mt-0">
                             <Image
+                            fill={true}
                               alt="test4"
                               src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
                               className="w-full h-[138px] object-cover rounded-[23px] "
