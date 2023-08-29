@@ -3,6 +3,7 @@ import * as FaIcons from 'react-icons/fa';
 import { useState, useRef } from 'react';
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+import { useAuth } from '@/src/context/authContext';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,6 +12,8 @@ import Image from 'next/image';
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function MainPage() {
+  const {accessToken}=useAuth()
+
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
   const [content, setContent] = useState('');
 
@@ -19,10 +22,8 @@ export default function MainPage() {
   };
   const handleCommentSubmit = (e: any) => {
     e.preventDefault();
-    // Handle the comment submission here, using the 'content' state.
-    // You can use 'content' to submit the comment to your backend or perform other actions.
     console.log('Comment submitted:', content);
-    setContent(''); // Clear the comment input after submission.
+    setContent(''); 
   };
   const swiperRef = useRef<any>();
 
@@ -47,7 +48,7 @@ export default function MainPage() {
           The Importance of End-Point Security in Today&apos; Cutting-Edge Tech World
         </h1>
         <div className="flex flex-row gap-3 w-full items-center mb-3">
-          <Image
+          <Image width={25} height={25}
             alt="test"
             src="https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c"
             className="w-[30px] h-[30px] shrink-0 rounded-[50%]"
@@ -58,7 +59,7 @@ export default function MainPage() {
                 <div className="text-sm font-['Poppins'] font-medium leading-[7.75px] text-[#d2d2d2] w-24">
                   Elon Musk
                 </div>
-                <Image alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2" />
+                <Image width={25} height={25} alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2" />
               </div>
               <div className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
                 <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
@@ -74,7 +75,7 @@ export default function MainPage() {
           </div>
         </div>
 
-        <Image
+        <Image width={25} height={25}
           className="w-full h-[70%] rounded-[43px] object-cover"
           src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
           alt="test3"
@@ -104,7 +105,7 @@ export default function MainPage() {
           <div className="justify-start items-center gap-3 inline-flex mt-4">
             <button className="btn">Convert to speech!</button>
             <button className="min-w-0 w-8">
-              <Image
+              <Image width={25} height={25}
                 alt="test4"
                 src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
                 className="min-w-0 relative w-8"
@@ -138,7 +139,7 @@ export default function MainPage() {
             forward by therapy advocates and as long as the bottom line outcomes were better than a control condition,
             the methods went on those lists — emboldening advocates to claim their theories were correct.
           </p>
-          <Image alt="test5" src="https://img.blogerbase.com/api/upload/KlBLAzhWLU" />
+          <Image width={25} height={25} alt="test5" src="https://img.blogerbase.com/api/upload/KlBLAzhWLU" />
           <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
             Maybe. Maybe not. Outcomes alone can’t tell you. You have to answer the “why” question.Gradually statistical
             methods that identify important pathways of change — that answer the why question — became more common in
@@ -213,7 +214,7 @@ export default function MainPage() {
                     onChange={(e) => setContent(e.target.value)}
                   ></textarea>
                   <button className="min-h-0 min-w-0">
-                    <Image
+                    <Image width={25} height={25}
                       alt="test5"
                       src="https://file.rendit.io/n/pXhcAcr2az9Z3CozUPlQ.svg"
                       className="min-h-0 min-w-0 mb-1 relative w-6 shrink-0 ml-3"
@@ -228,7 +229,7 @@ export default function MainPage() {
           <div className="bg-[rgba(36,_35,_35,_0.35)] p-4">
             <div className="flex flex-col justify-start gap-3 relative w-full items-stretch">
               <div className="flex flex-row justify-start gap-px relative items-center mb-px mr-12">
-                <Image
+                <Image width={25} height={25}
                   alt="test5"
                   className="min-h-0 min-w-0 mr-1 relative w-6 shrink-0 rounded-[50%]"
                   src="https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c"
@@ -236,7 +237,7 @@ export default function MainPage() {
                 <p className="text-sm font-['Poppins'] font-medium leading-[7.56px] text-white relative inline-block">
                   Amartya Raj
                 </p>
-                <Image alt="test5" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2 w-5" />
+                <Image width={25} height={25} alt="test5" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2 w-5" />
               </div>
               <div className="text-xs font-['Poppins'] leading-[11.6px] text-white relative"> 2.5K followers</div>
               <div className="text-xs font-['Poppins'] font-light leading-[18.6px] text-white relative"></div>
@@ -276,7 +277,7 @@ export default function MainPage() {
               >
                 <SwiperSlide>
                   <div className="blog-card">
-                    <Image
+                    <Image width={25} height={25}
                       alt="test5"
                       src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                       className="w-full h-[200px] object-cover"
@@ -290,7 +291,7 @@ export default function MainPage() {
                 </SwiperSlide>
                 <SwiperSlide>
                   <div className="blog-card">
-                    <Image
+                    <Image width={25} height={25}
                       alt="test6"
                       src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                       className="w-full h-[200px] object-cover"
@@ -304,7 +305,7 @@ export default function MainPage() {
                 </SwiperSlide>
                 <SwiperSlide>
                   <div className="blog-card">
-                    <Image
+                    <Image width={25} height={25}
                       alt="test7"
                       src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                       className="w-full h-[200px] object-cover"
@@ -364,7 +365,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -395,7 +396,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -426,7 +427,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -457,7 +458,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -488,7 +489,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -519,7 +520,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -550,7 +551,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -581,7 +582,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -629,7 +630,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -654,7 +655,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -679,7 +680,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -704,7 +705,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -729,7 +730,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>
@@ -754,7 +755,7 @@ export default function MainPage() {
                 <div className="details flex justify-between mt-2">
                   <div className="left flex gap-1 items-center">
                     <div className="prof">
-                      <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                      <Image width={25} height={25} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
                     </div>
                     <div className="writer xl:text-xs text-[10px]">
                       <h1>Amartya Raj</h1>

@@ -1,9 +1,8 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-// import './global.css';
+import { AuthProvider } from '../context/authContext'; // Update the path to your auth context
 import './globalnew.css';
-
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
@@ -22,7 +21,9 @@ export default function MyApp(props: MyAppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      {getLayout(<Component {...pageProps} />)}
+      <AuthProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </AuthProvider>
     </>
   );
 }
