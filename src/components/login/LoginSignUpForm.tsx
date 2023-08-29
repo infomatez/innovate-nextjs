@@ -5,9 +5,10 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import googleIcon from '@/public/site-icons/google.png';
 import recaptcha from '@/public/recaptcha.png';
-import { login, registerUser } from '../../services/auth'; // Import your API service functions
+import { login, registerUser } from '../../services/auth';
 import { useRouter } from 'next/router';
-
+import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 interface ILoginSignUpFormProps {
     userAction: LoginEnums;
@@ -25,28 +26,40 @@ const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction 
     const [togglePasswordField, setTogglePasswordField] = useState(false);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<ILoginSignUpForm>();
     const router = useRouter();
-    const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data:ILoginSignUpForm) => {
+
+    const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data: ILoginSignUpForm) => {
+        
         if (userAction === LoginEnums.LOGIN) {
-            try {
-                const userData = await login(data.username,data.email, data.password);
-                console.log('User logged in:', userData);
-                console.log("accesToken",userData.token);
-                localStorage.setItem('accessToken', userData.token);
-                router.push('/main/profile');
-            } catch (error) {
-                console.error('Login error:', error);
+          try {
+            const userData = await login(data.username, data.email, data.password);
+            if (userData && userData.token) {
+              toast.success('Login Sucessful');
+              Cookies.set('accessToken', userData.token, { expires: 1 });
+              router.push('/main/profile');
+            } else {
+              toast.error('Login failed');
             }
+          } catch (error) {
+            toast.error('Login error');
+            console.error('Login error:', error);
+          }
         } else if (userAction === LoginEnums.SIGN_UP) {
-            try {
-                const userData = await registerUser(data.username, data.email, data.password);
-                console.log('User registered:', userData);
-                localStorage.setItem('accessToken', userData.token);
-                router.push('/main/profile');
-            } catch (error) {
-                console.error('Registration error:', error);
+          try {
+            const userData = await registerUser(data.username, data.email, data.password);
+            if (userData && userData.token) {
+              toast.success('User Registered Sucessfully');
+              Cookies.set('accessToken', userData.token, { expires: 1 });
+              router.push('/main/profile');
+            } else {
+              toast.error('Registration failed');
             }
+          } catch (error) {
+            toast.error('Registration error');
+            console.error('Registration error:', error);
+          }
         }
-    };
+      };
+    
 
     useEffect(() => {
         reset({

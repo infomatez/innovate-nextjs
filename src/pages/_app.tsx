@@ -3,6 +3,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { AuthProvider } from '../context/authContext'; // Update the path to your auth context
 import './globalnew.css';
+import { Toaster } from 'react-hot-toast';
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
@@ -18,6 +19,7 @@ export default function MyApp(props: MyAppProps) {
 
   return (
     <>
+    <Toaster />
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>

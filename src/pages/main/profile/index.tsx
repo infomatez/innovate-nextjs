@@ -5,15 +5,17 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as FaIcons from 'react-icons/fa';
 import { useAuth } from '@/src/context/authContext';
+import { GetServerSideProps } from 'next';
+import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuthServerSideProps';
+
 ProfilePage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
-import PrivateRoute from '../../../components/PrivateRoutes/PrivateRoute';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { accessToken } = useAuth();
 
   return (
-    <PrivateRoute>
+  
       <div className="profilewrapper flex flex-col  w-full items-center ms:h-auto">
         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 md-3">
           <div className="wrapper w-fit flex gap-1 items-center p-1 rounded-b-2xl">
@@ -375,24 +377,9 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-    </PrivateRoute>
+    
   );
 }
 
+export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 
-export const getServerSideProps = async (context: any) => {
-
-  const authContext = useAuth();
-  if (!authContext.accessToken) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
