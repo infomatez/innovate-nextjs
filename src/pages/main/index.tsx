@@ -61,7 +61,7 @@ export default function MainPage() {
                                 <div className="text-sm font-['Poppins'] font-medium leading-[7.75px] text-[#d2d2d2] w-24">
                                     Elon Musk
                                 </div>
-                                <Image alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" fill={true} className="ml-2" />
+                                <Image alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" height="11" width="11" className="ml-0.5" />
                             </div>
                             <div className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
                                 <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
@@ -110,9 +110,11 @@ export default function MainPage() {
                         <button className="min-w-0 w-8">
                             <Image
                                 alt="test4"
+                                width="14"
+                                height="19"
                                 src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
-                                className="min-w-0 relative w-8"
-                                fill={true}
+                            // className="min-w-0 relative w-8"
+                            // fill={true}
                             />
                         </button>
                     </div>
@@ -373,7 +375,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" width="4" height="4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -404,7 +406,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" width="4" height="4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -435,7 +437,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -466,7 +468,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -497,7 +499,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -528,7 +530,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -559,7 +561,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -590,7 +592,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -638,7 +640,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -663,7 +665,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -688,7 +690,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -713,7 +715,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -738,7 +740,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
@@ -763,7 +765,7 @@ export default function MainPage() {
                                 <div className="details flex justify-between mt-2">
                                     <div className="left flex gap-1 items-center">
                                         <div className="prof">
-                                            <Image fill={true} alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                                            <Image alt="test10" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" width="4" height="4" className="w-4" />
                                         </div>
                                         <div className="writer xl:text-xs text-[10px]">
                                             <h1>Amartya Raj</h1>
