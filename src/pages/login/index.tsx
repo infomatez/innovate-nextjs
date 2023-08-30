@@ -2,6 +2,8 @@ import { useState } from 'react';
 import LoginSignUp from '@/src/components/login/LoginSignUp';
 import { LoginEnums } from '@/src/utils/enums';
 import LoginSignUpForm from '@/src/components/login/LoginSignUpForm';
+import { GetServerSideProps } from 'next';
+import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuthServerSideProps';
 export default function LoginPage() {
   const [userAction, setUserAction] = useState(LoginEnums.INDEX)
   return (
@@ -12,3 +14,19 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export const getServerSideProps:GetServerSideProps = async (context) => {
+  const { accessToken } = context.req.cookies;
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: '/main/profile',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

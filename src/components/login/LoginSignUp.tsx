@@ -4,6 +4,8 @@ import { LoginEnums } from '@/src/utils/enums';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { PATH_DASHBOARD } from '@/src/routes/path';
+import { GetServerSideProps } from 'next';
+import { withAuthServerSideProps } from '../PrivateRoutes/withAuthServerSideProps';
 
 interface ILoginSignUpProps {
     setUserAction: Dispatch<SetStateAction<LoginEnums>>
@@ -57,3 +59,19 @@ const LoginSignUp: FC<ILoginSignUpProps> = ({ setUserAction }) => {
 }
 
 export default LoginSignUp
+
+export const getServerSideProps:GetServerSideProps = async (context) => {
+    const { accessToken } = context.req.cookies;
+    if (accessToken) {
+      return {
+        redirect: {
+          destination: '/main/profile',
+          permanent: false,
+        },
+      };
+    }
+  
+    return {
+      props: {},
+    };
+  };
