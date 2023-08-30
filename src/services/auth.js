@@ -19,3 +19,12 @@ export const registerUser = async (username, email, password) => {
     throw error;
   }
 };
+
+export const logoutUser = async (accessToken) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/auth/logout`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,29 +1,76 @@
 import { filters } from '@/src/utils/constant';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import LogoIcon from '@/public/byteBlogger1.png';
 import Image from 'next/image';
+import { getUserProfile, editUserProfile } from "../../../services/user"
+import { useAuth } from '@/src/context/authContext';
+import Cookies from 'js-cookie';
 
 interface IProfileEditForm {
   username: string;
-  profileName: string;
+  name: string;
   bio: string;
-  socialMediaLinks: string;
+  sociallinks: string;
 }
+
 const ProfileEdit = () => {
-  const [favCategories, setFavCategories] = useState(['']);
-  const [profileImage, setProfileImage] = useState('');
-  const { register, handleSubmit } = useForm<IProfileEditForm>();
-  const onSubmit: SubmitHandler<IProfileEditForm> = (data: IProfileEditForm) => {
-    console.log({ data });
+  const accessTokenFromCookie = Cookies.get('accessToken');
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [favCategories, setFavCategories] = useState<string[]>([]);
+  const [profileImage, setProfileImage] = useState<string>('');
+  const { register, handleSubmit, setValue } = useForm<IProfileEditForm>({
+    defaultValues: {
+      username: userProfile?.message[0]?.username || '',
+      profilename: userProfile?.message[0]?.name || '',
+      bio: userProfile?.message[0]?.bio || '',
+      sociallinks: userProfile?.message[0]?.socialLinks?.join('\n') || '',
+    },
+  });
+
+  const onSubmit: SubmitHandler<IProfileEditForm> = async (data: IProfileEditForm) => {
+    try {
+      const updatedProfileData = {
+        username: data.username,
+        profilename: data.name,
+        bio: data.bio,
+        sociallinks: data.socialLinks?.split('\n').map(link => link.trim()), // Split and clean the links
+        // ... (other data to update)
+      };
+
+      const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
+
+      console.log('Profile updated:', result);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        console.log('Fetching user profile...');
+        const userProfileData = await getUserProfile(accessTokenFromCookie);
+        console.log('Fetched user profile:', userProfileData);
+        setUserProfile(userProfileData);
+        setValue('username', userProfileData?.message[0]?.username || '');
+        setValue('name', userProfileData?.message[0]?.name || '');
+        setValue('bio', userProfileData?.message[0]?.bio || '');
+        setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   const handleFavCategory = (value: string) => {
-    const isCategoryExists = favCategories.includes(value);
-    if (!isCategoryExists) {
-      return setFavCategories((prev) => [...prev, value]);
+    if (favCategories.includes(value)) {
+      setFavCategories((prev) => prev.filter((category) => category !== value));
+    } else {
+      setFavCategories((prev) => [...prev, value]);
     }
-    setFavCategories((prev) => prev.filter((category) => category != value));
   };
 
   const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,18 +93,19 @@ const ProfileEdit = () => {
               </label>
               <input
                 id="userName"
-                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
                 {...register('username')}
+                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
               />
             </div>
             <div>
-              <label htmlFor="profileName" className="text-white font-inter text-xs font-semibold mb-1">
+              <label htmlFor="name" className="text-white font-inter text-xs font-semibold mb-1">
                 Profile name
               </label>
               <input
-                id="profileName"
+                id="name"
+                {...register('name')}
                 className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-                {...register('username')}
+               
               />
             </div>
             <div>
@@ -68,7 +116,8 @@ const ProfileEdit = () => {
                 rows={4}
                 id="bio"
                 className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-                {...register('username')}
+
+                {...register('bio')}
               />
             </div>
             <div>
@@ -78,12 +127,11 @@ const ProfileEdit = () => {
               <textarea
                 rows={2}
                 id="socialLinks"
-                className=" resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-                {...register('username')}
+                {...register('socialLinks')}
+                className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4 text-[#fff] font-poppins outline-none bg-[#252525] pl-3"
               />
             </div>
           </div>
-
           <div className="flex flex-row-reverse sm:flex-col col-span-12 sm:col-span-6 order-1 sm:order-2">
             <div className="mt-9 sm:mt-0">
               <p className="ml-7 sm:ml-10 text-white text-inter font-semibold text-xs mb-2 sm:mb-0">
@@ -107,12 +155,12 @@ const ProfileEdit = () => {
             </div>
 
             <div className="flex sm:flex-row flex-col sm:mt-12 items-center gap-4 sm:ml-10 ">
-              <Image src={LogoIcon} fill={true} height={24} width={100} alt="logo icon" className="sm:hidden block" />
+              <Image src={LogoIcon} fill={true} alt="logo icon" className="sm:hidden block" />
               {profileImage ? (
                 <Image
                   src={profileImage}
                   fill={true}
-                  height={24} width={100}
+                  // height={24} width={100}
                   className="rounded-lg object-contain sm:w-52 w-28 h-24 sm:h-52"
                   alt="profile image"
                 />
@@ -148,7 +196,7 @@ const ProfileEdit = () => {
           </div>
         </div>
         <div className="flex justify-center mt-24">
-          <button className="rounded-[20px] py-1 sm:py-3 px-2 sm:px-4 bg-[#a801df] text-white font-inter text-xs sm:text-lg font-semibold">
+          <button className="rounded-[20px] py-1 sm:py-3 px-2 sm:px-4 bg-[#a801df] text-white font-inter text-xs sm:text-lg font-semibold" onClick={handleSubmit(onSubmit)}>
             Edit Profile
           </button>
         </div>
