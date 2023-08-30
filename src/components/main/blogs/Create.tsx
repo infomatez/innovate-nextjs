@@ -242,7 +242,7 @@ const Create = () => {
             {blogState.previewImage ? (
               <div className="flex sm:flex-col flex-col-reverse gap-5 ">
                 <div className="sm:w-60 sm:h-[188px] w-28 h-[91px]">
-                  <Image src={blogState.previewImage} alt="preview image" className="w-full h-full object-contain" />
+                  <Image fill={true} src={blogState.previewImage} height={100} width={100} alt="preview image" className="w-full h-full object-contain" />
                 </div>
                 <button
                   className="lg:p-2 p-1 text-white bg-black lg:text-sm sm:text-[10px] text-[10px] rounded-2xl border border-purple-500"
@@ -311,7 +311,7 @@ const Create = () => {
         </div>
 
         <div className="flex sm:justify-center justify-between sm:mt-28">
-          <Image src={LogoIcon} height={24} width={100} alt="logo icon" className="sm:hidden block" />
+          <Image src={LogoIcon} height={100} width={100}  fill={true} alt="logo icon" className="sm:hidden block" />
           <button className="rounded-md bg-[#bf02b5] sm:py-2 sm:px-5 py-1 px-[10px] sm:mr-0 mr-2 text-white font-inter font-semibold text-xs sm:text-xl mt-4">
             Publish
           </button>
