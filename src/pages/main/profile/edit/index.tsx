@@ -7,12 +7,10 @@ ProfileEditPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page
 
 export default function ProfileEditPage() {
     return (
-
-            <ProfileEdit />
-        
+        <ProfileEdit />
     )
 }
 
-export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 
   

@@ -138,7 +138,7 @@ const Create = () => {
     event.target.value = '';
   };
   return (
-    <div className="grid grid-cols-12 sm:ml-16 ml-2">
+    <div className="grid grid-cols-12 sm:ml-16 ml-2 mb-10">
       <div className="sm:col-span-9 col-span-12 sm:order-1 order-2 sm:mr-9 mr-2 h-fit">
         <form className="flex flex-col">
           <div className="titles flex items-center gap-2 sm:mt-12 mt-4">
@@ -173,7 +173,7 @@ const Create = () => {
                       duration: 0.75,
                     }}
                     // transition = {{duration:0.5}}
-                    className="iconmodal absolute top-10 left-8 h-[250px] w-[300px] rounded-lg p-1 flex flex-col justify-between"
+                    className="iconmodal absolute top-5 md:top-10 left-0 md:left-8 h-[250px] w-[200px] md:w-[300px] rounded-lg p-1 flex flex-col justify-between"
                     id="fonttoggle"
                   >
                     <input
@@ -230,7 +230,7 @@ const Create = () => {
             editorState={editorState}
             onEditorStateChange={setEditorState}
             wrapperClassName="wrapper-class !mt-4 sm:!mt-7"
-            editorClassName="editor-class sm:!h-[60vh] !h-[28vh]"
+            editorClassName="editor-class sm:!h-[50vh] !h-[50vh]"
             toolbarClassName="toolbar-class"
             placeholder="Write yor blog here"
           />
@@ -238,11 +238,11 @@ const Create = () => {
       </div>
       <div className="flex sm:flex-col flex-col-reverse sm:mt-12 sm:col-span-3 col-span-12 sm:order-2 order-1 sm:mr-9">
         <div className="flex sm:flex-col flex-row justify-between sm:justify-normal px-2 mt-[14px] sm:mt-0">
-          <div className="flex sm:flex-col flex-col-reverse items-center gap-4 sm:mb-12 mt-3 sm:mt-0">
+          <div className="flex sm:flex-col flex-col-reverse items-center gap-4 sm:mb-12 sm:mt-0">
             {blogState.previewImage ? (
               <div className="flex sm:flex-col flex-col-reverse gap-5 ">
                 <div className="sm:w-60 sm:h-[188px] w-28 h-[91px]">
-                  <Image fill={true} src={blogState.previewImage} height={100} width={100} alt="preview image" className="w-full h-full object-contain" />
+                  <Image src={blogState.previewImage} height={100} width={100} alt="preview image" className="w-full h-full object-contain" />
                 </div>
                 <button
                   className="lg:p-2 p-1 text-white bg-black lg:text-sm sm:text-[10px] text-[10px] rounded-2xl border border-purple-500"
@@ -310,8 +310,8 @@ const Create = () => {
           </div>
         </div>
 
-        <div className="flex sm:justify-center justify-between sm:mt-28">
-          <Image src={LogoIcon} height={100} width={100}  fill={true} alt="logo icon" className="sm:hidden block" />
+        <div className="flex sm:justify-center justify-between sm:mt-20">
+          <Image src={LogoIcon} height={100} width={100}  alt="logo icon" className="sm:hidden block" />
           <button className="rounded-md bg-[#bf02b5] sm:py-2 sm:px-5 py-1 px-[10px] sm:mr-0 mr-2 text-white font-inter font-semibold text-xs sm:text-xl mt-4">
             Publish
           </button>
