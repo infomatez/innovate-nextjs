@@ -245,4 +245,4 @@ export default function SavedBlogPage() {
 }
 
 
-// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
