@@ -89,7 +89,7 @@ export default function ProfilePage() {
                 <div className="one flex flex-col w-full justify-evenly items-center">
                   <div className="imgdiv relative">
                     <Image width={25} height={25}
-                      alt="test1"
+                      alt=" "
                       src="https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c"
                       className="rounded-full sm:w-[7vw] w-[20vw]"
                     />
@@ -125,7 +125,7 @@ export default function ProfilePage() {
                     </h1>
                     <div className="following  text-[12px] xl:text-[14px]">
                       <h1>
-                        <button>{userProfile?.following_details.length} Following</button>
+                        <button type='button' onClick={openModal}>{userProfile?.following_details.length} Following</button>
                       </h1>
                     </div>
                   </div>
@@ -431,5 +431,5 @@ export default function ProfilePage() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 
