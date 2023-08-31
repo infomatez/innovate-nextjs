@@ -13,11 +13,11 @@ export default function AboutUs() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col w-[95%] sm:h-screen h-[95vh] mx-auto overflow-y-scroll scrollbar-hide relative">
+    <div className="flex flex-col w-[95%] py-10 sm:h-screen h-[95vh] mx-auto overflow-y-scroll scrollbar-hide relative">
       <div className="one">
         <motion.div variants={textVariant()} className="flex justify-between items-center">
           <h2
-            className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px] font-family: 'Fjalla One' h2tag"
+            className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[28px] font-family: 'Fjalla One' h2tag"
             id="aboutush2"
           >
             About Us
@@ -29,7 +29,7 @@ export default function AboutUs() {
         <div className="bg-red-500 w-fit h-fit mx-auto my-10 p-[1px] rounded-lg green-pink-gradient">
           <motion.p
             variants={fadeIn('', '', 0.1, 1)}
-            className="text-[20px] aboutusp max-w-3xl leading-[30px] text-purpule font-bold bg-black-700 p-5 rounded-lg flex justify-center items-center w-full text-center mx-auto border border-1 text-white border-slate-400 hover:scale-105 "
+            className="text-[14px] md:text-[20px] aboutusp max-w-3xl leading-6 md:leading-[30px] text-purpule font-bold bg-black-700 p-5 rounded-lg flex justify-center items-center w-full text-center mx-auto border border-1 text-white border-slate-400 hover:scale-105 "
             id="hovereffect"
           >
             Our blogging website provides a modern and interactive platform for users to read and create blogs. With a
@@ -53,7 +53,7 @@ export default function AboutUs() {
       </div>
 
       <div className="mt-12 bg-black-800 rounded-[20px]">
-        <div className="sm:px-16 px-6 sm:py-16 py-10 bg-tertiary rounded-2xl min-h-[300px]">
+        <div className="sm:px-16 px-6 sm:py-16 py-10 bg-tertiary rounded-2xl md:min-h-[300px]">
           <motion.div variants={textVariant()}>
             <p className="sm:text-[18px] text-[14px] text-secondary uppercase tracking-wider text-slate-400">
               Why choose us?
@@ -63,7 +63,7 @@ export default function AboutUs() {
             </h2>
           </motion.div>
         </div>
-        <div className="sm:px-16 px-6 -mt-20 pb-14 flex flex-wrap justify-around gap-7">
+        <div className="sm:px-16 px-0 md:-mt-20 pb-14 flex flex-wrap justify-around gap-7">
           {testimonials.map((testimonial, index) => (
             <FeedbackCard key={testimonial.name} index={index} {...testimonial} />
           ))}

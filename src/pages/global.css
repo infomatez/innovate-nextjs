@@ -761,7 +761,6 @@ a {
 }
 
 .h2tag {
-  font-size: 3em;
   /* background: linear-gradient(to right, #a44dff, #7b1fa2); */
   background: white;
   -webkit-background-clip: text;
