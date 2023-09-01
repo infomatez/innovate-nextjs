@@ -15,7 +15,7 @@ import CloseIcon from '@/src/components/icons/border/CloseIcon';
 import AddCircleIcon from '@/src/components/icons/border/AddCircleIcon';
 import { EditorProps } from 'react-draft-wysiwyg';
 import LogoIcon from '@/public/byteBlogger1.png';
-import { createPost } from '@/src/services/post';
+import { createPost, updatePost } from '@/src/services/post';
 import Loader from '../../Loader/Loader';
 import { toast } from 'react-hot-toast';
 import { getPostsByBlogId } from '@/src/services/post';
@@ -61,9 +61,9 @@ const Create = () => {
         if (!blog_id) {
           return;
         }
-  
+
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-  
+
         if (response.message) {
           const contentFromAPI = response?.data[0]?.data[0]?.content;
           const contentState = ContentState.createFromBlockArray(
@@ -85,12 +85,12 @@ const Create = () => {
         console.error("An error occurred while fetching blog post data:", error);
       }
     };
-  
+
     fetchBlogData();
   }, [blog_id, accessTokenFromCookie]);
-  
-  
-  
+
+
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -99,14 +99,14 @@ const Create = () => {
     }
     if (
       !blogState.title ||
-      !editorState.getCurrentContent().hasText() || 
+      !editorState.getCurrentContent().hasText() ||
       !blogState.tags.length ||
       !blogState.previewImage
     ) {
       toast.error('Please fill in all required fields.');
       return;
     }
-  
+
     try {
       setIsLoading(true);
       const formData = new FormData();
@@ -116,13 +116,23 @@ const Create = () => {
       formData.append('content', editorState.getCurrentContent().getPlainText());
       formData.append('tags', JSON.stringify(blogState.tags));
       formData.append('font', blogState.font);
-  
-      const response = await createPost(accessTokenFromCookie, formData);
-      if (response.message) {
-        console.log('Post created successfully!');
-        router.push(PATH_DASHBOARD.profile);
+
+      if (blog_id) {
+        const response = await updatePost(accessTokenFromCookie, blog_id, formData);
+        if (response.message) {
+          toast.success(response.message);
+          router.push(PATH_DASHBOARD.profile);
+        } else {
+          console.error('Error updating post:', response.error);
+        }
       } else {
-        console.error('Error creating post:', response.error);
+        const response = await createPost(accessTokenFromCookie, formData);
+        if (response.message) {
+          console.log('Post created successfully!');
+          router.push(PATH_DASHBOARD.profile);
+        } else {
+          console.error('Error creating post:', response.error);
+        }
       }
     } catch (error) {
       console.error('An error occurred:', error);
@@ -130,7 +140,8 @@ const Create = () => {
       setIsLoading(false);
     }
   };
-  
+
+
 
   function filterWords(prefix: string) {
     return fonts.filter((font: any) => font.family.toLowerCase().startsWith(prefix));
@@ -368,7 +379,7 @@ const Create = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              {isLoading ? 'Creating...' : 'Publish'}
+              {isLoading ? 'Creating...' : blog_id ? 'Update Blog' : 'Publish'}
             </button>
           </div>
         </div>

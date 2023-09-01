@@ -21,22 +21,22 @@ export const createPost = async (accessToken:string | undefined , postData:any) 
 };
 
 
-// export const updatePost = async (accessToken, postId, updatedData) => {
-//     try {
-//       const response = await axios({
-//         method: 'post', 
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//           'Content-Type': 'application/json',
-//         },
-//         url: `${API_BASE_URL}/post/updatePost?post_id=${postId}`,
-//         data: updatedData,
-//       });
-//       return response.data;
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
+export const updatePost = async (accessToken: string | undefined , postId :string | string[], updatedData:any) => {
+    try {
+      const response = await axios({
+        method: 'post', 
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        url: `${API_BASE_URL}/post/updatePost?post_id=${postId}`,
+        data: updatedData,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   export const getAllPostsbyUserId = async (accessToken: string | undefined, userId: string) => {
     try {
