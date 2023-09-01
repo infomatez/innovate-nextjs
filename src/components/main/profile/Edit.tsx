@@ -6,25 +6,26 @@ import Image from 'next/image';
 import { getUserProfile, editUserProfile } from "../../../services/user"
 import { useAuth } from '@/src/context/authContext';
 import Cookies from 'js-cookie';
+import { toast } from 'react-hot-toast';
 
 interface IProfileEditForm {
   username: string;
   name: string;
   bio: string;
-  sociallinks: string;
+  socialLinks: string;
 }
 
 const ProfileEdit = () => {
   const accessTokenFromCookie = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [favCategories, setFavCategories] = useState<string[]>([]);
-  const [profileImage, setProfileImage] = useState<string>('');
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const { register, handleSubmit, setValue } = useForm<IProfileEditForm>({
     defaultValues: {
       username: userProfile?.message[0]?.username || '',
-      profilename: userProfile?.message[0]?.name || '',
+      name: userProfile?.message[0]?.name || '',
       bio: userProfile?.message[0]?.bio || '',
-      sociallinks: userProfile?.message[0]?.socialLinks?.join('\n') || '',
+      socialLinks: userProfile?.message[0]?.socialLinks?.join('\n') || '',
     },
   });
 
@@ -34,15 +35,17 @@ const ProfileEdit = () => {
         username: data.username,
         profilename: data.name,
         bio: data.bio,
-        sociallinks: data.socialLinks?.split('\n').map(link => link.trim()), // Split and clean the links
-        // ... (other data to update)
+        sociallinks: data.socialLinks?.split('\n').map(link => link.trim()),
+        profilepic: profileImage?.name, 
       };
 
       const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
 
       console.log('Profile updated:', result);
+      toast.success("Profile updated successfully")
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error updating profile', error);
+      toast.error('Error updating profile');
     }
   };
 
@@ -72,15 +75,26 @@ const ProfileEdit = () => {
       setFavCategories((prev) => [...prev, value]);
     }
   };
-
   const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     if (files && files.length) {
-      const imageUrl = URL.createObjectURL(files[0]);
-      setProfileImage(imageUrl);
+      const originalFile = files[0];
+      
+      // Extract the original filename
+      const originalFilename = originalFile.name;
+      
+      // Construct the desired filename using lastModified timestamp and original filename
+      const timestamp = originalFile.lastModified;
+      const filename = `${timestamp}_${originalFilename}`;
+      
+      // Create a new File object with the desired filename
+      const newFile = new File([originalFile], filename, { type: originalFile.type });
+      
+      setProfileImage(newFile);
     }
-    event.target.value = '';
   };
+  console.log(profileImage,"-------------------------");
+  
 
   return (
     <div className="mt-8 bg-sidebar h-[90vh] w-full rounded-2xl sm:py-14 sm:px-[82px] ">
@@ -158,9 +172,10 @@ const ProfileEdit = () => {
               <Image src={LogoIcon} fill={true} alt="logo icon" className="sm:hidden block" />
               {profileImage ? (
                 <Image
-                  src={profileImage}
-                  fill={true}
-                  // height={24} width={100}
+                src={URL.createObjectURL(profileImage)} 
+
+                  // fill={true}
+                  height={24} width={25}
                   className="rounded-lg object-contain sm:w-52 w-28 h-24 sm:h-52"
                   alt="profile image"
                 />
@@ -185,7 +200,7 @@ const ProfileEdit = () => {
                   Change Profile Photo
                 </label>
                 <button
-                  onClick={() => setProfileImage('')}
+                  onClick={() => setProfileImage(null)}
                   type="button"
                   className="p-1 rounded-[20px] sm:p-[6px] bg-[#b9b9b9] whitespace-nowrap text-black font-inter text-[6px] sm:text-sm font-medium"
                 >

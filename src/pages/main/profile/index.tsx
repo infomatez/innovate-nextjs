@@ -10,6 +10,7 @@ import { GetServerSideProps } from 'next';
 import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuthServerSideProps';
 import Cookies from 'js-cookie';
 import { getUserProfile } from '@/src/services/user';
+import { getAllPostsbyUserId } from "@/src/services/post"
 // import {logoutUser} from "@/src/services/auth"
 
 
@@ -20,29 +21,73 @@ ProfilePage.getLayout = (page: React.ReactElement) => (
 
 export default function ProfilePage() {
   const router = useRouter();
-  const {removeAccessToken} = useAuth();
-  const accessTokenFromCookie = Cookies.get('accessToken');
+  const { removeAccessToken } = useAuth();
+  const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);
+  const [savedPosts, setSavedPosts] = useState<number[]>([]);
+
+
+  const handleLikeClick = (index: number) => {
+    console.log(index,"likeeeeeeeeeeeeeeeeeeeeee");
+    
+    if (likedPosts.includes(index)) {
+      setLikedPosts(likedPosts.filter((item) => item !== index));
+    } else {
+      setLikedPosts([...likedPosts, index]);
+    }
+  };
+
+  const handleSaveClick = (index: number) => {
+    console.log(index,"saveeeeeeeeeeeeeeeeeeeeeeeee");
+    
+    if (savedPosts.includes(index)) {
+      setSavedPosts(savedPosts.filter((item) => item !== index));
+    } else {
+      setSavedPosts([...savedPosts, index]);
+    }
+  };
+
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         console.log('Fetching user profile...');
         const userProfileData = await getUserProfile(accessTokenFromCookie);
-        console.log('Fetched user profile:', userProfileData);
+        console.log('Fetched user profile:', userProfileData?.message[0]);
         setUserProfile(userProfileData?.message[0]);
-      } catch (error) {
+
+
+        const userId = userProfileData.message[0]._id;
+        console.log(userId, "userrrrrrrrrrrrrrrrrrrr");
+        const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId);
+
+
+        console.log('Fetched posts by user ID:', posts?.data[0]?.data);
+        setUserPosts(posts?.data[0]?.data);
+      }
+      catch (error) {
         console.error('Error fetching user profile:', error);
       }
     };
 
     fetchUserProfile();
   }, []);
-  console.log(userProfile);
+
+  const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
+console.log(imageUrl,"dfsgfavsDZ");
+
+const handleEditClick = (blogId:string) => {
+  router.push(`/main/create-blog?blog_id=${blogId}`);
+};
+  
 
   const handleLogout = async () => {
     try {
-     
+
       removeAccessToken();
       router.push("/");
     } catch (error) {
@@ -57,8 +102,8 @@ export default function ProfilePage() {
         <div className="wrapper w-fit flex gap-1 items-center p-1 rounded-b-2xl">
           <div className="img">
             <Image width={25} height={25}
-              alt="test1"
-              src="https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c"
+              alt="Profile Picture"
+              src={imageUrl}
               className="xl:w-[2rem] rounded-3xl w-[25px]"
             />
           </div>
@@ -81,11 +126,11 @@ export default function ProfilePage() {
                   <div className="imgdiv relative">
                     <Image width={25} height={25}
                       alt="test1"
-                      src="https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c"
+                      src={imageUrl}
                       className="rounded-full sm:w-[7vw] w-[20vw]"
                     />
                     <Image width={25} height={25}
-                      alt="test1"
+                      alt="badge"
                       src="/badge3.png"
                       className="rounded-full lg:w-[50px] md:w-[50px] w-[10vw] absolute right-[-10px] bottom-[-10px]"
                     />
@@ -126,12 +171,12 @@ export default function ProfilePage() {
                 <div className="title flex flex-col justify-between p-1">
                   <h1 className="text-xl text-white font-bold">Bio - </h1>
                   <div className="name font-bold">
-                  <h1 className="capitalize text-sm mt-2 lg:text-lg">{userProfile?.bio}</h1>
+                    <h1 className="capitalize text-sm mt-2 lg:text-lg">{userProfile?.bio}</h1>
                     <h1 className="capitalize text-sm mt-2 lg:text-lg">{userProfile?.name}</h1>
                   </div>
                 </div>
                 <ul className="list-disc ml-5">
-                  {userProfile?.favCategories.map((category:string, index:number) => (
+                  {userProfile?.favCategories.map((category: string, index: number) => (
                     <li key={index} className="font-light text-sm lg:text-lg">
                       {category}
                     </li>
@@ -166,247 +211,67 @@ export default function ProfilePage() {
                     My Blogs
                   </div>
                   <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-12 lg:col-span-6 mb-4">
-                      <div className="bg-[#000] p-4 rounded-[15px]">
-                        <div className="flex items-start">
-                          <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
-                            Engineering is waste of time
-                          </h3>
-                          <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ">
-                            Edit Blog
-                          </button>
-                        </div>
-
-                        <div className="flex w-full relative mb-1">
-                          <div className="w-full md:flex-1 mt-0 md:mt-0">
-                            <Image width={25} height={25}
-                              alt="test1"
-                              src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
-                              className="w-full h-[138px] object-cover rounded-[23px] "
-                            />
+                    {userPosts.map((post: any, index) => (
+                      <div key={index} className="col-span-12 lg:col-span-6 mb-4">
+                        <div className="bg-[#000] p-4 rounded-[15px]">
+                          <div className="flex items-start">
+                            <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
+                              {post.title}
+                            </h3>
+                            <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] "   onClick={() => handleEditClick(post?._id)}>
+                              Edit Blog
+                            </button>
                           </div>
-                          <div className="w-[20%] md:w-[30%]">
-                            <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegHeart className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaHeart className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegBookmark className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaBookmark className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaShareSquare className="min-h-0  relative w-4 shrink-0" />
-                              </button>
+
+                          <div className="flex w-full relative mb-1">
+                            <div className="w-full md:flex-1 mt-0 md:mt-0">
+                              <Image
+                                width={30}
+                                height={30}
+                                alt={post.title}
+                                src={`http://localhost:9000/public/${post?.img}`}
+                                className="w-full h-[138px] object-cover rounded-[23px]"
+                              />
+                            </div>
+                            <div className="w-[20%] md:w-[30%]">
+                              <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
+                                <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index)}>
+                                  {likedPosts.includes(index) ? (
+                                    <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
+                                  ) : (
+                                    <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
+                                  )}
+                                </button>
+                                <button className="min-w-0 mr-px" onClick={() => handleSaveClick(index)}>
+                                  {savedPosts.includes(index) ? (
+                                    <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                                  ) : (
+                                    <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                                  )}
+                                </button>
+                                <button className="min-w-0 mr-px">
+                                  <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex justify-end items-center mt-3">
-                          <p className="flex-1 mr-2 text-[10px]">
-                            Why does psychotherapy work? Until relatively recently, many scientists studying methods of
-                            improving mental and behavioral health have delayed answering that questi.....
-                          </p>
-                          <button className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]">
-                            <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                              Read More
-                            </span>
-                          </button>
+
+                          <div className="flex justify-end items-center mt-3">
+                            <p className="flex-1 mr-2 text-[10px]">
+                              {expandedIndex === index ? post?.content : post?.content?.slice(0, 50) + '...'}
+                            </p>
+                            <button
+                              className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]"
+                              onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                            >
+                              <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
+                                {expandedIndex === index ? 'Show Less' : 'Read More'}
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="col-span-12 lg:col-span-6 mb-4">
-                      <div className="bg-[#000] p-4 rounded-[15px]">
-                        <div className="flex items-start">
-                          <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
-                            Engineering is waste of time
-                          </h3>
-                          <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ">
-                            Edit Blog
-                          </button>
-                        </div>
-
-                        <div className="flex w-full relative mb-1">
-                          <div className="w-full md:flex-1 mt-0 md:mt-0">
-                            <Image width={25} height={25}
-                              alt="test12"
-                              src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
-                              className="w-full h-[138px] object-cover rounded-[23px] "
-                            />
-                          </div>
-                          <div className="w-[20%] md:w-[30%]">
-                            <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegHeart className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaHeart className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegBookmark className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaBookmark className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaShareSquare className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end items-center mt-3">
-                          <p className="flex-1 mr-2 text-[10px]">
-                            Why does psychotherapy work? Until relatively recently, many scientists studying methods of
-                            improving mental and behavioral health have delayed answering that questi.....
-                          </p>
-                          <button className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]">
-                            <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                              Read More
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-12 lg:col-span-6 mb-4">
-                      <div className="bg-[#000] p-4 rounded-[15px]">
-                        <div className="flex items-start">
-                          <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
-                            Engineering is waste of time
-                          </h3>
-                          <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ">
-                            Edit Blog
-                          </button>
-                        </div>
-
-                        <div className="flex w-full relative mb-1">
-                          <div className="w-full md:flex-1 mt-0 md:mt-0">
-                            <Image width={25} height={25}
-                              alt="test4"
-                              src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
-                              className="w-full h-[138px] object-cover rounded-[23px] "
-                            />
-                          </div>
-                          <div className="w-[20%] md:w-[30%]">
-                            <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegHeart className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaHeart className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegBookmark className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaBookmark className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaShareSquare className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end items-center mt-3">
-                          <p className="flex-1 mr-2 text-[10px]">
-                            Why does psychotherapy work? Until relatively recently, many scientists studying methods of
-                            improving mental and behavioral health have delayed answering that questi.....
-                          </p>
-                          <button className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]">
-                            <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                              Read More
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-12 lg:col-span-6 mb-4">
-                      <div className="bg-[#000] p-4 rounded-[15px]">
-                        <div className="flex items-start">
-                          <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
-                            Engineering is waste of time
-                          </h3>
-                          <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ">
-                            Edit Blog
-                          </button>
-                        </div>
-
-                        <div className="flex w-full relative mb-1">
-                          <div className="w-full md:flex-1 mt-0 md:mt-0">
-                            <Image width={25} height={25}
-                              alt="test4"
-                              src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
-                              className="w-full h-[138px] object-cover rounded-[23px] "
-                            />
-                          </div>
-                          <div className="w-[20%] md:w-[30%]">
-                            <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegHeart className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaHeart className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegBookmark className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaBookmark className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaShareSquare className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end items-center mt-3">
-                          <p className="flex-1 mr-2 text-[10px]">
-                            Why does psychotherapy work? Until relatively recently, many scientists studying methods of
-                            improving mental and behavioral health have delayed answering that questi.....
-                          </p>
-                          <button className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]">
-                            <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                              Read More
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-12 lg:col-span-6 mb-4">
-                      <div className="bg-[#000] p-4 rounded-[15px]">
-                        <div className="flex items-start">
-                          <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
-                            Engineering is waste of time
-                          </h3>
-                          <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ">
-                            Edit Blog
-                          </button>
-                        </div>
-
-                        <div className="flex w-full relative mb-1">
-                          <div className="w-full md:flex-1 mt-0 md:mt-0">
-                            <Image width={25} height={25}
-                              alt="test4"
-                              src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
-                              className="w-full h-[138px] object-cover rounded-[23px] "
-                            />
-                          </div>
-                          <div className="w-[20%] md:w-[30%]">
-                            <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegHeart className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaHeart className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaRegBookmark className="min-h-0  relative w-4 shrink-0" />
-                                <FaIcons.FaBookmark className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                              <button className="min-w-0 mr-px">
-                                <FaIcons.FaShareSquare className="min-h-0  relative w-4 shrink-0" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end items-center mt-3">
-                          <p className="flex-1 mr-2 text-[10px]">
-                            Why does psychotherapy work? Until relatively recently, many scientists studying methods of
-                            improving mental and behavioral health have delayed answering that questi.....
-                          </p>
-                          <button className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]">
-                            <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                              Read More
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
