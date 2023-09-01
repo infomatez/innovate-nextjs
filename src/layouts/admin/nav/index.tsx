@@ -12,7 +12,7 @@ export default function UserPanelLayout({ children }: MainLayoutProps) {
                 <div className="flex-1 px-4 lg:px-10 pb-10">
                     {children}
                 </div>
-                <div className="h-[8vh] order-3  bottom-0 sm:hidden fixed bottom-0 left-0 w-full">
+                <div className="h-[8vh] order-3 z-50 bottom-0 sm:hidden fixed bottom-0 left-0 w-full">
                     <BottomBar />
                 </div>
             </div>

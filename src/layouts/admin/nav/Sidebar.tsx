@@ -91,7 +91,7 @@ const Sidebar = () => {
           ))}
         </div>
         <div className="flex items-center py-3 my-1 cursor-pointer justify-start text-white">
-          <p className="text-center text-[8px] lg:text-[14px]">
+          <p className="text-center text-[8px] lg:text-[12px]">
             Copyright &copy; 2023 BlogerBase.
             <a href="#" className="hover:text-gray-300">
               Privacy Policy

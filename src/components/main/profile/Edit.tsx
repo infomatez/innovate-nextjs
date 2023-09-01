@@ -39,7 +39,7 @@ const ProfileEdit = () => {
         profilepic: profileImage?.name, 
       };
 
-      const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
+            const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
 
       console.log('Profile updated:', result);
       toast.success("Profile updated successfully")
@@ -49,24 +49,24 @@ const ProfileEdit = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        console.log('Fetching user profile...');
-        const userProfileData = await getUserProfile(accessTokenFromCookie);
-        console.log('Fetched user profile:', userProfileData);
-        setUserProfile(userProfileData);
-        setValue('username', userProfileData?.message[0]?.username || '');
-        setValue('name', userProfileData?.message[0]?.name || '');
-        setValue('bio', userProfileData?.message[0]?.bio || '');
-        setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                console.log('Fetching user profile...');
+                const userProfileData = await getUserProfile(accessTokenFromCookie);
+                console.log('Fetched user profile:', userProfileData);
+                setUserProfile(userProfileData);
+                setValue('username', userProfileData?.message[0]?.username || '');
+                setValue('name', userProfileData?.message[0]?.name || '');
+                setValue('bio', userProfileData?.message[0]?.bio || '');
+                setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
 
-    fetchUserProfile();
-  }, []);
+        fetchUserProfile();
+    }, []);
 
   const handleFavCategory = (value: string) => {
     if (favCategories.includes(value)) {
@@ -96,40 +96,40 @@ const ProfileEdit = () => {
   console.log(profileImage,"-------------------------");
   
 
-  return (
-    <div className="mt-8 bg-sidebar h-[90vh] w-full rounded-2xl sm:py-14 sm:px-[82px] ">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-12 sm:gap-12 ">
-          <div className="flex flex-col gap-4 col-span-12 sm:col-span-6 order-2 sm:order-1 mt-7 sm:mt-0">
-            <div>
-              <label htmlFor="userName" className="text-white font-inter text-xs font-semibold mb-1">
-                Username
-              </label>
-              <input
-                id="userName"
-                {...register('username')}
-                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-              />
-            </div>
-            <div>
-              <label htmlFor="name" className="text-white font-inter text-xs font-semibold mb-1">
-                Profile name
-              </label>
-              <input
-                id="name"
-                {...register('name')}
-                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-               
-              />
-            </div>
-            <div>
-              <label htmlFor="bio" className="text-white font-inter text-xs font-semibold mb-1">
-                Bio
-              </label>
-              <textarea
-                rows={4}
-                id="bio"
-                className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+    return (
+        <div className="mt-8 bg-sidebar w-full rounded-2xl p-0 md:py-[30px] md:px-[30px] xl:py-14 xl:px-[82px] mb-14">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-12 sm:gap-12 ">
+                    <div className="flex flex-col gap-4 col-span-12 md:col-span-6 order-2 sm:order-1 mt-7 md:mt-0">
+                        <div>
+                            <label htmlFor="userName" className="text-white font-inter text-xs font-semibold mb-1">
+                                Username
+                            </label>
+                            <input
+                                id="userName"
+                                {...register('username')}
+                                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="name" className="text-white font-inter text-xs font-semibold mb-1">
+                                Profile name
+                            </label>
+                            <input
+                                id="name"
+                                {...register('name')}
+                                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="bio" className="text-white font-inter text-xs font-semibold mb-1">
+                                Bio
+                            </label>
+                            <textarea
+                                rows={4}
+                                id="bio"
+                                className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
 
                 {...register('bio')}
               />

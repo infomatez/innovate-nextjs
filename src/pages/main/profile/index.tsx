@@ -11,6 +11,7 @@ import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuth
 import Cookies from 'js-cookie';
 import { getUserProfile } from '@/src/services/user';
 import { getAllPostsbyUserId } from "@/src/services/post"
+import Modal from './model';
 // import {logoutUser} from "@/src/services/auth"
 
 
@@ -24,6 +25,11 @@ export default function ProfilePage() {
   const { removeAccessToken } = useAuth();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
   const [userPosts, setUserPosts] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
@@ -52,6 +58,9 @@ export default function ProfilePage() {
 
 
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -96,8 +105,8 @@ const handleEditClick = (blogId:string) => {
   };
 
   return (
-
-    <div className="profilewrapper flex flex-col  w-full items-center ms:h-auto">
+<>
+    <div className="profilewrapper pb-[50px] flex flex-col  w-full items-center ms:h-auto">
       <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 md-3">
         <div className="wrapper w-fit flex gap-1 items-center p-1 rounded-b-2xl">
           <div className="img">
@@ -118,9 +127,9 @@ const handleEditClick = (blogId:string) => {
         </div>
       </div>
       <div className="row2 flex justify-center ms:w-auto w-full items-center">
-        <div className="wrapper w-full flex flex-col pt-5 h-[auto] rounded-t-2xl bg-opacity-20 ">
+        <div className="wrapper w-full flex flex-col pt-5 h-[auto] rounded-t-2xl bg-opacity-20">
           <div className="profileinner flex lg:flex-row flex-col w-full justify-between">
-            <div className="left bg-sidebar bg-opacity-70 lg:w-[25%] p-3 flex flex-col lg:h-[85%] h-[auto] rounded-2xl lg:gap-10 lg:sticky lg:top-0 mb-10 lg:mb-0">
+            <div className="left bg-sidebar bg-opacity-70 lg:w-[25%] p-3 flex flex-col lg:h-[85%] h-[auto] rounded-2xl lg:gap-10 lg:sticky lg:top-6 mb-10 lg:mb-0">
               <div className="top flex flex-col justify-evenly items-center lg:gap-3 gap-2">
                 <div className="one flex flex-col w-full justify-evenly items-center">
                   <div className="imgdiv relative">
@@ -157,11 +166,11 @@ const handleEditClick = (blogId:string) => {
                     </div>
                     <div className="followers"></div>
                     <h1 className=" text-[12px] xl:text-[14px]">
-                      <button>{userProfile?.follower_details.length} Followers</button>
+                      <button type='button' onClick={openModal}>{userProfile?.follower_details.length} Followers</button>
                     </h1>
                     <div className="following  text-[12px] xl:text-[14px]">
                       <h1>
-                        <button>{userProfile?.following_details.length} Following</button>
+                        <button type='button' onClick={openModal}>{userProfile?.following_details.length} Following</button>
                       </h1>
                     </div>
                   </div>
@@ -206,7 +215,7 @@ const handleEditClick = (blogId:string) => {
             </div>
             <div className="right lg:w-[75%] lg:h-[auto] sm:h-[45vh] h-[39vh] flex flex-col">
               <div className="w-full px-0 lg:px-10">
-                <div className="text-white bg-sidebar p-2 py-4 md:p-5 mx-auto  rounded-3xl items-start overflow-y-scroll scrollbar-hide w-[100%]">
+                <div className="text-white bg-sidebar p-2 py-4 md:p-5 mx-auto  rounded-3xl items-start overflow-y-scroll scrollbar-hide w-[100%] mb-12">
                   <div className="text-xl font-['Montserrat'] font-medium leading-[1] mb-5 text-white w-full">
                     My Blogs
                   </div>
@@ -280,9 +289,12 @@ const handleEditClick = (blogId:string) => {
         </div>
       </div>
     </div>
-
+    {isModalOpen && (
+        <Modal userProfile={userProfile} onClose={closeModal} />
+    )}
+    </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 

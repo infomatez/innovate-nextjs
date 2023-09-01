@@ -5,14 +5,165 @@ import { withAuthServerSideProps } from "@/src/components/PrivateRoutes/withAuth
 
 NotificationPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
-export default function NotificationPage()  {
-  return (
+export default function NotificationPage() {
+    const styles = {
+        paddingX: "sm:px-16 px-6",
+        paddingY: "sm:py-16 py-6",
+        padding: "sm:px-16 px-6 sm:py-16 py-10",
 
-   <div className="text-white">
-    Notification
-   </div>
- 
-  )
+        heroHeadText:
+            "font-black text-white lg:text-[80px] sm:text-[60px] xs:text-[50px] text-[40px] lg:leading-[98px] mt-2",
+        heroSubText:
+            "text-[#dfd9ff] font-medium lg:text-[30px] sm:text-[26px] xs:text-[20px] text-[16px] lg:leading-[40px]",
+        heroSubText2:
+            "text-[#dfd9ff] font-medium lg:text-[20px] sm:text-[26px] xs:text-[20px] text-[16px] lg:leading-[40px]",
+
+        sectionHeadText:
+            "text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px] font-family: 'Fjalla One'",
+        sectionSubText:
+            "sm:text-[18px] text-[14px] text-secondary uppercase tracking-wider",
+    };
+    return (
+        <>
+            <section className="wrapper w-full px-2 py-10">
+                <div className="bg-black-100 rounded-[20px] h-full overflow-y-scroll scrollbar-hide">
+                    <div className={`${styles.padding} bg-tertiary rounded-2xl`}>
+                        <p className={`${styles.sectionSubText} text-slate-400`}>See What's New!</p>
+                        <h2 className={styles.sectionHeadText} id="aboutush2">Notifications</h2>
+                    </div>
+                    <div className="mt-4 py-4 px-4 md:px-8">
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4">
+                            <div className="flex md:items-center">
+                                <div className="mt-2 mr-2">
+                                    <svg width="25" className="w-[20px] h-[20px] md:w-[45px] md:h-[45px]" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.5138 8.07617C18.5138 6.48487 17.8817 4.95875 16.7564 3.83353C15.6312 2.70831 14.1051 2.07617 12.5138 2.07617C10.9225 2.07617 9.39637 2.70831 8.27115 3.83353C7.14594 4.95875 6.51379 6.48487 6.51379 8.07617C6.51379 15.0762 3.51379 17.0762 3.51379 17.0762H21.5138C21.5138 17.0762 18.5138 15.0762 18.5138 8.07617Z" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14.2438 21.0762C14.068 21.3792 13.8157 21.6308 13.512 21.8057C13.2084 21.9806 12.8642 22.0726 12.5138 22.0726C12.1634 22.0726 11.8192 21.9806 11.5156 21.8057C11.212 21.6308 10.9596 21.3792 10.7838 21.0762" stroke="#bf02b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-semibold text-white">New Blog Post</p>
+                                    <p className="text-sm text-white opacity-50">A new blog post has been published.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </>
+    )
 }
 
 export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();

@@ -40,7 +40,7 @@ export default function MainPage() {
   };
   return (
     <section className="flex  z-10 py-5 overflow-auto">
-      <div className="order-1 w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
+      <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
         <h1
           id="pageDiv"
           className="text-md lg:text-4xl font-['Poppins'] font-semibold leading-[1.3] text-white relative w-full mb-10 mt-10"
@@ -101,7 +101,7 @@ export default function MainPage() {
             <button>device security</button>
           </span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col-reverse md:flex-row justify-between">
           <div className="justify-start items-center gap-3 inline-flex mt-4">
             <button className="btn">Convert to speech!</button>
             <button className="min-w-0 w-8">
