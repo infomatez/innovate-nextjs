@@ -49,6 +49,7 @@
     "@types/draft-js": "^0.11.12",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/html-to-draftjs": "^1.4.0",
+    "@types/js-cookie": "^3.0.3",
     "@types/react-draft-wysiwyg": "^1.13.4",
     "@types/react-scroll": "^1.8.7",
     "@types/three": "^0.154.0",

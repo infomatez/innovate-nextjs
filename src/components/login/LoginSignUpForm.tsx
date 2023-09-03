@@ -9,6 +9,7 @@ import { login, registerUser } from '../../services/auth';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
+import Loader from '../Loader/Loader';
 
 interface ILoginSignUpFormProps {
     userAction: LoginEnums;
@@ -24,44 +25,52 @@ interface ILoginSignUpForm {
 
 const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction }) => {
     const [togglePasswordField, setTogglePasswordField] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<ILoginSignUpForm>();
     const router = useRouter();
     const isPasswordValid = (password: string) => {
         return /^(?=.*[A-Z])(?=.*\d).{7,}$/.test(password);
       };
-      const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data: ILoginSignUpForm) => {
-        if (userAction === LoginEnums.LOGIN) {
-          try {
-            const userData = await login(data.username, data.email, data.password);
-            if (userData && userData.token) {
-              toast.success('Login Successful');
-              Cookies.set('accessToken', userData.token, { expires: 1 });
-              router.push('/main/profile');
-            } else {
-              toast.error('Login failed');
-            }
-          } catch (error) {
-            toast.error('Login error');
-            console.error('Login error:', error);
-          }
-        } else if (userAction === LoginEnums.SIGN_UP) { 
-          try {
-            const userData = await registerUser(data.username, data.email, data.password);
-            console.log(userData);
-            if (userData && userData.token) {
-              toast.success('User Registered Successfully');
-              Cookies.set('accessToken', userData.token, { expires: 1 });
-              router.push('/main/profile');
-            } else {
-              toast.error('Registration failed');
-            }
-          } catch (error) {
-            toast.error('Registration error');
-            console.error('Registration error:', error);
-          }
+     
+  const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data: ILoginSignUpForm) => {
+    // Show loader while processing form submission
+    setIsLoading(true);
+    
+    if (userAction === LoginEnums.LOGIN) {
+      try {
+        const userData = await login(data.username, data.email, data.password);
+        if (userData && userData.token) {
+          toast.success('Login Successful');
+          Cookies.set('accessToken', userData.token, { expires: 7 });
+          router.push('/main/profile');
+        } else {
+          toast.error('Login failed');
         }
-      };
-
+      } catch (error) {
+        toast.error('Login error');
+        console.error('Login error:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (userAction === LoginEnums.SIGN_UP) { 
+      try {
+        const userData = await registerUser(data.username, data.email, data.password);
+        console.log(userData);
+        if (userData && userData.token) {
+          toast.success('User Registered Successfully');
+          Cookies.set('accessToken', userData.token, { expires: 7 });
+          router.push('/main/profile');
+        } else {
+          toast.error('Registration failed');
+        }
+      } catch (error) {
+        toast.error('Registration error');
+        console.error('Registration error:', error);
+      } finally {
+        setIsLoading(false); // Hide the loader after submission is done
+      }
+    }
+  };
     useEffect(() => {
         reset({
             username: '',
@@ -71,6 +80,8 @@ const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction 
         });
     }, [userAction]);
     return (
+      <>
+       {isLoading && <Loader />}
         <div className='w-full h-[100vh] flex items-center'>
           <div className="container mx-auto px-4 py-10 h-full">
             <div className="flex flex-wrap -mx-2 justify-center">
@@ -160,6 +171,7 @@ const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction 
             </div>
           </div>
         </div>
+        </>
       );
       
 }

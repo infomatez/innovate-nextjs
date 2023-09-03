@@ -7,7 +7,7 @@ const nextConfig = {
   },
   
   images: {
-    domains: ['file.rendit.io','images.theconversation.com'],
+    domains: ['file.rendit.io','images.theconversation.com','localhost'],
     remotePatterns: [
       {
         protocol: 'https',
