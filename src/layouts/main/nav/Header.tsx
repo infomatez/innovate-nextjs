@@ -7,10 +7,16 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import logoImage from '@/public/logoicon.jpeg';
 import Image from 'next/image';
-import { PATH_AUTH } from '@/src/routes/path';
+import { PATH_AUTH, PATH_DASHBOARD } from '@/src/routes/path';
+import { getUserProfile } from '@/src/services/user';
+import Cookies from 'js-cookie';
+
 
 const Header = () => {
+  const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+
   const [scrollNav, setScrollNav] = useState(false);
+  const [username, setUsername] = useState('');
   const router = useRouter();
   console.log('process :>> ', process.env.SITE_URL);
 
@@ -21,6 +27,18 @@ const Header = () => {
       setScrollNav(false);
     }
   };
+  useEffect(() => {
+    if (accessTokenFromCookie) {
+      getUserProfile(accessTokenFromCookie)
+        .then((response) => {
+          setUsername(response?.message[0]?.username);
+          
+        })
+        .catch((error) => {
+          console.error('Error fetching user profile:', error);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', changeNav);
@@ -72,6 +90,24 @@ const Header = () => {
             </div>
           ))}
         </ul>
+        {accessTokenFromCookie !== null ?
+        <div className="w-[50%] md:w-[16vw] flex sm:w-[22vw] justify-end lg:w-[12vw]">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold p-2 rounded-full shadow-md text-sm flex gap-1"
+            onClick={() => router.push(PATH_DASHBOARD.profile)}
+          >
+            {/* <Image
+              src="https://www.transparentpng.com/thumb/google-logo/google-logo-png-icon-free-download-SUF63j.png"
+              className="w-5 rounded-full"
+              alt="test5"
+              fill={true}
+            /> */}
+            <p>{username}</p>
+          </motion.button>
+        </div> 
+        : 
         <div className="w-[50%] md:w-[16vw] flex sm:w-[22vw] justify-end lg:w-[12vw]">
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -87,7 +123,7 @@ const Header = () => {
             /> */}
             <p>Login</p>
           </motion.button>
-        </div>
+        </div>}
       </nav>
     </div>
   );

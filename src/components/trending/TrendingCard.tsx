@@ -9,14 +9,13 @@ interface ITrendingCardProps {
   title: string;
 }
 const TrendingCard: FC<ITrendingCardProps> = ({ id, title, name, userImg, date, likes }) => {
-  const dateStr = date; // Your input date string
-  const dates = new Date(dateStr); // Create a Date object from the string
+  const dateStr = date; 
+  const dates = new Date(dateStr);
+  console.log(userImg)
 
-  // Get the month name and date from the Date object
   const month = dates.toLocaleString('default', { month: 'long' });
   const day = dates.getDate();
 
-  // Create the output string in the "Month Date" format
   const monthDateStr = `${month} ${day}`;
 
   return (
@@ -25,7 +24,7 @@ const TrendingCard: FC<ITrendingCardProps> = ({ id, title, name, userImg, date, 
         <p className="w-[10%] text-gray-400 text-lg font-bold">{id}</p>
         <div className="flex flex-col w-[80%] ml-2 pb-4">
           <span className="flex justify-start items-center">
-            <div className='relative w-[20px] h-[20px]'>{userImg && <Image fill={true} src={userImg} alt="" className="w-8 object-cover rounded-full" />}</div>
+            <div className='relative w-[20px] h-[20px]'>{userImg && <Image fill={true} src={`/${userImg}`} alt="" className="w-8 object-cover rounded-full" />}</div>
             <p className="ml-2 font-semibold text-md capitalize">{name}</p>
           </span>
           <p className="w-full text-md font-normal my-2">{title}</p>

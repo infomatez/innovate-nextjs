@@ -1,13 +1,49 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getUserFollowers, getUserFollowing } from '../../../services/user';
+import Cookies from 'js-cookie';
 
-const Modal = ({ userProfile, onClose }) => {
-    const [activeTab, setActiveTab] = useState('tab1'); // Initialize the active tab state
+const Modal = ({ userProfile, onClose }: any) => {
+    const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+    console.log(userProfile);
+
+
+    const [activeTab, setActiveTab] = useState('tab1');
+    const [followers, setFollowers] = useState([]);
+    const [following, setFollowing] = useState([]);
 
     const closeModal = () => {
-        // Call the onClose function to close the modal
         onClose();
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (activeTab === 'tab1') {
+                    console.log('Fetching followers...');
+                    const followersData = await getUserFollowers(
+                        accessTokenFromCookie,
+                        userProfile._id
+                    );
+                    console.log('Followers data:', followersData?.data?.follower_details);
+                    setFollowers(followersData?.data?.follower_details);
+                } else {
+                    console.log('Fetching following...');
+                    const followingData = await getUserFollowing(
+                        accessTokenFromCookie,
+                        userProfile._id
+                    );
+                    console.log('Following data:', followingData?.data?.following_details);
+                    setFollowing(followingData?.data?.following_details);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [activeTab, userProfile]);
+
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 mx-[20px] modelbox">
@@ -48,247 +84,77 @@ const Modal = ({ userProfile, onClose }) => {
                 <div className="px-4 pt-2 h-[100%]">
                     {activeTab === 'tab1' ? (
                         <div className='overflow-auto h-[330px] flex flex-col'>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
+                            {followers?.length === 0 ? (
+                                <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                    No followers
+                                </p>
+                            ) : (
+                                followers?.map((follower: any) => (
+                                    <div className='follower-list flex justify-between items-center mb-3' key={follower._id}>
+                                        <div className='flex items-center'>
+                                            <Image
+                                                src={follower.img}
+                                                height="48"
+                                                width="48"
+                                                className='rounded-[50%] mr-3'
+                                                alt='Follower Dp'
+                                            />
+                                            <div className='follow-info'>
+                                                <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide">
+                                                    {follower.username}
+                                                </h5>
+                                                <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                                    {follower.name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
+                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
+                                                Follow
+                                            </div>
+                                        </button>
                                     </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div><div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
+                                ))
+                            )}
+
+
+
                         </div>
                     ) : (
                         <div className='overflow-auto h-[330px] flex flex-col'>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Test</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
+                            {following?.length === 0 ? (
+                                <p className=" text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                    You Do not Follow Anyone
+                                </p>
+                            ) : (
+                                following?.map((following: any) => (
+                                    <div className='follower-list flex justify-between items-center mb-3' key={following._id}>
+                                        <div className='flex items-center'>
+                                            <Image
+                                                src={following.img}
+                                                height="48"
+                                                width="48"
+                                                className='rounded-[50%] mr-3'
+                                                alt='Following Dp'
+                                            />
+                                            <div className='follow-info'>
+                                                <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide">
+                                                    {following.username}
+                                                </h5>
+                                                <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                                    {following.name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
+                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
+                                                Follow
+                                            </div>
+                                        </button>
                                     </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div><div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
-                            <div className='follower-list flex justify-between items-center mb-3'>
-                                <div className='flex items-center'>
-                                    <Image src='https://lh3.googleusercontent.com/a/AAcHTtexA2-I0IIQAIx-4IXhoo-oHuU-M05zwD4mSYvDE4u5Dz0=s96-c' height="48" width="48" className='rounded-[50%] mr-3' />
-                                    <div className='follow-info'>
-                                        <h5 className=" text-white text-sm font-semibold leading-[1.5] tracking-wide">Username</h5>
-                                        <p className=" text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">profile name</p>
-                                    </div>
-                                </div>
-                                <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded"><div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">Follow</div></button>
-                            </div>
+                                ))
+                            )}
+
                         </div>
                     )}
                 </div>
