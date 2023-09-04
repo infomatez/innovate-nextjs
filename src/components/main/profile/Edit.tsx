@@ -206,6 +206,7 @@ const ProfileEdit = () => {
                   name="previewImage"
                   accept="image/*"
                   onChange={handleProfileImageChange}
+                  disabled={isLoading}
                 />
                 <label
                   htmlFor="profileImage"
