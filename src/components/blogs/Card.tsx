@@ -1,14 +1,23 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import parse from 'html-react-parser';
 import style from './blogs.module.css';
 import Image from 'next/image';
+
 interface ICardProps {
   img: string;
   title: string;
   content: string;
   index: number;
 }
+
 const Card: FC<ICardProps> = ({ img, title, content, index }) => {
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
+
+
   return (
     <div
       className={`${style['timeline-block']} ${
@@ -26,10 +35,10 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
           />
         </picture>
       </div>
-      <div className={style['timeline-content']}>
-        <h3>{title}</h3>
-        <div className={`${style['image-box-inner']}`}>
-          <div className="w-full md:w-[40%]">
+      <div className={`${style['timeline-content']} rounded-lg`}>
+        <h3 className='mb-3'>{title}</h3>
+        <div className={`${style['image-box-inner']} mt-3`}>
+          <div className="w-full md:w-[40%] mt-3">
             <div className="flex flex-row justify-end gap-3 relative items-center mt-[10px] md:mt-[50px] md:mb-50">
               <Image
                 src="https://file.rendit.io/n/Z14BG1N5XdMogNlZjMZN.svg"
@@ -63,33 +72,33 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
               />
             </div>
             <div className="justify-start items-start gap-3 inline-flex mt-4 relative md:absolute bottom-0 left-0">
-              <button className="px-[10px] py-2 bg-fuchsia-700 rounded-md justify-center items-center gap-2.5 flex">
-                <div className="text-white text-[13.021600723266602px] font-medium leading-3">Convert To Speech!</div>
+              <button className="px-[10px] py-2 bg-fuchsia-700 rounded-md justify-center items-center gap-2.5 flex mb-3 mt-3">
+                <div className="text-white text-[13.021600723266602px] font-medium leading-3 ">Convert To Speech!</div>
               </button>
-              <button className="min-w-0 w-8">
+              {/* <button className="min-w-0 w-8">
                 <Image
                   src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
                   className="min-w-0 relative w-8"
                   alt="test3"
                   fill={true}
                 />
-              </button>
+              </button> */}
             </div>
           </div>
 
           {img && (
-            <div className="w-full md:flex-1 md:ml-4 mt-3 md:mt-0">
-              <Image fill={true} src={img} className="w-full rounded-[23px]" alt="test4" />
+            <div className="w-full md:flex-1 md:ml-4 mt-3 md:mt-0 mb-3">
+              <Image width={100} height={75} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px]" alt="test4" />
             </div>
           )}
         </div>
         <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white ">
-          {parse(content.split(' ').slice(0, 30).join(' '))}
+          {showMore ? parse(content) : parse(content.split(' ').slice(0, 20).join(' '))}
         </p>
         <div className="flex justify-end">
-          <button className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]">
+          <button className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]" onClick={toggleShowMore}>
             <span className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative">
-              Read More
+              {showMore ? 'Show Less' : 'Read More'}
             </span>
           </button>
         </div>

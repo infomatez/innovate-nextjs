@@ -7,6 +7,7 @@ import { getUserProfile, editUserProfile } from "../../../services/user"
 import { useAuth } from '@/src/context/authContext';
 import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 interface IProfileEditForm {
   username: string;
@@ -16,10 +17,12 @@ interface IProfileEditForm {
 }
 
 const ProfileEdit = () => {
+  const router = useRouter()
   const accessTokenFromCookie = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [favcategories, setFavCategories] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, setValue } = useForm<IProfileEditForm>({
     defaultValues: {
       username: userProfile?.message[0]?.username || '',
@@ -30,42 +33,48 @@ const ProfileEdit = () => {
   });
 
   const onSubmit: SubmitHandler<IProfileEditForm> = async (data: IProfileEditForm) => {
+    setIsLoading(true); // Set loading state to true
+
     try {
       const updatedProfileData = {
         username: data.username,
         profilename: data.name,
         bio: data.bio,
-        sociallinks: data.socialLinks?.split('\n').map(link => link.trim()),
+        sociallinks: data.socialLinks?.split("\n").map((link) => link.trim()),
         image: profileImage,
         favcategories: favcategories,
       };
 
       const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
 
-      console.log('Profile updated:', result);
-      toast.success("Profile updated successfully")
-    } catch (error :any) {
-      console.error('Error updating profile', error);
-      if (error.message){
-        toast.error(error.message)
+      console.log("Profile updated:", result);
+      toast.success("Profile updated successfully");
+
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Error updating profile", error);
+      if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Error updating profile");
       }
-      else{
-      toast.error('Error updating profile');
-      }
+
+      setIsLoading(false);
     }
   };
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         console.log('Fetching user profile...');
         const userProfileData = await getUserProfile(accessTokenFromCookie);
         console.log('Fetched user profile:', userProfileData);
-  
+
         setUserProfile(userProfileData);
 
         const initialFavCategories = userProfileData?.message[0]?.favCategories || [];
         setFavCategories(initialFavCategories);
-  
+
         setValue('username', userProfileData?.message[0]?.username || '');
         setValue('name', userProfileData?.message[0]?.name || '');
         setValue('bio', userProfileData?.message[0]?.bio || '');
@@ -74,10 +83,10 @@ const ProfileEdit = () => {
         console.error("Error fetching user profile:", error);
       }
     };
-  
+
     fetchUserProfile();
   }, []);
-  
+
 
   const handleFavCategory = (value: string) => {
     setFavCategories((prev) => {
@@ -90,8 +99,8 @@ const ProfileEdit = () => {
       }
     });
   };
-  
-  
+
+
   const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     if (files && files.length) {
@@ -157,19 +166,19 @@ const ProfileEdit = () => {
                 Favorite Categories
               </p>
               <div className="flex flex-wrap justify-center gap-1 sm:gap-2 ">
-              {filters.map((f, index) => (
-        <button
-          type="button"
-          key={`filter-button-${index}`}
-          className="btn favCategoryBtn whitespace-nowrap w-fit"
-          style={favcategories?.includes(f.text) ?{ background: 'white', color: 'black' }:{} }
-          onClick={() => {
-            handleFavCategory(f.text);
-          }}
-        >
-          {f.text}
-        </button>
-      ))}
+                {filters.map((f, index) => (
+                  <button
+                    type="button"
+                    key={`filter-button-${index}`}
+                    className="btn favCategoryBtn whitespace-nowrap w-fit"
+                    style={favcategories?.includes(f.text) ? { background: 'white', color: 'black' } : {}}
+                    onClick={() => {
+                      handleFavCategory(f.text);
+                    }}
+                  >
+                    {f.text}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -216,8 +225,12 @@ const ProfileEdit = () => {
           </div>
         </div>
         <div className="flex justify-center mt-24">
-          <button className="rounded-[20px] py-1 sm:py-3 px-2 sm:px-4 bg-[#a801df] text-white font-inter text-xs sm:text-lg font-semibold" onClick={handleSubmit(onSubmit)}>
-            Edit Profile
+          <button
+            className="rounded-[20px] py-1 sm:py-3 px-2 sm:px-4 bg-[#a801df] text-white font-inter text-xs sm:text-lg font-semibold"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading} 
+          >
+            {isLoading ? "Updating..." : "Edit Profile"}
           </button>
         </div>
       </form>

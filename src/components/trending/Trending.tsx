@@ -1,19 +1,35 @@
 import { motion, useAnimation } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-// import { useDispatch, useSelector } from "react-redux";
-// import "react-toastify/dist/ReactToastify.css";
-// import { getTrending } from "../../api";
 import TrendingCard from "./TrendingCard";
-import { blogsData } from "@/src/utils/constant";
 import TrendingUpIcon from "../icons/border/TrendingUpIcon";
+import { getTrendingPosts } from "@/src/services/post";
+import Cookies from "js-cookie";
+import TrendingCardSkeleton from "../Skeleton/TrendingblogSkeleton";
 
 const Trending = () => {
-  //   const dispatch = useDispatch();
-  //   const { trending } = useSelector((state) => state.blog);
-  const trending = blogsData
+  const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+  const [trending, setTrending] = useState([]);
+  const [loading,setLoading] = useState(false)
   const controls = useAnimation();
   const [ref, inView] = useInView();
+
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+      const limit = 10;
+      const skip = 3;
+
+      const response = await getTrendingPosts(accessTokenFromCookie, limit, skip);
+      const data = response?.data[0]?.data;
+      console.log(data, "--------------------------");
+
+      setTrending(data);
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching trending data:', error);
+    }
+  };
 
   useEffect(() => {
     if (inView) {
@@ -22,6 +38,10 @@ const Trending = () => {
       controls.start("hidden");
     }
   }, [controls, inView]);
+
+  useEffect(() => {
+    fetchData();
+  }, []); 
 
   return (
     <section
@@ -39,7 +59,6 @@ const Trending = () => {
           }}
         >
           <p className="flex items-center font-bookman-old-style md:gap-2">
-            {" "}
             <TrendingUpIcon height='30px' width='30px' />
             Trending
           </p>
@@ -49,18 +68,34 @@ const Trending = () => {
         className="flex hover:cursor-pointer sm:gap-[20px] gap-[20px] md:gap-[40px] justify-center flex-wrap"
         ref={ref}
       >
-        {trending &&
-          trending.map((b, index) => (
+        
+        {loading ? (
+          <>
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            <TrendingCardSkeleton />
+            
+          </>
+        ) : (
+          trending.map((b:any, index) => (
             <TrendingCard
-              key={b._id}
+              key={b?._id}
               id={index + 1}
-              name={b.user.name}
-              title={b.title}
-              userImg={b.user.img}
-              date={b.createdAt}
-              likes={b.likes}
+              name={b?.user_details?.name}
+              title={b?.title}
+              userImg={b?.img}
+              date={b?.createdAt}
+              likes={b?.likes}
             />
-          ))}
+          ))
+        )}
       </div>
     </section>
   );
