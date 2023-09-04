@@ -22,6 +22,10 @@ interface ILoginSignUpForm {
     password: string;
     confirmPassword: string;
 }
+interface CustomError {
+  status_code: number;
+  message: string;
+}
 
 const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction }) => {
     const [togglePasswordField, setTogglePasswordField] = useState(false);
@@ -32,45 +36,64 @@ const LoginSignUpForm: FC<ILoginSignUpFormProps> = ({ userAction, setUserAction 
         return /^(?=.*[A-Z])(?=.*\d).{7,}$/.test(password);
       };
      
-  const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data: ILoginSignUpForm) => {
-    // Show loader while processing form submission
-    setIsLoading(true);
-    
-    if (userAction === LoginEnums.LOGIN) {
-      try {
-        const userData = await login(data.username, data.email, data.password);
-        if (userData && userData.token) {
-          toast.success('Login Successful');
-          Cookies.set('accessToken', userData.token, { expires: 7 });
-          router.push('/main/profile');
-        } else {
-          toast.error('Login failed');
+   
+      
+      const handleFormSubmit: SubmitHandler<ILoginSignUpForm> = async (data: ILoginSignUpForm) => {
+        setIsLoading(true);
+      
+        if (userAction === LoginEnums.LOGIN) {
+          try {
+            const userData = await login(data.username, data.email, data.password);
+            if (userData && userData.token) {
+              toast.success('Login Successful');
+              Cookies.set('accessToken', userData.token, { expires: 7 });
+              router.push('/main/profile');
+            } else {
+              if (userData && userData.message) {
+                toast.error(userData.message);
+              } else {
+                toast.error('Login failed');
+              }
+            }
+          } catch (error:any) {
+            if (error.response && error.response.data && error.response.data.message) {
+              const errorMessage = error.response.data.message;
+              toast.error(errorMessage);
+            } else {
+              toast.error('Login error');
+            }
+          } finally {
+            setIsLoading(false);
+          }
+        } else if (userAction === LoginEnums.SIGN_UP) {
+          try {
+            const userData = await registerUser(data.username, data.email, data.password);
+            if (userData && userData.token) {
+              toast.success('User Registered Successfully');
+              Cookies.set('accessToken', userData.token, { expires: 7 });
+              router.push('/main/profile');
+            } else {
+              if (userData && userData.message) {
+                toast.error(userData.message);
+              } else {
+                toast.error('Registration failed');
+              }
+            }
+          } catch (error:any) {
+            if (error.response && error.response.data && error.response.data.message) {
+              const errorMessage = error.response.data.message;
+              toast.error(errorMessage);
+            } else {
+              toast.error('Registration error');
+            }
+          } finally {
+            setIsLoading(false);
+          }
         }
-      } catch (error) {
-        toast.error('Login error');
-        console.error('Login error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    } else if (userAction === LoginEnums.SIGN_UP) { 
-      try {
-        const userData = await registerUser(data.username, data.email, data.password);
-        console.log(userData);
-        if (userData && userData.token) {
-          toast.success('User Registered Successfully');
-          Cookies.set('accessToken', userData.token, { expires: 7 });
-          router.push('/main/profile');
-        } else {
-          toast.error('Registration failed');
-        }
-      } catch (error) {
-        toast.error('Registration error');
-        console.error('Registration error:', error);
-      } finally {
-        setIsLoading(false); // Hide the loader after submission is done
-      }
-    }
-  };
+      };
+      
+      
+      
     useEffect(() => {
         reset({
             username: '',

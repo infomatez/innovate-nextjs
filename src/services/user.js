@@ -23,7 +23,7 @@ export const getUserProfile = async (accessToken) => {
         method: 'post',
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
         data: dataToUpdate, 
         url:  `${API_BASE_URL}/auth/editUserProfile`,

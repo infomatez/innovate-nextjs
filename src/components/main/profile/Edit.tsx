@@ -18,7 +18,7 @@ interface IProfileEditForm {
 const ProfileEdit = () => {
   const accessTokenFromCookie = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [favCategories, setFavCategories] = useState<string[]>([]);
+  const [favcategories, setFavCategories] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const { register, handleSubmit, setValue } = useForm<IProfileEditForm>({
     defaultValues: {
@@ -36,100 +36,105 @@ const ProfileEdit = () => {
         profilename: data.name,
         bio: data.bio,
         sociallinks: data.socialLinks?.split('\n').map(link => link.trim()),
-        profilepic: profileImage?.name, 
+        image: profileImage,
+        favcategories: favcategories,
       };
 
-            const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
+      const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
 
       console.log('Profile updated:', result);
       toast.success("Profile updated successfully")
-    } catch (error) {
+    } catch (error :any) {
       console.error('Error updating profile', error);
+      if (error.message){
+        toast.error(error.message)
+      }
+      else{
       toast.error('Error updating profile');
+      }
     }
   };
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        console.log('Fetching user profile...');
+        const userProfileData = await getUserProfile(accessTokenFromCookie);
+        console.log('Fetched user profile:', userProfileData);
+  
+        setUserProfile(userProfileData);
 
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                console.log('Fetching user profile...');
-                const userProfileData = await getUserProfile(accessTokenFromCookie);
-                console.log('Fetched user profile:', userProfileData);
-                setUserProfile(userProfileData);
-                setValue('username', userProfileData?.message[0]?.username || '');
-                setValue('name', userProfileData?.message[0]?.name || '');
-                setValue('bio', userProfileData?.message[0]?.bio || '');
-                setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
-            } catch (error) {
-                console.error("Error fetching user profile:", error);
-            }
-        };
-
-        fetchUserProfile();
-    }, []);
+        const initialFavCategories = userProfileData?.message[0]?.favCategories || [];
+        setFavCategories(initialFavCategories);
+  
+        setValue('username', userProfileData?.message[0]?.username || '');
+        setValue('name', userProfileData?.message[0]?.name || '');
+        setValue('bio', userProfileData?.message[0]?.bio || '');
+        setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+  
 
   const handleFavCategory = (value: string) => {
-    if (favCategories.includes(value)) {
-      setFavCategories((prev) => prev.filter((category) => category !== value));
-    } else {
-      setFavCategories((prev) => [...prev, value]);
-    }
+    setFavCategories((prev) => {
+      if (prev?.includes(value)) {
+        // Remove the category if it's already in the array
+        return prev.filter((category) => category !== value);
+      } else {
+        // Add the category if it's not in the array
+        return [...(prev || []), value];
+      }
+    });
   };
+  
+  
   const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     if (files && files.length) {
       const originalFile = files[0];
-      
-      // Extract the original filename
-      const originalFilename = originalFile.name;
-      
-      // Construct the desired filename using lastModified timestamp and original filename
-      const timestamp = originalFile.lastModified;
-      const filename = `${timestamp}_${originalFilename}`;
-      
-      // Create a new File object with the desired filename
-      const newFile = new File([originalFile], filename, { type: originalFile.type });
-      
-      setProfileImage(newFile);
+      setProfileImage(originalFile);
     }
   };
-  console.log(profileImage,"-------------------------");
-  
 
-    return (
-        <div className="mt-8 bg-sidebar w-full rounded-2xl p-0 md:py-[30px] md:px-[30px] xl:py-14 xl:px-[82px] mb-14">
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-12 sm:gap-12 ">
-                    <div className="flex flex-col gap-4 col-span-12 md:col-span-6 order-2 sm:order-1 mt-7 md:mt-0">
-                        <div>
-                            <label htmlFor="userName" className="text-white font-inter text-xs font-semibold mb-1">
-                                Username
-                            </label>
-                            <input
-                                id="userName"
-                                {...register('username')}
-                                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="name" className="text-white font-inter text-xs font-semibold mb-1">
-                                Profile name
-                            </label>
-                            <input
-                                id="name"
-                                {...register('name')}
-                                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
 
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="bio" className="text-white font-inter text-xs font-semibold mb-1">
-                                Bio
-                            </label>
-                            <textarea
-                                rows={4}
-                                id="bio"
-                                className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+  return (
+    <div className="mt-8 bg-sidebar w-full rounded-2xl p-0 md:py-[30px] md:px-[30px] xl:py-14 xl:px-[82px] mb-14">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-12 sm:gap-12 ">
+          <div className="flex flex-col gap-4 col-span-12 md:col-span-6 order-2 sm:order-1 mt-7 md:mt-0">
+            <div>
+              <label htmlFor="userName" className="text-white font-inter text-xs font-semibold mb-1">
+                Username
+              </label>
+              <input
+                id="userName"
+                {...register('username')}
+                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+              />
+            </div>
+            <div>
+              <label htmlFor="name" className="text-white font-inter text-xs font-semibold mb-1">
+                Profile name
+              </label>
+              <input
+                id="name"
+                {...register('name')}
+                className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
+
+              />
+            </div>
+            <div>
+              <label htmlFor="bio" className="text-white font-inter text-xs font-semibold mb-1">
+                Bio
+              </label>
+              <textarea
+                rows={4}
+                id="bio"
+                className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
 
                 {...register('bio')}
               />
@@ -152,19 +157,19 @@ const ProfileEdit = () => {
                 Favorite Categories
               </p>
               <div className="flex flex-wrap justify-center gap-1 sm:gap-2 ">
-                {filters.map((f, index) => (
-                  <button
-                    type="button"
-                    key={`filter-button-${index}`}
-                    className="btn favCategoryBtn whitespace-nowrap w-fit"
-                    style={favCategories.includes(f.text) ? { background: 'white', color: 'black' } : {}}
-                    onClick={() => {
-                      handleFavCategory(f.text);
-                    }}
-                  >
-                    {f.text}
-                  </button>
-                ))}
+              {filters.map((f, index) => (
+        <button
+          type="button"
+          key={`filter-button-${index}`}
+          className="btn favCategoryBtn whitespace-nowrap w-fit"
+          style={favcategories?.includes(f.text) ?{ background: 'white', color: 'black' }:{} }
+          onClick={() => {
+            handleFavCategory(f.text);
+          }}
+        >
+          {f.text}
+        </button>
+      ))}
               </div>
             </div>
 
@@ -172,7 +177,7 @@ const ProfileEdit = () => {
               <Image src={LogoIcon} fill={true} alt="logo icon" className="sm:hidden block" />
               {profileImage ? (
                 <Image
-                src={URL.createObjectURL(profileImage)} 
+                  src={URL.createObjectURL(profileImage)}
 
                   // fill={true}
                   height={24} width={25}

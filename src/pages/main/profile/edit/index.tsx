@@ -11,6 +11,6 @@ export default function ProfileEditPage() {
     )
 }
 
-// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 
   

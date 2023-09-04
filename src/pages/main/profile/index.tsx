@@ -224,7 +224,6 @@ export default function ProfilePage() {
                     </div>
                     <div className="grid grid-cols-12 gap-4">
                       {isLoading ? (
-                        // Render skeleton loaders while loading
                         Array.from({ length: 6 }).map((_, index) => <PostSkeleton key={index} />)
                       ) : (
                         userPosts.map((post: any, index) => (
@@ -304,5 +303,5 @@ export default function ProfilePage() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
+export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
 
