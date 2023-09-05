@@ -105,3 +105,43 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
       throw error;
     }
   };
+
+
+export const dislikePost = async (accessToken: string | undefined, postId: string) => {
+  try {
+    const response = await axios({
+      method: 'post', 
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/dislikePost`,
+      data: {
+        post_id: postId, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const likePost = async (accessToken: string | undefined, postId: string) => {
+  try {
+    const response = await axios({
+      method: 'post', 
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/likePost`, 
+      data: {
+        post_id: postId, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
