@@ -2,20 +2,21 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { getUserFollowers, getUserFollowing } from '../../../services/user';
 import Cookies from 'js-cookie';
+import { followUser, unfollowUser } from '../../../services/user'; // Import your API functions
 
 const Modal = ({ userProfile, onClose }: any) => {
     const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
-    console.log(userProfile);
-
+    console.log(userProfile._id);
 
     const [activeTab, setActiveTab] = useState('tab1');
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(false); // Loading state for API calls
+
     const closeModal = () => {
         onClose();
     };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,8 +34,8 @@ const Modal = ({ userProfile, onClose }: any) => {
                         accessTokenFromCookie,
                         userProfile._id
                     );
-                    console.log('Following data:', followingData?.data?.following_details);
-                    setFollowing(followingData?.data?.following_details);
+                    console.log('Following data:', followingData?.data[0]?.following_details);
+                    setFollowing(followingData?.data[0]?.following_details);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -44,6 +45,53 @@ const Modal = ({ userProfile, onClose }: any) => {
         fetchData();
     }, [activeTab, userProfile]);
 
+
+    const handleFollowClick = async (userId: string) => {
+        setIsLoading(true);
+
+        try {
+            // Call the followUser API
+            await followUser(accessTokenFromCookie, userId);
+
+            // Refresh the followers or following data after following
+            if (activeTab === 'tab1') {
+                const followersData = await getUserFollowers(accessTokenFromCookie, userProfile._id);
+                setFollowers(followersData?.data?.follower_details);
+            } else {
+                const followingData = await getUserFollowing(accessTokenFromCookie, userProfile._id);
+                setFollowing(followingData?.data?.following_details);
+            }
+        } catch (error) {
+            console.error('Error following user:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleUnfollowClick = async (userId: string) => {
+        setIsLoading(true);
+      
+        try {
+          // Call the unfollowUser API
+          await unfollowUser(accessTokenFromCookie, userId);
+      
+          // Remove the unfollowed user from the followers or following list
+          if (activeTab === 'tab1') {
+            // Filter out the unfollowed user from the followers list
+            setFollowers((prevFollowers) => prevFollowers.filter((follower) => follower._id !== userId));
+          } else {
+            // Filter out the unfollowed user from the following list
+            setFollowing((prevFollowing) => prevFollowing.filter((following) => following._id !== userId));
+          }
+        } catch (error) {
+          console.error('Error unfollowing user:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+
+    // Rest of your component code...
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 mx-[20px] modelbox">
@@ -85,7 +133,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                     {activeTab === 'tab1' ? (
                         <div className='overflow-auto h-[330px] flex flex-col'>
                             {followers?.length === 0 ? (
-                                <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide text-center">
                                     No followers
                                 </p>
                             ) : (
@@ -108,22 +156,25 @@ const Modal = ({ userProfile, onClose }: any) => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
-                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
-                                                Follow
+                                        <button
+                                            className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-2 m-2 w-[80px] p-2 border rounded"
+                                            onClick={() => handleFollowClick(follower._id)}
+                                            disabled={isLoading} // Disable the button while the API call is in progress
+                                        >
+                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[0.58px] text-[#ad00ff] w-5/5">
+                                                {userProfile._id === follower.followers[0]
+                                                        ? 'Following'
+                                                        : 'Follow'}
                                             </div>
                                         </button>
                                     </div>
                                 ))
                             )}
-
-
-
                         </div>
                     ) : (
                         <div className='overflow-auto h-[330px] flex flex-col'>
                             {following?.length === 0 ? (
-                                <p className=" text-[10.80px] font-normal leading-[1.3] tracking-wide">
+                                <p className=" text-[10.80px] font-normal leading-[1.3] tracking-wide text-white text-center">
                                     You Do not Follow Anyone
                                 </p>
                             ) : (
@@ -146,9 +197,15 @@ const Modal = ({ userProfile, onClose }: any) => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <button className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border rounded">
-                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-3/5">
-                                                Follow
+                                        <button
+                                            className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-2 m-2 w-[80px] p-2 border rounded"
+
+                                            onClick={() => handleUnfollowClick(following._id)}
+                                            disabled={isLoading} // Disable the button while the API call is in progress
+                                        >
+                                            <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[0.58px] text-[#ad00ff] w-5/5">
+
+                                                Unfollow
                                             </div>
                                         </button>
                                     </div>

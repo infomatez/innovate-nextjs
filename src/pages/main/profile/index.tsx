@@ -165,7 +165,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="dets flex lg:justify-between justify-evenly font-md text-white sm:text-lg text-[10px] lg:w-full w-[60vw] sm:gap-0 gap-2">
                       <div className="posts  text-[12px] xl:text-[14px]">
-                        <h1>{userProfile?.posts.length} posts</h1>
+                        <h1>{userPosts?.length} posts</h1>
                       </div>
                       <div className="followers"></div>
                       <h1 className=" text-[12px] xl:text-[14px]">
