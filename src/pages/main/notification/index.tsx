@@ -27,7 +27,7 @@ export default function NotificationPage() {
         <>
             <section className="wrapper w-full px-2 py-10">
                 <div className="bg-black-100 rounded-[20px] h-full overflow-y-scroll scrollbar-hide">
-                    <div className={`${styles.padding} bg-tertiary rounded-2xl`}>
+                    <div className={`${styles.padding} sidebar-bg-ct rounded-2xl`}>
                         <p className={`${styles.sectionSubText} text-slate-400`}>See What's New!</p>
                         <h2 className={styles.sectionHeadText} id="aboutush2">Notifications</h2>
                     </div>
