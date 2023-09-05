@@ -11,7 +11,9 @@ const Modal = ({ userProfile, onClose }: any) => {
     const [activeTab, setActiveTab] = useState('tab1');
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
-
+    const initialfollowers = followers?.map((follower: any, index) =>
+    follower?.followers?.includes(userProfile._id)
+  );
     const [isLoading, setIsLoading] = useState(false); // Loading state for API calls
 
     const closeModal = () => {
@@ -137,7 +139,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                                     No followers
                                 </p>
                             ) : (
-                                followers?.map((follower: any) => (
+                                followers?.map((follower: any,index) => (
                                     <div className='follower-list flex justify-between items-center mb-3' key={follower._id}>
                                         <div className='flex items-center'>
                                             <Image
@@ -162,7 +164,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                                             disabled={isLoading} // Disable the button while the API call is in progress
                                         >
                                             <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[0.58px] text-[#ad00ff] w-5/5">
-                                                {userProfile._id === follower.followers[0]
+                                                {initialfollowers[index]
                                                         ? 'Following'
                                                         : 'Follow'}
                                             </div>
