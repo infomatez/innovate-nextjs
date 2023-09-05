@@ -90,7 +90,7 @@ const Header = () => {
             </div>
           ))}
         </ul>
-        {accessTokenFromCookie !== null ?
+        {accessTokenFromCookie ?
         <div className="w-[50%] md:w-[16vw] flex sm:w-[22vw] justify-end lg:w-[12vw]">
           <motion.button
             whileHover={{ scale: 1.05 }}
