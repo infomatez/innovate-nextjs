@@ -142,6 +142,7 @@ export default function MainPage() {
       }
     } catch (error) {
       console.error('Error liking/unliking post:', error);
+      toast.error("Please Login To Like the Post")
     }
   };
 
@@ -162,6 +163,8 @@ export default function MainPage() {
       }
     } catch (error) {
       console.error('Error saving/unsaving post:', error);
+      toast.error("Please Login To Save the Post")
+
     }
   };
 
