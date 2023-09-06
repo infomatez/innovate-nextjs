@@ -43,8 +43,6 @@ export default function MainPage() {
 
     try {
       console.log('Comment submitted:', content);
-
-      // Call the commentOnPost API function here
       await commentOnPost(accessTokenFromCookie, content, blog_id);
       toast.success("Comment Added Sucessfully")
 
@@ -68,16 +66,9 @@ export default function MainPage() {
         if (!blog_id) {
           return;
         }
-
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-
         console.log('Blog Data:', response?.data[0]?.data[0]);
-
-        // Store the data in the state variable
         setBlogData(response?.data[0]?.data[0]);
-
-
-        // Rest of your code...
       } catch (error) {
         console.error('Error fetching blog data:', error);
       }
@@ -90,10 +81,7 @@ export default function MainPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Call the getUserProfile API here
         const response = await getUserProfile(accessTokenFromCookie);
-
-        // Log the response
         console.log('User Profile Data:', response?.message[0]);
         setUserProfileData(response?.message[0]);
 
@@ -102,15 +90,12 @@ export default function MainPage() {
         console.log("trending response", trendingpostresponse?.data[0]?.data)
 
         setTrendingPostdata(trendingpostresponse?.data[0]?.data)
-
-
-        // Rest of your code...
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
     };
 
-    fetchData(); // Call the fetchData function when the component mounts
+    fetchData();
   }, [accessTokenFromCookie]);
 
 
@@ -128,16 +113,10 @@ export default function MainPage() {
   const handleLikeClick = async () => {
     try {
       if (liked) {
-        // User already liked the post, so perform an unlike action
-        await dislikePost(accessTokenFromCookie, blog_id);
-
-        // Update the liked state
+        await dislikePost(accessTokenFromCookie, blog_id)
         setLiked(false);
       } else {
-        // User is liking the post, so perform a like action
         await likePost(accessTokenFromCookie, blog_id);
-
-        // Update the liked state
         setLiked(true);
       }
     } catch (error) {
@@ -149,16 +128,10 @@ export default function MainPage() {
   const handleSaveClick = async () => {
     try {
       if (saved) {
-        // User already saved the post, so perform an unsave
         await unsavePost(accessTokenFromCookie, blog_id);
-
-        // Update the saved state
         setSaved(false);
       } else {
-        // User is saving the post, so perform a save
         await savePost(accessTokenFromCookie, blog_id);
-
-        // Update the saved state
         setSaved(true);
       }
     } catch (error) {
@@ -169,13 +142,13 @@ export default function MainPage() {
   };
 
 
-  const dateStr = blogData?.createdAt; // Assuming it's in a valid date string format
+  const dateStr = blogData?.createdAt;
   const date = new Date(dateStr);
 
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate = date.toLocaleDateString(undefined, options);
 
-  console.log(formattedDate); // Output: "Sep 5, 2023" (or in the "Nov 11, 2022" format)
+  console.log(formattedDate);
 
   const goNext = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
