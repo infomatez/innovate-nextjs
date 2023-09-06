@@ -107,7 +107,7 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
   };
 
 
-export const dislikePost = async (accessToken: string | undefined, postId: string) => {
+export const dislikePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post', 
@@ -127,7 +127,7 @@ export const dislikePost = async (accessToken: string | undefined, postId: strin
 };
 
 
-export const likePost = async (accessToken: string | undefined, postId: string) => {
+export const likePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post', 
@@ -147,7 +147,7 @@ export const likePost = async (accessToken: string | undefined, postId: string) 
 };
 
 
-export const savePost = async (accessToken: string | undefined, postId: string) => {
+export const savePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post', 
@@ -166,7 +166,7 @@ export const savePost = async (accessToken: string | undefined, postId: string) 
   }
 };
 
-export const unsavePost = async (accessToken: string | undefined, postId: string) => {
+export const unsavePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post', 
@@ -177,6 +177,27 @@ export const unsavePost = async (accessToken: string | undefined, postId: string
       url: `${API_BASE_URL}/post/unSavePostUser`, 
       data: {
         post_id: postId, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const commentOnPost = async (accessToken: string | undefined, content:string, postId:string | string[] | undefined) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/comment/commentOnPost`,
+      data: {
+        content,
+        post: postId,
       },
     });
     return response.data;

@@ -2,19 +2,27 @@ import { FC, useState } from 'react';
 import parse from 'html-react-parser';
 import style from './blogs.module.css';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 interface ICardProps {
   img: string;
   title: string;
   content: string;
   index: number;
+  _id:string
 }
 
-const Card: FC<ICardProps> = ({ img, title, content, index }) => {
+const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
+  const router = useRouter();
   const [showMore, setShowMore] = useState(false);
 
   const toggleShowMore = () => {
     setShowMore(!showMore);
+  };
+
+  
+  const handleTitleClick = (blogId: string) => {
+    router.push(`/main?blog_id=${blogId}`);
   };
 
 
@@ -36,7 +44,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index }) => {
         </picture>
       </div>
       <div className={`${style['timeline-content']} rounded-lg`}>
-        <h3 className='mb-3'>{title}</h3>
+        <h3 className='mb-3 cursor-pointer' onClick={() => handleTitleClick(_id)}>{title}</h3>
         <div className={`${style['image-box-inner']} mt-3`}>
           <div className="w-full md:w-[40%] mt-3">
             <div className="flex flex-row justify-end gap-3 relative items-center mt-[10px] md:mt-[50px] md:mb-50">

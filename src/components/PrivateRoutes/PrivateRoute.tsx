@@ -1,3 +1,4 @@
+// components/PrivateRoute/PrivateRoute.tsx
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/src/context/authContext';
