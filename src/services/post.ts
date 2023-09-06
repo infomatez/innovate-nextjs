@@ -145,3 +145,42 @@ export const likePost = async (accessToken: string | undefined, postId: string) 
     throw error;
   }
 };
+
+
+export const savePost = async (accessToken: string | undefined, postId: string) => {
+  try {
+    const response = await axios({
+      method: 'post', 
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/savePostUser`, 
+      data: {
+        post_id: postId, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unsavePost = async (accessToken: string | undefined, postId: string) => {
+  try {
+    const response = await axios({
+      method: 'post', 
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/unSavePostUser`, 
+      data: {
+        post_id: postId, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
