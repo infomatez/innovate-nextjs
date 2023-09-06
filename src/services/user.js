@@ -44,7 +44,7 @@ export const getUserProfile = async (accessToken) => {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        url: `${API_BASE_URL}/user/getUserFollowers?user_id=64949a69b99dd039cf4581d3`,
+        url: `${API_BASE_URL}/user/getUserFollowers?user_id=${userId}`,
       });
       return response.data;
     } catch (error) {
