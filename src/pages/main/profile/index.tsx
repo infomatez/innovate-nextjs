@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuthServerSideProps';
 import Cookies from 'js-cookie';
 import { getUserProfile } from '@/src/services/user';
-import { dislikePost, getAllPostsbyUserId, likePost } from "@/src/services/post"
+import { dislikePost, getAllPostsbyUserId, likePost, savePost, unsavePost } from "@/src/services/post"
 import Modal from './model';
 import PostSkeleton from '@/src/components/Skeleton/PostSkeleton';
 // import {logoutUser} from "@/src/services/auth"
@@ -80,14 +80,31 @@ export default function ProfilePage() {
   };
 
 
+  const handleSaveClick = (index: number, postId: string) => {
+    try {
+      if (savedPosts.includes(index)) {
 
-  const handleSaveClick = (index: number) => {
-    console.log(index, "saveeeeeeeeeeeeeeeeeeeeeeeee");
+        unsavePost(accessTokenFromCookie, postId)
+          .then(() => {
 
-    if (savedPosts.includes(index)) {
-      setSavedPosts(savedPosts.filter((item) => item !== index));
-    } else {
-      setSavedPosts([...savedPosts, index]);
+            setSavedPosts(savedPosts.filter((item) => item !== index));
+          })
+          .catch((error) => {
+            console.error('Error unsaving post:', error);
+          });
+      } else {
+
+        savePost(accessTokenFromCookie, postId)
+          .then(() => {
+
+            setSavedPosts([...savedPosts, index]);
+          })
+          .catch((error) => {
+            console.error('Error saving post:', error);
+          });
+      }
+    } catch (error) {
+      console.error('Error saving/unsaving post:', error);
     }
   };
 
@@ -129,6 +146,11 @@ export default function ProfilePage() {
     router.push(`/main/create-blog?blog_id=${blogId}`);
   };
 
+
+  const handleTitleClick = (blogId: string) => {
+    router.push(`/main?blog_id=${blogId}`);
+  };
+  
 
   const handleLogout = async () => {
     try {
@@ -263,7 +285,8 @@ export default function ProfilePage() {
                           <div key={index} className="col-span-12 lg:col-span-6 mb-4">
                             <div className="bg-[#000] p-4 rounded-[15px]">
                               <div className="flex items-start">
-                                <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase">
+                                <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase cursor-pointer"
+                                onClick={() => handleTitleClick(post?._id)}>
                                   {post.title}
                                 </h3>
                                 <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] " onClick={() => handleEditClick(post?._id)}>
@@ -290,7 +313,7 @@ export default function ProfilePage() {
                                         <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
                                       )}
                                     </button>
-                                    <button className="min-w-0 mr-px" onClick={() => handleSaveClick(index)}>
+                                    <button className="min-w-0 mr-px" onClick={() => handleSaveClick(index, post._id)}>
                                       {savedPosts.includes(index) ? (
                                         <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
                                       ) : (

@@ -12,6 +12,7 @@ interface Blog {
     img: string;
     title: string;
     content: string;
+    _id:string;
 }
 
 
@@ -33,6 +34,8 @@ const Blogs = () => {
             console.log(data, "--------------------------");
 
             setRandomBlogs((prevBlogs) => [...prevBlogs, ...(data as Blog[])]);
+            console.log(randomBlogs);
+            
               setLoading(false)
         } catch (error) {
             setLoading(true)
@@ -56,6 +59,9 @@ const Blogs = () => {
         skipRef.current += 10;
         fetchData();
     };
+
+    console.log(randomBlogs,"------------");
+    
 
     return (
         <section id="Blogs" className="pb-20 pt-10 h-auto bg-cover bg-star">
@@ -109,8 +115,8 @@ const Blogs = () => {
                                 ? Array.from({ length: 8 }, (_, index) => (
                                     <CardSkeleton key={index}  index={index}/>
                                 ))
-                                : randomBlogs.map(({ img, title, content }, index) => (
-                                    <Card key={index} img={img} title={title} content={content} index={index} />
+                                : randomBlogs.map(({ img, title, content ,_id}, index) => (
+                                    <Card key={index} img={img} title={title} content={content} index={index} _id={_id}/>
                                 ))}
                         </div>
                     </div>
