@@ -244,17 +244,17 @@ export default function MainPage() {
               />
             </button>
           </div>
-         {accessTokenFromCookie &&
+         
           <div className="flex flex-row justify-start gap-5 relative items-center">
           <button onClick={handleLikeClick}>
-            {liked ? (
+            {liked && accessTokenFromCookie ? (
               <FaIcons.FaThumbsUp className="w-10 fill-[#f00] w-[32px] h-[32px]" />
             ) : (
               <FaIcons.FaRegThumbsUp className="w-10 fill-white w-[32px] h-[32px]" />
             )}
           </button>
           <button onClick={handleSaveClick}>
-            {saved ? (
+            {saved && accessTokenFromCookie ? (
               <FaIcons.FaBookmark className="w-10 fill-[#bf02b5] w-[32px] h-[32px]" />
             ) : (
               <FaIcons.FaRegBookmark className="w-10 fill-white w-[32px] h-[32px]" />
@@ -264,7 +264,7 @@ export default function MainPage() {
             <FaIcons.FaShareSquare className="w-10 fill-white w-[32px] h-[32px]" />
           </button>
         </div>
-         }
+      
 
         </div>
         <hr className="opacity-25 bg-light relative bg-white w-full h-[2px]  block mt-5" />
