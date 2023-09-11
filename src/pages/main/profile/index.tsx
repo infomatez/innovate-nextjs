@@ -134,7 +134,7 @@ export default function ProfilePage() {
 
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === "http://localhost:9000/public/undefined"
-
+console.log(profilePicSrc,"==")
 
   const handleEditClick = (blogId: string) => {
     router.push(`/main/create-blog?blog_id=${blogId}`);
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                   width={25}
                   height={25}
                   alt="Profile"
-                  src="/default-user.jpg"
+                  src="/deafult-user.jpg"
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 /> :
                 <Image
@@ -202,7 +202,7 @@ export default function ProfilePage() {
                   width={25}
                   height={25}
                   alt="Profile"
-                  src="/default-user.jpg"
+                  src="/deafult-user.jpg"
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 /> :
                 <Image
