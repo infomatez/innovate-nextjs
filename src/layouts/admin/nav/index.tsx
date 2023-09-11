@@ -1,18 +1,21 @@
 import Cookies from "js-cookie";
 import BottomBar from "./Bottombar";
 import Sidebar from "./Sidebar";
+import { useAuth } from '@/src/context/authContext';
+
 
 type MainLayoutProps = {
     children?: React.ReactNode;
 };
 export default function UserPanelLayout({ children }: MainLayoutProps) {
   const accessTokenFromCookie = Cookies.get('accessToken');
+  const {accessToken} = useAuth();
 
 
     return (
         <div>
             <div className="flex flex-col sm:flex-row">
-                {accessTokenFromCookie && <Sidebar />}
+                {accessToken && <Sidebar />}
                 <div className="flex-1 px-4 lg:px-10 pb-10">
                     {children}
                 </div>
