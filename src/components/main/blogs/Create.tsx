@@ -151,7 +151,6 @@ const Create = () => {
     const selectedFont = e.family;
     const newfont = selectedFont.replace(/ /g, '+');
     setSelectedFont(selectedFont);
-    console.log('Updated url');
     setFontToggle(false);
     setBlogState((prev) => ({ ...prev, font: selectedFont }));
     setSuggestions([]);
@@ -181,9 +180,6 @@ const Create = () => {
 
   const handleBlogStateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
-    console.log('Event Target Name:', name);
-    console.log('Event Target Value:', value);
-    console.log('Selected Files:', files);
     if (name !== 'previewImage') {
       return setBlogState((prev) => ({ ...prev, [name]: value }));
     }

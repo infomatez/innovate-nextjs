@@ -11,7 +11,6 @@ interface ITrendingCardProps {
 const TrendingCard: FC<ITrendingCardProps> = ({ id, title, name, userImg, date, likes }) => {
   const dateStr = date; 
   const dates = new Date(dateStr);
-  console.log(userImg)
 
   const month = dates.toLocaleString('default', { month: 'long' });
   const day = dates.getDate();

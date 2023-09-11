@@ -22,11 +22,11 @@ export default function HomePage() {
 
 useEffect(() => {
   const handleRouteChangeStart = () => {
-    setIsLoading(true); // Show the loader when route changes start
+    setIsLoading(true);
   };
 
   const handleRouteChangeComplete = () => {
-    setIsLoading(false); // Hide the loader when route changes complete
+    setIsLoading(false);
   };
 
   router.events.on('routeChangeStart', handleRouteChangeStart);

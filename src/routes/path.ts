@@ -4,7 +4,7 @@ function path(root: string, subLink: string) {
 const ROOT_AUTH = '/';
 const ROOT_MAIN = '/main';
 const ROOT_PROFILE = '/main/profile'
-// ----------------------------------------------------------------------
+
 
 export const PATH_AUTH = {
   root: ROOT_AUTH,

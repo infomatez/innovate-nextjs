@@ -33,7 +33,7 @@ const ProfileEdit = () => {
   });
 
   const onSubmit: SubmitHandler<IProfileEditForm> = async (data: IProfileEditForm) => {
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true); 
 
     try {
       const updatedProfileData = {
@@ -66,9 +66,7 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        console.log('Fetching user profile...');
         const userProfileData = await getUserProfile(accessTokenFromCookie);
-        console.log('Fetched user profile:', userProfileData);
 
         setUserProfile(userProfileData);
 
@@ -91,10 +89,10 @@ const ProfileEdit = () => {
   const handleFavCategory = (value: string) => {
     setFavCategories((prev) => {
       if (prev?.includes(value)) {
-        // Remove the category if it's already in the array
+      
         return prev.filter((category) => category !== value);
       } else {
-        // Add the category if it's not in the array
+
         return [...(prev || []), value];
       }
     });
@@ -187,8 +185,6 @@ const ProfileEdit = () => {
               {profileImage ? (
                 <Image
                   src={URL.createObjectURL(profileImage)}
-
-                  // fill={true}
                   height={24} width={25}
                   className="rounded-lg object-contain sm:w-52 w-28 h-24 sm:h-52"
                   alt="profile image"

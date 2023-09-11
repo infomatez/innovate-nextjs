@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AuthProvider } from '../context/authContext'; // Update the path to your auth context
+import { AuthProvider } from '../context/authContext'; 
 import './globalnew.css';
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,11 @@ export default function MyApp(props: MyAppProps) {
 
   useEffect(() => {
     const handleRouteChangeStart = () => {
-      setIsLoading(true); // Show the loader when route changes start
+      setIsLoading(true); 
     };
   
     const handleRouteChangeComplete = () => {
-      setIsLoading(false); // Hide the loader when route changes complete
+      setIsLoading(false);
     };
   
     router.events.on('routeChangeStart', handleRouteChangeStart);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 const API_BASE_URL = process.env.API_BASE_URL;
 
-export const getUserProfile = async (accessToken) => {
+export const getUserProfile = async (accessToken:string | undefined) => {
   try {
       const response = await axios({
         method: 'get',
@@ -17,7 +17,7 @@ export const getUserProfile = async (accessToken) => {
     }
   };
 
-  export const editUserProfile = async (accessToken, dataToUpdate) => {
+  export const editUserProfile = async (accessToken:string | undefined, dataToUpdate:any) => {
     try {
       const response = await axios({
         method: 'post',
@@ -36,7 +36,7 @@ export const getUserProfile = async (accessToken) => {
   
 
 
-  export const getUserFollowers = async (accessToken, userId) => {
+  export const getUserFollowers = async (accessToken:string | undefined, userId:string) => {
     try {
       const response = await axios({
         method: 'get',
@@ -53,7 +53,7 @@ export const getUserProfile = async (accessToken) => {
   };
 
 
-  export const getUserFollowing = async (accessToken, userId) => {
+  export const getUserFollowing = async  (accessToken:string | undefined, userId:string) => {
     try {
       const response = await axios({
         method: 'get',
@@ -70,7 +70,7 @@ export const getUserProfile = async (accessToken) => {
   };
 
 
-  export const unfollowUser = async (accessToken, toUserId) => {
+  export const unfollowUser = async  (accessToken:string | undefined, toUserId:string) => {
     try {
       const response = await axios({
         method: 'put',
@@ -87,7 +87,7 @@ export const getUserProfile = async (accessToken) => {
   };
 
 
-  export const followUser = async (accessToken, toUserId) => {
+  export const followUser = async (accessToken:string | undefined, toUserId:string) => {
     try {
       const response = await axios({
         method: 'put',
