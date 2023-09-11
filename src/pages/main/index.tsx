@@ -21,6 +21,7 @@ MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</User
 export default function MainPage() {
   const router = useRouter();
   const { blog_id } = router.query;
+  const {accessToken} = useAuth();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
   const [content, setContent] = useState('');
@@ -223,14 +224,14 @@ export default function MainPage() {
          
           <div className="flex flex-row justify-start gap-5 relative items-center">
           <button onClick={handleLikeClick}>
-            {liked && accessTokenFromCookie ? (
+            {liked && accessToken ? (
               <FaIcons.FaThumbsUp className="w-10 fill-[#f00] w-[32px] h-[32px]" />
             ) : (
               <FaIcons.FaRegThumbsUp className="w-10 fill-white w-[32px] h-[32px]" />
             )}
           </button>
           <button onClick={handleSaveClick}>
-            {saved && accessTokenFromCookie ? (
+            {saved && accessToken ? (
               <FaIcons.FaBookmark className="w-10 fill-[#bf02b5] w-[32px] h-[32px]" />
             ) : (
               <FaIcons.FaRegBookmark className="w-10 fill-white w-[32px] h-[32px]" />
@@ -447,7 +448,7 @@ export default function MainPage() {
           </div>
         </div>
       </div>
-     {accessTokenFromCookie &&
+      {accessToken &&
       <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
       <div className="rightwrapper py-5 flex flex-col justify-between">
         <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">

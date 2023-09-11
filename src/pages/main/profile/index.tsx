@@ -13,7 +13,7 @@ import { getUserProfile } from '@/src/services/user';
 import { dislikePost, getAllPostsbyUserId, likePost, savePost, unsavePost } from "@/src/services/post"
 import Modal from './model';
 import PostSkeleton from '@/src/components/Skeleton/PostSkeleton';
-// import {logoutUser} from "@/src/services/auth"
+
 
 
 
@@ -35,16 +35,16 @@ export default function ProfilePage() {
   const [userPosts, setUserPosts] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const initialLikedPosts = userPosts?.map((post: any, index) =>
-    post?.likedBy?.includes(userProfile._id)
-  );
+  post?.likedBy?.includes(userProfile?._id)
+) || [];
 
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
 
   useEffect(() => {
 
     const initialLikedPosts = userPosts?.map((post: any, index) =>
-      post?.likedBy?.includes(userProfile._id)
-    );
+    post?.likedBy?.includes(userProfile?._id)
+  ) || [];
 
     setLikedPosts(initialLikedPosts);
   }, [userPosts, userProfile]);
@@ -54,20 +54,18 @@ export default function ProfilePage() {
   const handleLikeClick = async (index: number, postId: string) => {
     try {
       if (likedPosts[index]) {
-        // User already liked the post, so perform a dislike
+        
         await dislikePost(accessTokenFromCookie, postId);
 
-        // Update the likedPosts state by setting the index to false
+       
         setLikedPosts((prevLikedPosts) => {
           const updatedLikedPosts = [...prevLikedPosts];
           updatedLikedPosts[index] = false;
           return updatedLikedPosts;
         });
       } else {
-        // User is liking the post, so perform a like
         await likePost(accessTokenFromCookie, postId);
 
-        // Update the likedPosts state by setting the index to true
         setLikedPosts((prevLikedPosts) => {
           const updatedLikedPosts = [...prevLikedPosts];
           updatedLikedPosts[index] = true;
@@ -120,7 +118,7 @@ export default function ProfilePage() {
         const userProfileData = await getUserProfile(accessTokenFromCookie);
         console.log('Fetched user profile:', userProfileData?.message[0]);
         setUserProfile(userProfileData?.message[0]);
-        setIsLoading(false); // Set loading to false when profile is fetched
+        setIsLoading(false);
 
         const userId = userProfileData.message[0]._id;
         console.log(userId, "userrrrrrrrrrrrrrrrrrrr");
@@ -128,7 +126,7 @@ export default function ProfilePage() {
 
         console.log('Fetched posts by user ID:', posts?.data[0]?.data);
         setUserPosts(posts?.data[0]?.data);
-        setIsLoading(false); // Set loading to false when posts are fetched
+        setIsLoading(false); 
       }
       catch (error) {
         console.error('Error fetching user profile:', error);
