@@ -13,6 +13,7 @@ import { getUserProfile } from '@/src/services/user';
 import { dislikePost, getAllPostsbyUserId, likePost, savePost, unsavePost } from "@/src/services/post"
 import Modal from './model';
 import PostSkeleton from '@/src/components/Skeleton/PostSkeleton';
+import ShareModal from './ShareModal';
 
 
 
@@ -28,9 +29,24 @@ export default function ProfilePage() {
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
+  const [shareurl, setShareUrl]= useState("")
+
+
 
   const openModal = () => {
     setIsModalOpen(true);
+  };
+  const openShareModal = (type: 'profile' | 'post', postId?: string) => {
+    setShareType(type);
+    setIsShareModalOpen(true);
+
+    if (postId) {
+      const shareUrl = `${window.location.origin}/main?blog_id=${postId}`;
+      setShareUrl(shareUrl)
+      
+    }
   };
   const [userPosts, setUserPosts] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -106,11 +122,15 @@ export default function ProfilePage() {
     }
   };
 
-
+  const closeShareModal = () => {
+    setIsShareModalOpen(false);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -146,7 +166,9 @@ console.log(profilePicSrc,"==")
     router.push(`/main?blog_id=${blogId}`);
   };
 
-
+  const generateShareUrl = (blogId: string) => {
+    return `${window.location.origin}/main?blog_id=${blogId}`;
+  };
   const handleLogout = async () => {
     try {
 
@@ -230,7 +252,7 @@ console.log(profilePicSrc,"==")
                         >
                           Edit Profile
                         </button>
-                        <button className="py-2 px-3 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ml-3">
+                        <button className="py-2 px-3 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ml-3"  onClick={() => openShareModal('profile')}>
                           Share Profile
                         </button>
                       </div>
@@ -241,11 +263,11 @@ console.log(profilePicSrc,"==")
                       </div>
                       <div className="followers"></div>
                       <h1 className=" text-[12px] xl:text-[14px]">
-                        <button type='button' onClick={openModal}>{userProfile?.follower_details.length} Followers</button>
+                        <button type='button' onClick={openModal}>{userProfile?.follower_details?.length} Followers</button>
                       </h1>
                       <div className="following  text-[12px] xl:text-[14px]">
                         <h1>
-                          <button type='button' onClick={openModal}>{userProfile?.following_details.length} Following</button>
+                          <button type='button' onClick={openModal}>{userProfile?.following_details?.length} Following</button>
                         </h1>
                       </div>
                     </div>
@@ -337,7 +359,7 @@ console.log(profilePicSrc,"==")
                                         <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
                                       )}
                                     </button>
-                                    <button className="min-w-0 mr-px">
+                                    <button className="min-w-0 mr-px" onClick={() => openShareModal('post', post._id)}>
                                       <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
                                     </button>
                                   </div>
@@ -371,6 +393,9 @@ console.log(profilePicSrc,"==")
       </div>
       {isModalOpen && (
         <Modal userProfile={userProfile} onClose={closeModal} />
+      )}
+      {isShareModalOpen && (
+       <ShareModal  shareType={shareType} onClose={closeShareModal} shareurl={shareurl}/>
       )}
     </>
   );

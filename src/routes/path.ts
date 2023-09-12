@@ -4,6 +4,8 @@ function path(root: string, subLink: string) {
 const ROOT_AUTH = '/';
 const ROOT_MAIN = '/main';
 const ROOT_PROFILE = '/main/profile'
+const ROOT_HOME = '/main/dashboard'
+
 
 
 export const PATH_AUTH = {
@@ -14,7 +16,7 @@ export const PATH_AUTH = {
 };
 
 export const PATH_DASHBOARD ={
-  dashboard:ROOT_MAIN,
+  dashboard:ROOT_HOME,
   saved:path(ROOT_MAIN,'/saved'),
   create:path(ROOT_MAIN,'/create-blog'),
   notification:path(ROOT_MAIN,'/notification'),

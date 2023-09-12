@@ -38,7 +38,7 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
     }
   }
 
-  export const getAllPostsbyUserId = async (accessToken: string | undefined, userId: string) => {
+  export const getAllPostsbyUserId = async (accessToken: string | undefined |null, userId: string) => {
     try {
       const response = await axios({
         method: 'get',
@@ -54,9 +54,23 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
     }
   };
   
+  export const getAllSavePostsbyUserId = async (accessToken: string | undefined |null) => {
+    try {
+      const response = await axios({
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        url: `${API_BASE_URL}/post/userSavedPostsList`,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-
-  export const getAllPosts = async (accessToken:string|undefined, limit:number, skip:number) => {
+  export const getAllPosts = async (accessToken:string|undefined|null, limit:number, skip:number) => {
     try {
       const response = await axios({
         method: 'get',
@@ -90,7 +104,7 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
   }
 
 
-  export const getTrendingPosts = async (accessToken:string|undefined, limit:number, skip:number) => {
+  export const getTrendingPosts = async (accessToken:string|undefined|null, limit:number, skip:number) => {
     try {
       const response = await axios({
         method: 'get',
