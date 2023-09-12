@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 interface AuthContextData {
   accessToken: string | null;
   setAccessToken: (token: string | null) => void;
-  removeAccessToken: () => void; // New function declaration
+  removeAccessToken: () => void; 
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);

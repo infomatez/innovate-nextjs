@@ -22,7 +22,7 @@ const Trending = () => {
 
       const response = await getTrendingPosts(accessTokenFromCookie, limit, skip);
       const data = response?.data[0]?.data;
-      console.log(data, "--------------------------");
+
 
       setTrending(data);
       setLoading(false)

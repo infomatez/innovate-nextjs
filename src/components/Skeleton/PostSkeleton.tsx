@@ -1,4 +1,3 @@
-// PostSkeleton.tsx
 import React from 'react';
 
 const PostSkeleton: React.FC = () => {

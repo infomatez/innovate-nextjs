@@ -11,7 +11,6 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<IContactFrom>();
   const onSubmit:SubmitHandler<IContactFrom> =  (data:IContactFrom) => {
-    console.log({ data })
     // e.preventDefault();
     // var email = $("#email").val();
     // var subject = $("#subject").val();

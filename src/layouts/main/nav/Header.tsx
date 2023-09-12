@@ -18,7 +18,6 @@ const Header = () => {
   const [scrollNav, setScrollNav] = useState(false);
   const [username, setUsername] = useState('');
   const router = useRouter();
-  console.log('process :>> ', process.env.SITE_URL);
 
   const changeNav = () => {
     if (window.scrollY >= 100) {

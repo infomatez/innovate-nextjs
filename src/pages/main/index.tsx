@@ -70,7 +70,6 @@ export default function MainPage() {
           return;
         }
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-        console.log('Blog Data:', response?.data[0]?.data[0]);
         setBlogData(response?.data[0]?.data[0]);
       } catch (error) {
         console.error('Error fetching blog data:', error);
@@ -85,13 +84,10 @@ export default function MainPage() {
     const fetchData = async () => {
       try {
         const response = await getUserProfile(accessTokenFromCookie);
-        console.log('User Profile Data:', response?.message[0]);
         setUserProfileData(response?.message[0]);
 
 
         const trendingpostresponse = await getTrendingPosts(accessTokenFromCookie, 10, 0)
-        console.log("trending response", trendingpostresponse?.data[0]?.data)
-
         setTrendingPostdata(trendingpostresponse?.data[0]?.data)
       } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -172,10 +168,13 @@ export default function MainPage() {
   const dateStr = blogData?.createdAt;
   const date = new Date(dateStr);
 
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
   const formattedDate = date.toLocaleDateString(undefined, options);
-
-  console.log(formattedDate);
+  
 
   const goNext = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
@@ -231,7 +230,7 @@ export default function MainPage() {
         />
 
         <div className="relative flex gap-4 flex-row justify-start flex-wrap mt-4 mb-5">
-          {userProfileData?.favCategories?.map((category, index) => (
+          {userProfileData?.favCategories?.map((category:string[], index:number) => (
             <span
               key={index}
               className="text-sm font-['Montserrat'] inline font-medium leading-[6.9px] bg-[rgba(130,_130,_130,_0.49)] text-white rounded-lg relative py-3 px-4"
@@ -281,7 +280,7 @@ export default function MainPage() {
           </p>
           <Image width={100} height={100} alt="test5" src={`http://localhost:9000/public/${blogData?.img}`} />
           <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
-            Rest of blog Data.{' '}
+            Thank You for Reading Blog{' '}
           </p>
           <div>
             <div className="flex flex-row gap-3 w-full items-center cursor-pointer mb-4" onClick={toggleCommentBox}>
@@ -753,7 +752,7 @@ export default function MainPage() {
                 </h1>
               </div>
               <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                {trendingpostData?.map((item, index) => (
+                {trendingpostData?.map((item:any, index:number) => (
                   <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
                     <div className="title">
                       <h1 className="font-[600] text-[#2e2e2e] text-[12px]">

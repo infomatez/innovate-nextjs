@@ -31,11 +31,8 @@ const Blogs = () => {
 
             const response = await getAllPosts(accessTokenFromCookie, limit, skipRef.current);
             const data = response?.data[0]?.data;
-            console.log(data, "--------------------------");
 
             setRandomBlogs((prevBlogs) => [...prevBlogs, ...(data as Blog[])]);
-            console.log(randomBlogs);
-            
               setLoading(false)
         } catch (error) {
             setLoading(true)
@@ -60,7 +57,6 @@ const Blogs = () => {
         fetchData();
     };
 
-    console.log(randomBlogs,"------------");
     
 
     return (

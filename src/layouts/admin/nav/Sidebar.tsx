@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { motion } from "framer-motion";
-// import { useSelector } from "react-redux";
 import BookmarkSolidIcon from "@/src/components/icons/solid/BookmarkIcon";
 import HomeSolidIcon from "@/src/components/icons/solid/HomeIcon";
 import GroupSolidIcon from "@/src/components/icons/solid/GroupIcon";
@@ -14,7 +13,7 @@ import { PATH_DASHBOARD } from "@/src/routes/path";
 import profileImage from '@/public/alternate.png'
 
 const Sidebar = () => {
-  //   const { userData } = useSelector((state) => state.user);
+
   const [view, setView] = useState(false);
   const sideItems = [
     {
