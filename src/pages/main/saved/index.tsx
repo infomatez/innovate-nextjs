@@ -1,10 +1,42 @@
 import UserPanelLayout from "@/src/layouts/admin/nav";
 import { GetServerSideProps } from "next";
 import { withAuthServerSideProps } from "@/src/components/PrivateRoutes/withAuthServerSideProps";
+import { getUserProfile } from "@/src/services/user";
+import { useAuth } from "@/src/context/authContext";
+import { useEffect, useState } from "react";
+import { getAllSavePostsbyUserId } from "@/src/services/post";
+import Cookies from "js-cookie";
 
 SavedBlogPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function SavedBlogPage() {
+    const {accessToken} = useAuth();
+  const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+
+
+    
+    const [userSavedProfileData, setUserSaveProfile] = useState<any>(null);
+
+
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try {
+            const userSavedProfileData = await getAllSavePostsbyUserId(accessTokenFromCookie);
+            setUserSaveProfile(userSavedProfileData?.data);
+          
+       
+          }
+          catch (error) {
+            console.error('Error fetching user profile:', error);
+          }
+        };
+    
+        fetchUserProfile();
+ 
+
+      }, [])
+
     const styles = {
         paddingX: "sm:px-16 px-6",
         paddingY: "sm:py-16 py-6",
@@ -39,225 +71,31 @@ export default function SavedBlogPage() {
                             No blogs saved till now!
                         </h1>
 
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div><div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>   
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
-                        <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                            <div className="relative w-full sm:h-[230px] h-fit">
-                                <img
-                                    src={'https://lh3.googleusercontent.com/a/AAcHTtedue8CiQ9YWFdVWobpgmzoRYuw1W0ollyGhMPJCBs=s96-c'}
-                                    alt="name"
-                                    className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                    This is temparary Titiel
-                                </h3>
-                                <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                    This is the content part with the html parse data
-                                </p>
-                            </div>
-                            <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                <p className={`text-[14px]`}>#this</p>
-                                <p className={`text-[14px]`}>#new</p>
-                                <p className={`text-[14px]`}>#Blog</p>
-                            </div>
-                        </div>
+                       {userSavedProfileData?.map((post:any)=>(
+                         <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
+                         <div className="relative w-full sm:h-[230px] h-fit">
+                             <img
+                                 src={`http://localhost:9000/public/${post?.img}`}
+                                 alt="name"
+                                 className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
+                             />
+                         </div>
+                         <div className="mt-5">
+                             <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
+                                 {post?.title}
+                             </h3>
+                             <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
+                                 {post?.content}
+                             </p>
+                         </div>
+                         <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
+                             {post?.tags.map((tag:any)=>(
+                                <p className={`text-[14px]`}>#{tag}</p>
+                             ))}
+                         </div>
+                     </div>
+                       ))}
+                      
 
                     </div>
                 </div>

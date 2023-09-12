@@ -1,7 +1,7 @@
 import axios from 'axios';
 const API_BASE_URL = process.env.API_BASE_URL;
 
-export const getUserProfile = async (accessToken:string | undefined) => {
+export const getUserProfile = async (accessToken:string | undefined |null) => {
   try {
       const response = await axios({
         method: 'get',
@@ -53,7 +53,7 @@ export const getUserProfile = async (accessToken:string | undefined) => {
   };
 
 
-  export const getUserFollowing = async  (accessToken:string | undefined, userId:string) => {
+  export const getUserFollowing = async  (accessToken:string | undefined | null, userId:string) => {
     try {
       const response = await axios({
         method: 'get',

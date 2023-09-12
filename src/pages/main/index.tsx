@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { likePost, savePost, dislikePost, unsavePost, commentOnPost } from '@/src/services/post';
 import { followUser, getUserProfile, unfollowUser } from '@/src/services/user';
 import { toast } from 'react-hot-toast';
+import ShareModal from './profile/ShareModal';
 
 
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
@@ -34,6 +35,8 @@ export default function MainPage() {
   const initialLiked = blogData?.likedBy?.includes(userId);
   const [liked, setLiked] = useState(initialLiked || false);
   const initialsavePost = userProfileData?.savedPosts?.includes(blog_id)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
 
 
   const [saved, setSaved] = useState(initialsavePost || false);
@@ -45,7 +48,6 @@ export default function MainPage() {
     e.preventDefault();
 
     try {
-      console.log('Comment submitted:', content);
       await commentOnPost(accessTokenFromCookie, content, blog_id);
       toast.success("Comment Added Sucessfully")
 
@@ -54,7 +56,14 @@ export default function MainPage() {
       console.error('Error submitting comment:', error);
     }
   };
+  const openShareModal = (type: 'profile' | 'post') => {
+    setShareType(type);
+    setIsShareModalOpen(true);
+  };
 
+  const closeShareModal = () => {
+    setIsShareModalOpen(false);
+  };
   const swiperRef = useRef<any>();
 
   const goPrev = () => {
@@ -183,6 +192,7 @@ export default function MainPage() {
   };
 
   return (
+    <>
     <section className="flex  z-10 py-5 overflow-auto">
       <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
         <h1
@@ -266,7 +276,7 @@ export default function MainPage() {
                 <FaIcons.FaRegBookmark className="w-10 fill-white w-[32px] h-[32px]" />
               )}
             </button>
-            <button>
+            <button onClick={() => openShareModal('post')}>
               <FaIcons.FaShareSquare className="w-10 fill-white w-[32px] h-[32px]" />
             </button>
           </div>
@@ -795,5 +805,9 @@ export default function MainPage() {
         </div>
       }
     </section>
+    {isShareModalOpen && (
+       <ShareModal  shareType={shareType} onClose={closeShareModal}/>
+      )}
+    </>
   );
 }
