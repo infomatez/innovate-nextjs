@@ -200,22 +200,3 @@ export const unsavePost = async (accessToken: string | undefined, postId: string
 };
 
 
-export const commentOnPost = async (accessToken: string | undefined, content:string, postId:string | string[] | undefined) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      url: `${API_BASE_URL}/comment/commentOnPost`,
-      data: {
-        content,
-        post: postId,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
