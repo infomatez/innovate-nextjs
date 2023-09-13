@@ -45,9 +45,9 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
       </div>
       <div className={`${style['timeline-content']} rounded-lg`}>
         <h3 className='mb-3 cursor-pointer' onClick={() => handleTitleClick(_id)}>{title}</h3>
-        <div className={`${style['image-box-inner']} mt-3`}>
+        <div className={`${style['image-box-inner']} mt-3 d-flex flex-col`}>
           <div className="w-full md:w-[40%] mt-3">
-            <div className="flex flex-row justify-end gap-3 relative items-center mt-[10px] md:mt-[50px] md:mb-50">
+            {/* <div className="flex flex-row justify-end gap-3 relative items-center mt-[10px] md:mt-[50px] md:mb-50">
               <Image
                 src="https://file.rendit.io/n/Z14BG1N5XdMogNlZjMZN.svg"
                 className="min-h-0 min-w-0 mr-px relative w-4 shrink-0"
@@ -78,8 +78,8 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
                 alt="test2"
                 fill={true}
               />
-            </div>
-            <div className="justify-start items-start gap-3 inline-flex mt-4 relative md:absolute bottom-0 left-0">
+            </div> */}
+            <div className="justify-start items-start gap-3 inline-flex mt-4 relative  bottom-0 left-0">
               <button className="px-[10px] py-2 bg-fuchsia-700 rounded-md justify-center items-center gap-2.5 flex mb-3 mt-3">
                 <div className="text-white text-[13.021600723266602px] font-medium leading-3 ">Convert To Speech!</div>
               </button>
@@ -94,11 +94,11 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
             </div>
           </div>
 
-          {img && (
-            <div className="w-full md:flex-1 md:ml-4 mt-3 md:mt-0 mb-3">
-              <Image width={100} height={75} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px]" alt="test4" />
+          
+            <div className="w-full md:flex-1 mt-2 mb-3">
+              <Image width={100} height={90} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px] h-[280px] py-2" alt="test4" />
             </div>
-          )}
+          
         </div>
         <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white ">
           {showMore ? parse(content) : parse(content.split(' ').slice(0, 20).join(' '))}

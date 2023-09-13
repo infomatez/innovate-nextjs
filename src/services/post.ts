@@ -200,3 +200,18 @@ export const unsavePost = async (accessToken: string | undefined, postId: string
 };
 
 
+export const getAllCategory = async (accessToken: string | undefined | null) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/getBlogCategory`,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
