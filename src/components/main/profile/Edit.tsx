@@ -8,6 +8,7 @@ import { useAuth } from '@/src/context/authContext';
 import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { getAllCategory } from '@/src/services/post';
 
 interface IProfileEditForm {
   username: string;
@@ -22,6 +23,7 @@ const ProfileEdit = () => {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [favcategories, setFavCategories] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, setValue } = useForm<IProfileEditForm>({
     defaultValues: {
@@ -77,6 +79,8 @@ const ProfileEdit = () => {
         setValue('name', userProfileData?.message[0]?.name || '');
         setValue('bio', userProfileData?.message[0]?.bio || '');
         setValue('socialLinks', userProfileData?.message[0]?.socialLinks?.join('\n') || '');
+        const categoryData = await getAllCategory(accessTokenFromCookie);
+        setCategories(categoryData?.data);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }
@@ -84,6 +88,7 @@ const ProfileEdit = () => {
 
     fetchUserProfile();
   }, []);
+console.log(categories,"lllllllllllllssssssssssssssss");
 
 
   const handleFavCategory = (value: string) => {
@@ -164,17 +169,17 @@ const ProfileEdit = () => {
                 Favorite Categories
               </p>
               <div className="flex flex-wrap justify-center gap-1 sm:gap-2 ">
-                {filters.map((f, index) => (
+                {categories.map((f:any, index) => (
                   <button
                     type="button"
                     key={`filter-button-${index}`}
                     className="btn favCategoryBtn whitespace-nowrap w-fit"
-                    style={favcategories?.includes(f.text) ? { background: 'white', color: 'black' } : {}}
+                    style={favcategories?.includes(f.name) ? { background: 'white', color: 'black' } : {}}
                     onClick={() => {
-                      handleFavCategory(f.text);
+                      handleFavCategory(f.name);
                     }}
                   >
-                    {f.text}
+                    {f.name}
                   </button>
                 ))}
               </div>

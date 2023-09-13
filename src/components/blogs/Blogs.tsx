@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import TuneIcon from "../icons/solid/TuneIcon";
 import { filters } from "@/src/utils/constant";
 import Card from "./Card";
-import { getAllPosts } from "@/src/services/post";
+import { getAllCategory, getAllPosts } from "@/src/services/post";
 import Cookies from "js-cookie";
 import CardSkeleton from "../Skeleton/AllbogsSkeleton";
 
@@ -22,6 +22,8 @@ const Blogs = () => {
     const [selectedFilterId, setSelectedFilterId] = useState(0);
     const [loading, setLoading] = useState(false)
     const [selectedId, setSelectedId] = useState(false);
+    const [categories, setCategories] = useState([]);
+
     const skipRef = useRef(0); 
 
     const fetchData = async () => {
@@ -34,13 +36,15 @@ const Blogs = () => {
 
             setRandomBlogs((prevBlogs) => [...prevBlogs, ...(data as Blog[])]);
               setLoading(false)
+        const categoryData = await getAllCategory(accessTokenFromCookie);
+        setCategories(categoryData?.data);
         } catch (error) {
             setLoading(true)
             console.error('Error fetching data:', error);
             setLoading(false)
         }
     };
-
+console.log(categories)
     useEffect(() => {
         fetchData();
     }, [accessTokenFromCookie]);
@@ -85,8 +89,8 @@ const Blogs = () => {
                     {selectedId && (
                         <div className="w-auto bg-black-100 bg-opacity-50 p-2 rounded-2xl absolute z-10 right-0 top-12">
                             <div className=" flex justify-center flex-col">
-                                {filters.slice(0, 5).map((f, index) => (
-                                    <button className="btn" key={index}>{f.text}</button>
+                                {categories.slice(0, 5).map((f:string, index) => (
+                                    <button className="btn" key={index}>{f.name}</button>
                                 ))}
                             </div>
                         </div>
@@ -98,8 +102,8 @@ const Blogs = () => {
                 <div className="hidden md:block h-[10vh]">
                     <div className="w-full">
                         <div className="flex justify-center">
-                            {filters.map((f, index) => (
-                                <button key={index} className={`btn whitespace-nowrap ${selectedFilterId == f.id && 'bg-white text-black-0'}`} onClick={() => { setSelectedFilterId(selectedFilterId == f.id ? 0 : f.id); }}>{f.text}</button>
+                            {categories.map((f:any, index) => (
+                                <button key={index} className={`btn whitespace-nowrap ${selectedFilterId == f._id && 'bg-white text-black-0'}`} onClick={() => { setSelectedFilterId(selectedFilterId == f._id ? 0 : f._id); }}>{f.name}</button>
                             ))}
                         </div>
                     </div>

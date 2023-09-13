@@ -15,7 +15,7 @@ import CloseIcon from '@/src/components/icons/border/CloseIcon';
 import AddCircleIcon from '@/src/components/icons/border/AddCircleIcon';
 import { EditorProps } from 'react-draft-wysiwyg';
 import LogoIcon from '@/public/byteBlogger1.png';
-import { createPost, updatePost } from '@/src/services/post';
+import { createPost, getAllCategory, updatePost } from '@/src/services/post';
 import Loader from '../../Loader/Loader';
 import { toast } from 'react-hot-toast';
 import { getPostsByBlogId } from '@/src/services/post';
@@ -47,11 +47,17 @@ const Create = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [fontToggle, setFontToggle] = useState(false);
   const [suggestionToggle, setSuggestionToggle] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
   const [selectedFont, setSelectedFont] = useState('');
   const fonts = [''];
 
   const handleRemoveTag = (target: string) => {
     setBlogState((prev) => ({ ...prev, tags: prev.tags.filter((tag) => tag !== target) }));
+  };
+  const handleCategoryChange = (event: any) => {
+    setSelectedCategory(event.target.value); 
   };
 
 
@@ -63,7 +69,7 @@ const Create = () => {
         }
 
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-
+        console.log(response)
         if (response.message) {
           const contentFromAPI = response?.data[0]?.data[0]?.content;
           const contentState = ContentState.createFromBlockArray(
@@ -78,6 +84,7 @@ const Create = () => {
             font: response?.data[0]?.data[0]?.font,
           });
           setEditorState(newEditorState);
+          setSelectedCategory(response?.data[0]?.data[0]?.category)
         } else {
           console.error("Failed to fetch blog post data.");
         }
@@ -89,9 +96,20 @@ const Create = () => {
     fetchBlogData();
   }, [blog_id, accessTokenFromCookie]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getAllCategory(accessTokenFromCookie);
+        setCategories(categoryData?.data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
 
+    fetchCategories();
+  }, []);
 
-
+  console.log(categories, "okokokokokoko")
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isLoading) {
@@ -101,7 +119,8 @@ const Create = () => {
       !blogState.title ||
       !editorState.getCurrentContent().hasText() ||
       !blogState.tags.length ||
-      !blogState.previewImage
+      !blogState.previewImage ||
+      !selectedCategory
     ) {
       toast.error('Please fill in all required fields.');
       return;
@@ -116,6 +135,7 @@ const Create = () => {
       formData.append('content', editorState.getCurrentContent().getPlainText());
       formData.append('tags', JSON.stringify(blogState.tags));
       formData.append('font', blogState.font);
+      formData.append('category', selectedCategory);
 
       if (blog_id) {
         const response = await updatePost(accessTokenFromCookie, blog_id, formData);
@@ -127,6 +147,8 @@ const Create = () => {
         }
       } else {
         const response = await createPost(accessTokenFromCookie, formData);
+        console.log('Post created successfully!');
+
         if (response.message) {
           console.log('Post created successfully!');
           router.push(PATH_DASHBOARD.profile);
@@ -331,8 +353,20 @@ const Create = () => {
                 Add Image <br /> (JPG, JPEG AND PNG)
               </label>
             </div>
-
-            <div className="h-fit">
+            <div className=' flex flex-col gap-1 mb-4 cursor-pointer'>
+              <label htmlFor="tags" className="text-white font-inter text-[6px] text-sm font-semibold ">
+                Select Your Category
+              </label>
+              <select value={selectedCategory} onChange={handleCategoryChange} className='cursor-pointer rounded-md outline-none sm:py-3 text-[7px] text-base py-[6px] px-1 bg-[#252525] text-white w-full'>
+                <option className="cursor-pointer" value="">Select a category</option>
+                {categories?.map((category) => (
+                  <option key={category._id} value={category?.name} className='cursor-pointer'>
+                    {category?.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="h-fit mt-2">
               <div className="flex flex-col gap-1 mb-4">
                 <label htmlFor="tags" className="text-white font-inter text-[6px] sm:text-xs font-semibold ">
                   Add Tags
