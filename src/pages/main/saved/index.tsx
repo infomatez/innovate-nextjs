@@ -6,36 +6,42 @@ import { useAuth } from "@/src/context/authContext";
 import { useEffect, useState } from "react";
 import { getAllSavePostsbyUserId } from "@/src/services/post";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 SavedBlogPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function SavedBlogPage() {
-    const {accessToken} = useAuth();
-  const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+    const router = useRouter();
+    const { accessToken } = useAuth();
+    const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
 
 
-    
+
     const [userSavedProfileData, setUserSaveProfile] = useState<any>(null);
 
+    const handleTitleClick = (blogId: string) => {
+        router.push(`/main?blog_id=${blogId}`);
+      };
+    
 
 
     useEffect(() => {
         const fetchUserProfile = async () => {
-          try {
-            const userSavedProfileData = await getAllSavePostsbyUserId(accessTokenFromCookie);
-            setUserSaveProfile(userSavedProfileData?.data);
-          
-       
-          }
-          catch (error) {
-            console.error('Error fetching user profile:', error);
-          }
-        };
-    
-        fetchUserProfile();
- 
+            try {
+                const userSavedProfileData = await getAllSavePostsbyUserId(accessTokenFromCookie);
+                setUserSaveProfile(userSavedProfileData?.data);
 
-      }, [])
+
+            }
+            catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        };
+
+        fetchUserProfile();
+
+
+    }, [])
 
     const styles = {
         paddingX: "sm:px-16 px-6",
@@ -67,37 +73,41 @@ export default function SavedBlogPage() {
                     className={`${styles.padding} -mt-14 md:-mt-20 pb-14 flex flex-wrap justify-around gap-7`}
                 >
                     <div className="grid grid-cols-12 gap-4 w-full gap-7 h-full overflow-y-scroll scrollbar-hide">
-                        <h1 className="title text-3xl text-white font-bold mt-16 col-span-12 text-center">
-                            No blogs saved till now!
-                        </h1>
-
-                       {userSavedProfileData?.map((post:any)=>(
-                         <div className="blog-bg-ct p-5 rounded-2xl w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto">
-                         <div className="relative w-full sm:h-[230px] h-fit">
-                             <img
-                                 src={`http://localhost:9000/public/${post?.img}`}
-                                 alt="name"
-                                 className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
-                             />
-                         </div>
-                         <div className="mt-5">
-                             <h3 className="text-white font-bold sm:text-[24px] text-[14px]">
-                                 {post?.title}
-                             </h3>
-                             <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
-                                 {post?.content}
-                             </p>
-                         </div>
-                         <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                             {post?.tags.map((tag:any)=>(
-                                <p className={`text-[14px]`}>#{tag}</p>
-                             ))}
-                         </div>
-                     </div>
-                       ))}
-                      
-
+                        {userSavedProfileData && userSavedProfileData.length === 0 ? (
+                            <h1 className="title text-3xl text-white font-bold mt-16 col-span-12 text-center">
+                                No blogs saved till now!
+                            </h1>
+                        ) : (
+                            userSavedProfileData?.map((post: any) => (
+                                <div
+                                    className="blog-bg-ct p-5 rounded-2xl mt-16 w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto"
+                                    key={post?._id}
+                                >
+                                    <div className="relative w-full sm:h-[230px] h-fit">
+                                        <img
+                                            src={`http://localhost:9000/public/${post?.img}`}
+                                            alt="name"
+                                            className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
+                                        />
+                                    </div>
+                                    <div className="mt-5">
+                                        <h3 className="text-white font-bold sm:text-[24px] text-[14px] cursor-pointer" onClick={() => handleTitleClick(post?._id)}>
+                                            {post?.title}
+                                        </h3>
+                                        <p className="mt-2 text-secondary sm:text-[18px] text-[11px]">
+                                            {post?.content}
+                                        </p>
+                                    </div>
+                                    <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
+                                        {post?.tags?.map((tag: any) => (
+                                            <p className={`text-[14px]`}>#{tag}</p>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
+
                 </div>
             </div>
         </section>
