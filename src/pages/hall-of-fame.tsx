@@ -55,5 +55,5 @@ export default function HOF() {
         </div>
       </div>
     </div>
-  );n
+  );
 }

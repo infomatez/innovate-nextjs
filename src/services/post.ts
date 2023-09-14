@@ -215,3 +215,22 @@ export const getAllCategory = async (accessToken: string | undefined | null) => 
     throw error;
   }
 };
+
+export const getPostsByCategory = async (
+  accessToken: string | undefined | null,
+  category: string
+) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      url: `${API_BASE_URL}/post/getAllPost?category_name=${category}`,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
