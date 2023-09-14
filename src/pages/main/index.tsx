@@ -7,7 +7,7 @@ import { useAuth } from '@/src/context/authContext';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Image from 'next/image';
-import { getPostsByBlogId, getTrendingPosts } from '@/src/services/post';
+import { getPostsByBlogId, getPostsByCategory, getTrendingPosts } from '@/src/services/post';
 import Cookies from 'js-cookie';
 import { formatDistanceToNow } from 'date-fns';
 import { useRouter } from 'next/router';
@@ -29,6 +29,7 @@ export default function MainPage() {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState('');
   const [blogData, setBlogData] = useState<any>(null);
+  const [relatedBlogData, setRelatedBlogData] = useState<any>(null);
   const userId = blogData?.user_details?._id
   const [userProfileData, setUserProfileData] = useState<any>(null);
   const [trendingpostData, setTrendingPostdata] = useState<any>(null)
@@ -41,8 +42,18 @@ export default function MainPage() {
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
   const commentsContainerRef = useRef(null);
 
-
+  const initialrealtedLikedPosts = relatedBlogData?.map((post: any) =>
+  post?.likedBy?.includes(userId)
+) || [];
+const initialtrendingLikedPosts = trendingpostData?.map((post: any) =>
+post?.likedBy?.includes(userId)
+) || [];
+  const [likedPosts, setLikedPosts] = useState<boolean[]>(initialrealtedLikedPosts);
   const [saved, setSaved] = useState(initialsavePost || false);
+  const [savedrealtedblog,setSavedrealtedBlog] =useState<any[]>(initialrealtedLikedPosts);
+  const [savedtrendingblog,setSavedTrendingBlog] =useState<any[]>(initialtrendingLikedPosts);
+
+
 
   const toggleCommentBox = () => {
     setCommentBoxOpen((prevState) => !prevState);
@@ -110,6 +121,12 @@ export default function MainPage() {
         }
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
         setBlogData(response?.data[0]?.data[0]);
+
+        const category = response?.data[0]?.data[0]?.category
+
+
+        const relatedBlogResponse = await getPostsByCategory(accessTokenFromCookie, category);
+        setRelatedBlogData(relatedBlogResponse?.data[0]?.data);
       } catch (error) {
         console.error('Error fetching blog data:', error);
       }
@@ -147,7 +164,15 @@ export default function MainPage() {
 
     const initialsavePost = userProfileData?.savedPosts?.includes(blog_id)
     setSaved(initialsavePost)
-  }, [blog_id, blogData]);
+
+
+    const initialrealtedLikedPosts = relatedBlogData?.map((post: any) =>
+    post?.likedBy?.includes(userId)
+  ) || [];
+ 
+  setLikedPosts(initialrealtedLikedPosts)
+
+  }, [blog_id, blogData,relatedBlogData]);
 
   const handleLikeClick = async () => {
     try {
@@ -163,6 +188,35 @@ export default function MainPage() {
       toast.error("Please Login To Like the Post")
     }
   };
+  
+
+
+  
+const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
+  try {
+      if (likedPosts[index]) {
+
+          await dislikePost(accessTokenFromCookie, postId);
+
+
+          setLikedPosts((prevLikedPosts) => {
+              const updatedLikedPosts = [...prevLikedPosts];
+              updatedLikedPosts[index] = false;
+              return updatedLikedPosts;
+          });
+      } else {
+          await likePost(accessTokenFromCookie, postId);
+
+          setLikedPosts((prevLikedPosts) => {
+              const updatedLikedPosts = [...prevLikedPosts];
+              updatedLikedPosts[index] = true;
+              return updatedLikedPosts;
+          });
+      }
+  } catch (error) {
+      console.error('Error liking/disliking post:', error);
+  }
+};
 
 
   const handleFollowClick = async () => {
@@ -185,7 +239,7 @@ export default function MainPage() {
       console.error('Error following/unfollowing user:', error);
     }
   };
-console.log(comments,";;;;;;;;;;;;;;;")
+ 
 
   const handleSaveClick = async () => {
     try {
@@ -200,6 +254,57 @@ console.log(comments,";;;;;;;;;;;;;;;")
       console.error('Error saving/unsaving post:', error);
       toast.error("Please Login To Save the Post")
 
+    }
+  };
+
+
+  const handlerealtedSaveClick = async (index: number, realtedBlogId: string) => {
+    try {
+      if (savedrealtedblog[index]) {
+        await unsavePost(accessTokenFromCookie, realtedBlogId);
+  
+        setSavedrealtedBlog((prevSavedState) => {
+          const updatedSavedState = [...prevSavedState];
+          updatedSavedState[index] = false;
+          return updatedSavedState;
+        });
+      } else {
+        await savePost(accessTokenFromCookie, realtedBlogId);
+  
+        setSavedrealtedBlog((prevSavedState) => {
+          const updatedSavedState = [...prevSavedState];
+          updatedSavedState[index] = true;
+          return updatedSavedState;
+        });
+      }
+    } catch (error) {
+      console.error('Error saving/unsaving related blog:', error);
+      toast.error("Please Login To Save the Post");
+    }
+  };
+
+  const handletrendingSaveClick = async (index: number, realtedBlogId: string) => {
+    try {
+      if (savedtrendingblog[index]) {
+        await unsavePost(accessTokenFromCookie, realtedBlogId);
+  
+        setSavedTrendingBlog((prevSavedState) => {
+          const updatedSavedState = [...prevSavedState];
+          updatedSavedState[index] = false;
+          return updatedSavedState;
+        });
+      } else {
+        await savePost(accessTokenFromCookie, realtedBlogId);
+  
+        setSavedTrendingBlog((prevSavedState) => {
+          const updatedSavedState = [...prevSavedState];
+          updatedSavedState[index] = true;
+          return updatedSavedState;
+        });
+      }
+    } catch (error) {
+      console.error('Error saving/unsaving related blog:', error);
+      toast.error("Please Login To Save the Post");
     }
   };
   const [likedComments, setLikedComments] = useState<string[]>([]);
@@ -592,254 +697,44 @@ console.log(comments,";;;;;;;;;;;;;;;")
                   </h1>
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today&apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                  {relatedBlogData?.map((post: any,index) => (
+                    <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl" key={post?._id}>
+                      <div className="title">
+                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
+                          {post?.title}
+                        </h1>
+                      </div>
+                      <div className="details flex justify-between mt-2">
+                        <div className="left flex gap-1 items-center">
+                          <div className="prof">
+                            <Image width={25} height={25} alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                          </div>
+                          <div className="writer xl:text-xs text-[10px]">
+                            <h1>{post?.name}</h1>
+                          </div>
+                          <div className="actions flex gap-1 items-center">
+                          <button className="min-w-0 mr-px" onClick={() => handleRealtedBlogLikeClick(index, post?._id)}>
+                        {likedPosts[index] ? (
+                            <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
+                        ) : (
+                            <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
+                        )}
+                    </button>
+                    <button className="min-w-0 mr-px"  onClick={()=>handlerealtedSaveClick(index, post?._id)}>
+                        {savedrealtedblog[index] ? (
+                            <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                        ) : (
+                            <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                        )}
+                    </button>
+                          </div>
                         </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
+                        <div className="right flex items-center">
+                          <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]">{post?.likes} </div>
                         </div>
                       </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
                     </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                    <div className="title">
-                      <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                        The Importance of End-Point Security in Today &apos; Cutting-Edge Tech World
-                      </h1>
-                    </div>
-                    <div className="details flex justify-between mt-2">
-                      <div className="left flex gap-1 items-center">
-                        <div className="prof">
-                          <Image width={25} height={25} alt="test9" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
-                        </div>
-                        <div className="writer xl:text-xs text-[10px]">
-                          <h1>Amartya Raj</h1>
-                        </div>
-                        <div className="actions flex gap-1 items-center">
-                          <button>
-                            <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                          <button className="min-w-0 mr-px">
-                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="right flex items-center">
-                        <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]"> 100K </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
               <div className="flex justify-center">
@@ -873,9 +768,13 @@ console.log(comments,";;;;;;;;;;;;;;;")
                             <h1>{item.user_details?.name}</h1>
                           </div>
                           <div className="actions flex gap-1 items-center">
-                            <button className="min-w-0 mr-px">
-                              <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                            </button>
+                          <button className="min-w-0 mr-px"  onClick={()=>handletrendingSaveClick(index, item?._id)}>
+                        {savedtrendingblog[index] ? (
+                            <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                        ) : (
+                            <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                        )}
+                    </button>
                           </div>
                         </div>
                         <div className="right flex items-center">
