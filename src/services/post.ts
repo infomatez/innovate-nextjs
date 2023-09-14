@@ -70,22 +70,50 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
     }
   };
 
-  export const getAllPosts = async (accessToken:string|undefined|null, limit:number, skip:number) => {
+  export const getAllPosts = async (
+    accessToken: string | undefined | null,
+    limit: number | undefined | null,
+    skip: number | undefined | null,
+    search: string | undefined | null
+  ) => {
     try {
+      // Initialize an empty array to hold the URL query parameters
+      const queryParams = [];
+  
+      // Add 'limit' parameter if it has a value
+      if (limit !== undefined && limit !== null) {
+        queryParams.push(`limit=${limit}`);
+      }
+  
+      // Add 'skip' parameter if it has a value
+      if (skip !== undefined && skip !== null) {
+        queryParams.push(`skip=${skip}`);
+      }
+  
+      // Add 'search' parameter if it has a value
+      if (search !== undefined && search !== null) {
+        queryParams.push(`search=${search}`);
+      }
+  
+      // Construct the final URL with optional parameters
+      const url =
+        `${API_BASE_URL}/post/getAllPost` +
+        (queryParams.length > 0 ? `?${queryParams.join('&')}` : '');
+  
       const response = await axios({
         method: 'get',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        url: `${API_BASE_URL}/post/getAllPost?limit=${limit}&skip=${skip}`,
+        url: url,
       });
       return response.data;
     } catch (error) {
       throw error;
     }
   };
-
+  
 
   export const getPostsByBlogId = async (accessToken:String|undefined,blogId:string |string[]) => {
     try {

@@ -25,7 +25,10 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
 
 
     const initialFollowUser = userProfile?.followers?.includes(id)
-    const [isFollowing, setIsFollowing] = useState(initialFollowUser || false);
+   
+    
+    
+    const [isFollowing, setIsFollowing] = useState(initialFollowUser);
 
     function formatDate(inputDate: any) {
         const date = new Date(inputDate);
@@ -176,7 +179,7 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
                     </p>
                     <div className="status">
                         <button className="border border-[#cc00ff] rounded-2xl py-1 px-2 text-sm font-semibold" onClick={handleFollowClick}>
-                            {isFollowing ? 'Following' : 'Follow'}
+                            {userProfile?.followers?.includes(id) ? 'Following' : 'Follow'}
                         </button>
                     </div>
                 </div>
@@ -193,7 +196,7 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
                             <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
                         )}
                     </button>
-                    <button className="min-w-0 mr-px"  onClick={handleSaveClick}>
+                    <button className="min-w-0 mr-px" onClick={handleSaveClick}>
                         {saved ? (
                             <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
                         ) : (
@@ -225,8 +228,9 @@ export default function dashboard() {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
     const [shareurl, setShareUrl] = useState("")
+    const [searchQuery, setSearchQuery] = useState('');
 
-
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const fetchUserProfileAndPosts = async () => {
@@ -235,24 +239,43 @@ export default function dashboard() {
                 setUserProfile(userProfileData?.message[0]);
 
                 const userId = userProfileData?.message[0]?._id;
-                const posts = await getAllPosts(accessToken, 10, 0);
+                const posts = await getAllPosts(accessToken, 10, 4, searchQuery); 
                 setUserPosts(posts?.data[0]?.data);
 
-                const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0)
-                setTrendingPostdata(trendingpostresponse?.data[0]?.data)
+                const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0);
+                setTrendingPostdata(trendingpostresponse?.data[0]?.data);
 
                 const followingData = await getUserFollowing(accessToken, userId);
                 setFollowing(followingData?.data[0]?.following_details);
-
             } catch (error) {
                 console.error('Error fetching user profile and posts:', error);
-
             }
         };
-        fetchUserProfileAndPosts();
 
+        fetchUserProfileAndPosts();
     }, [accessToken]);
 
+
+    useEffect(() => {
+        const fetchUserProfileAndPosts = async () => {
+          try {
+  
+            if (searchQuery) {
+              const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
+              setUserPosts(posts?.data[0]?.data);
+            } else {
+              const posts = await getAllPosts(accessToken, currentPage * 10,4, '');
+              setUserPosts((prevPosts: any) => [...prevPosts, ...posts?.data[0]?.data]);
+            }
+          } catch (error) {
+            console.error('Error fetching user profile and posts:', error);
+          }
+        };
+      
+        fetchUserProfileAndPosts();
+      }, [accessToken, searchQuery, currentPage]);
+
+ 
     const receiveDataFromChild = (type: any, postId: string, url: string) => {
         setShareType(type);
         setIsShareModalOpen(true);
@@ -263,7 +286,9 @@ export default function dashboard() {
     const closeShareModal = () => {
         setIsShareModalOpen(false);
     };
-
+    const handleLoadMoreClick = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
 
     const styles = {
         paddingX: "sm:px-16 px-6",
@@ -294,7 +319,10 @@ export default function dashboard() {
                                     type="text"
                                     placeholder="Search Blog..."
                                     className="bg-[#393939] placeholder-white focus:outline-none text-sm"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
+
                             </div>
                         </div>
                         <div className="right">
@@ -310,7 +338,7 @@ export default function dashboard() {
                     </div>
                     <div className="mt-10 w-full flex flex-col overflow-y-scroll scrollbar-hide">
                         <VerticalTimeline>
-                            {userPosts.map((post: any, index: number) => (
+                            {userPosts?.map((post: any, index: number) => (
                                 <ExperienceCard
                                     index={index}
                                     key={post?._id}
@@ -327,6 +355,12 @@ export default function dashboard() {
                                     onDataReceived={receiveDataFromChild}
                                 />
                             ))}
+                            <div className="w-[full] text-center mt-5">
+                                <button onClick={handleLoadMoreClick} className="btn text-center">
+                                    Load More
+                                </button>
+                            </div>
+
                         </VerticalTimeline>
                     </div>
                 </div>

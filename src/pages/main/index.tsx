@@ -697,7 +697,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   </h1>
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  {relatedBlogData?.map((post: any,index) => (
+                  {relatedBlogData?.map((post: any,index:number) => (
                     <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl" key={post?._id}>
                       <div className="title">
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
