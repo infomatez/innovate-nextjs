@@ -13,6 +13,7 @@ export const PATH_AUTH = {
   login: path(ROOT_AUTH, 'login'),
   hallOfFame:path(ROOT_AUTH,'hall-of-fame'),
   aboutUs:path(ROOT_AUTH,'/about-us'),
+  hallofFameReward:path(ROOT_AUTH,'/hall-of-fame-reward'),
 };
 
 export const PATH_DASHBOARD ={

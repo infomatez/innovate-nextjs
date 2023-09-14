@@ -66,7 +66,15 @@ export const testimonials = [
     image: '/amartya.jpg',
   },
 ];
+export const newhofitems = [
+    {
+      id: 1,
+      title: 'Responsible Disclosure Programme',
+      content:
+        "We take the security of our systems, products, our employees’ and customers’ information seriously, and we value the security community. We appreciate and encourage security researchers to contact us to report potential vulnerabilities identified in any product, system, or asset belonging to Blogerbse Inc., its affiliates and subsidiaries (together referred to herein as 'Blogerbse' or 'we'/'us'/'our'). If you believe you have identified a potential security vulnerability, please submit it to our Responsible Disclosure Programme.",
+    },
 
+  ];
 export const hofitems = [
   {
     id: 1,
@@ -125,6 +133,13 @@ export const hofitems = [
       'If you find a security vulnerability, please submit an email to the above link and include the following information: ● Step-by-step instructions of how to reproduce the issue. ● Screenshots or a screen-recording (video) of the steps to reproduce the issue. ● Include descriptive text with the video or screenshots. ● Define the vulnerability and how it can be used to compromise security. ● Provide a link to the relevant OWASP page for the submitted issue. ● Suggestion on how to remedy the issue.',
     url: 'support@blogerbase.com',
   },
+  {
+    id: 10,
+    title: `Hall of Fame`,
+    content:
+      'Hall Of Fame ● We would like to thanl all persona who make a responsible disclosure to us and recognize their valuable contribution in increasing the security of our products and services for our benefit and for the benefit of our customers by featuring those contributers in our Hall of Fame .',
+    // url: 'support@blogerbase.com',
+  }
 ];
 export const blogsData = [
     {

@@ -46,12 +46,14 @@ export default function HOF() {
           </div>
         </div>
       ))}
-      <div className="rewards w-[80%] mx-auto flex flex-col gap-10">
-        <div className="title font-bold text-4xl mx-auto" id="aboutush2">
+      <div className="rewards w-[80%] mx-auto flex flex-col gap-10 mb-[100px]">
+        {/* <div className="title font-bold text-4xl mx-auto" id="aboutush2">
           <h1>Rewards</h1>
+        </div> */}
+        <div className="reward flex md:flex-row cursor-pointer mb-5 py-5"  onClick={() => router.push(PATH_AUTH.hallofFameReward)}>
+          <div className='font-bold text-[24px] md:text-4xl text-white flex items-center'>Go to The Hall Of Fame <img src='arrow-right-6-circle.svg' className='w-[60px] h-[60px] ms-1' alt='Next image'/></div>
         </div>
-        <div className="reward flex md:flex-row flex-col mx-auto"></div>
       </div>
     </div>
-  );
+  );n
 }
