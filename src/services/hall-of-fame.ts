@@ -18,4 +18,24 @@ export const getAllHofData = async (accessToken: string | null) => {
       throw error;
     }
   };
+
+  
+
+  // notification call for user 
+
+  export const getUserAllNotifications = async (accessToken: string | undefined) => {
+    try {
+      const response = await axios({
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        url: `${API_BASE_URL}/notification/userAllNotification`,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
   
