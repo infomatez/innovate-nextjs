@@ -25,9 +25,9 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
 
 
     const initialFollowUser = userProfile?.followers?.includes(id)
-   
-    
-    
+
+
+
     const [isFollowing, setIsFollowing] = useState(initialFollowUser);
 
     function formatDate(inputDate: any) {
@@ -231,6 +231,8 @@ export default function dashboard() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentSkipPage, setCurrentSkipPage] = useState(0);
+
 
     useEffect(() => {
         const fetchUserProfileAndPosts = async () => {
@@ -239,7 +241,7 @@ export default function dashboard() {
                 setUserProfile(userProfileData?.message[0]);
 
                 const userId = userProfileData?.message[0]?._id;
-                const posts = await getAllPosts(accessToken, 10, 4, searchQuery); 
+                const posts = await getAllPosts(accessToken, 10, 4, searchQuery);
                 setUserPosts(posts?.data[0]?.data);
 
                 const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0);
@@ -256,26 +258,33 @@ export default function dashboard() {
     }, [accessToken]);
 
 
+    const [searchResults, setSearchResults] = useState([]);
+    const [normalResults, setNormalResults] = useState<any>([]);
+    
     useEffect(() => {
-        const fetchUserProfileAndPosts = async () => {
-          try {
-  
-            if (searchQuery) {
-              const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
-              setUserPosts(posts?.data[0]?.data);
-            } else {
-              const posts = await getAllPosts(accessToken, currentPage * 10,4, '');
-              setUserPosts((prevPosts: any) => [...prevPosts, ...posts?.data[0]?.data]);
-            }
-          } catch (error) {
-            console.error('Error fetching user profile and posts:', error);
+      const fetchUserProfileAndPosts = async () => {
+        try {
+          if (searchQuery) {
+            const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
+            setSearchResults(posts?.data[0]?.data);
+            
+            setNormalResults([]);
+          } else {
+            const posts = await getAllPosts(accessToken, currentPage * 10,(currentSkipPage*10) + 4, '');
+            setNormalResults((prevResults:any) => [...prevResults, ...posts?.data[0]?.data]);
+            console.log(normalResults,"render post");
+            
           }
-        };
-      
-        fetchUserProfileAndPosts();
-      }, [accessToken, searchQuery, currentPage]);
+        } catch (error) {
+          console.error('Error fetching user profile and posts:', error);
+        }
+      };
+    
+      fetchUserProfileAndPosts();
+    }, [ searchQuery, currentPage]);
+    
 
- 
+
     const receiveDataFromChild = (type: any, postId: string, url: string) => {
         setShareType(type);
         setIsShareModalOpen(true);
@@ -288,6 +297,7 @@ export default function dashboard() {
     };
     const handleLoadMoreClick = () => {
         setCurrentPage((prevPage) => prevPage + 1);
+        setCurrentSkipPage((prevPage) => prevPage + 1);      
     };
 
     const styles = {
@@ -338,30 +348,50 @@ export default function dashboard() {
                     </div>
                     <div className="mt-10 w-full flex flex-col overflow-y-scroll scrollbar-hide">
                         <VerticalTimeline>
-                            {userPosts?.map((post: any, index: number) => (
-                                <ExperienceCard
-                                    index={index}
-                                    key={post?._id}
-                                    title={post?.title}
-                                    content={post?.content}
-                                    createdAt={post?.createdAt}
-                                    img={post?.img}
-                                    userName={post?.user_details?.name}
-                                    userProfile={userProfile}
-                                    id={post?.user_details?._id}
-                                    blogId={post?._id}
-                                    accessToken={accessToken}
-                                    userPosts={userPosts}
-                                    onDataReceived={receiveDataFromChild}
-                                />
-                            ))}
-                            <div className="w-[full] text-center mt-5">
-                                <button onClick={handleLoadMoreClick} className="btn text-center">
-                                    Load More
-                                </button>
-                            </div>
-
+                            {searchQuery
+                                ? searchResults.map((post: any, index: number) => (
+                                    <ExperienceCard
+                                        index={index}
+                                        key={post?._id}
+                                        title={post?.title}
+                                        content={post?.content}
+                                        createdAt={post?.createdAt}
+                                        img={post?.img}
+                                        userName={post?.user_details?.name}
+                                        userProfile={userProfile}
+                                        id={post?.user_details?._id}
+                                        blogId={post?._id}
+                                        accessToken={accessToken}
+                                        userPosts={searchResults} // Pass searchResults for onDataReceived if needed
+                                        onDataReceived={receiveDataFromChild}
+                                    />
+                                ))
+                                : normalResults.map((post: any, index: number) => (
+                                    <ExperienceCard
+                                        index={index}
+                                        key={post?._id}
+                                        title={post?.title}
+                                        content={post?.content}
+                                        createdAt={post?.createdAt}
+                                        img={post?.img}
+                                        userName={post?.user_details?.name}
+                                        userProfile={userProfile}
+                                        id={post?.user_details?._id}
+                                        blogId={post?._id}
+                                        accessToken={accessToken}
+                                        userPosts={normalResults} // Pass normalResults for onDataReceived if needed
+                                        onDataReceived={receiveDataFromChild}
+                                    />
+                                ))}
+                          
+                                <div className="w-[full] text-center mt-5">
+                                    <button onClick={handleLoadMoreClick} className="btn text-center">
+                                        Load More
+                                    </button>
+                                </div>
+                            
                         </VerticalTimeline>
+
                     </div>
                 </div>
                 <div className="postright order-2 w-[22%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
