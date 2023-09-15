@@ -423,12 +423,6 @@ export default function dashboard() {
                                                         <button>
                                                             <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
                                                         </button>
-                                                        <button className="min-w-0 mr-px">
-                                                            <FaIcons.FaPlusCircle className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                                                        </button>
-                                                        <button className="min-w-0 mr-px">
-                                                            <FaIcons.FaCommentAlt className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
-                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div className="right flex items-center">

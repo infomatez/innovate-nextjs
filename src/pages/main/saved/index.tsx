@@ -29,7 +29,7 @@ export default function SavedBlogPage() {
         const fetchUserProfile = async () => {
             try {
                 const userSavedProfileData = await getAllSavePostsbyUserId(accessTokenFromCookie);
-                setUserSaveProfile(userSavedProfileData?.data);
+                setUserSaveProfile(userSavedProfileData?.data[0]?.data);
 
 
             }
@@ -42,6 +42,7 @@ export default function SavedBlogPage() {
 
 
     }, [])
+console.log(userSavedProfileData);
 
     const styles = {
         paddingX: "sm:px-16 px-6",
