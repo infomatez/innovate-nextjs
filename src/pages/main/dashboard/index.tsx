@@ -25,7 +25,10 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
 
 
     const initialFollowUser = userProfile?.followers?.includes(id)
-    const [isFollowing, setIsFollowing] = useState(initialFollowUser || false);
+
+
+
+    const [isFollowing, setIsFollowing] = useState(initialFollowUser);
 
     function formatDate(inputDate: any) {
         const date = new Date(inputDate);
@@ -176,7 +179,7 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
                     </p>
                     <div className="status">
                         <button className="border border-[#cc00ff] rounded-2xl py-1 px-2 text-sm font-semibold" onClick={handleFollowClick}>
-                            {isFollowing ? 'Following' : 'Follow'}
+                            {userProfile?.followers?.includes(id) ? 'Following' : 'Follow'}
                         </button>
                     </div>
                 </div>
@@ -193,7 +196,7 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
                             <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
                         )}
                     </button>
-                    <button className="min-w-0 mr-px"  onClick={handleSaveClick}>
+                    <button className="min-w-0 mr-px" onClick={handleSaveClick}>
                         {saved ? (
                             <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
                         ) : (
@@ -225,7 +228,10 @@ export default function dashboard() {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
     const [shareurl, setShareUrl] = useState("")
+    const [searchQuery, setSearchQuery] = useState('');
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentSkipPage, setCurrentSkipPage] = useState(0);
 
 
     useEffect(() => {
@@ -235,23 +241,49 @@ export default function dashboard() {
                 setUserProfile(userProfileData?.message[0]);
 
                 const userId = userProfileData?.message[0]?._id;
-                const posts = await getAllPosts(accessToken, 10, 0);
+                const posts = await getAllPosts(accessToken, 10, 4, searchQuery);
                 setUserPosts(posts?.data[0]?.data);
 
-                const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0)
-                setTrendingPostdata(trendingpostresponse?.data[0]?.data)
+                const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0);
+                setTrendingPostdata(trendingpostresponse?.data[0]?.data);
 
                 const followingData = await getUserFollowing(accessToken, userId);
                 setFollowing(followingData?.data[0]?.following_details);
-
             } catch (error) {
                 console.error('Error fetching user profile and posts:', error);
-
             }
         };
-        fetchUserProfileAndPosts();
 
+        fetchUserProfileAndPosts();
     }, [accessToken]);
+
+
+    const [searchResults, setSearchResults] = useState([]);
+    const [normalResults, setNormalResults] = useState<any>([]);
+    
+    useEffect(() => {
+      const fetchUserProfileAndPosts = async () => {
+        try {
+          if (searchQuery) {
+            const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
+            setSearchResults(posts?.data[0]?.data);
+            
+            setNormalResults([]);
+          } else {
+            const posts = await getAllPosts(accessToken, currentPage * 10,(currentSkipPage*10) + 4, '');
+            setNormalResults((prevResults:any) => [...prevResults, ...posts?.data[0]?.data]);
+            console.log(normalResults,"render post");
+            
+          }
+        } catch (error) {
+          console.error('Error fetching user profile and posts:', error);
+        }
+      };
+    
+      fetchUserProfileAndPosts();
+    }, [ searchQuery, currentPage]);
+    
+
 
     const receiveDataFromChild = (type: any, postId: string, url: string) => {
         setShareType(type);
@@ -263,7 +295,10 @@ export default function dashboard() {
     const closeShareModal = () => {
         setIsShareModalOpen(false);
     };
-
+    const handleLoadMoreClick = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setCurrentSkipPage((prevPage) => prevPage + 1);      
+    };
 
     const styles = {
         paddingX: "sm:px-16 px-6",
@@ -294,7 +329,10 @@ export default function dashboard() {
                                     type="text"
                                     placeholder="Search Blog..."
                                     className="bg-[#393939] placeholder-white focus:outline-none text-sm"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
+
                             </div>
                         </div>
                         <div className="right">
@@ -310,24 +348,50 @@ export default function dashboard() {
                     </div>
                     <div className="mt-10 w-full flex flex-col overflow-y-scroll scrollbar-hide">
                         <VerticalTimeline>
-                            {userPosts.map((post: any, index: number) => (
-                                <ExperienceCard
-                                    index={index}
-                                    key={post?._id}
-                                    title={post?.title}
-                                    content={post?.content}
-                                    createdAt={post?.createdAt}
-                                    img={post?.img}
-                                    userName={post?.user_details?.name}
-                                    userProfile={userProfile}
-                                    id={post?.user_details?._id}
-                                    blogId={post?._id}
-                                    accessToken={accessToken}
-                                    userPosts={userPosts}
-                                    onDataReceived={receiveDataFromChild}
-                                />
-                            ))}
+                            {searchQuery
+                                ? searchResults.map((post: any, index: number) => (
+                                    <ExperienceCard
+                                        index={index}
+                                        key={post?._id}
+                                        title={post?.title}
+                                        content={post?.content}
+                                        createdAt={post?.createdAt}
+                                        img={post?.img}
+                                        userName={post?.user_details?.name}
+                                        userProfile={userProfile}
+                                        id={post?.user_details?._id}
+                                        blogId={post?._id}
+                                        accessToken={accessToken}
+                                        userPosts={searchResults} // Pass searchResults for onDataReceived if needed
+                                        onDataReceived={receiveDataFromChild}
+                                    />
+                                ))
+                                : normalResults.map((post: any, index: number) => (
+                                    <ExperienceCard
+                                        index={index}
+                                        key={post?._id}
+                                        title={post?.title}
+                                        content={post?.content}
+                                        createdAt={post?.createdAt}
+                                        img={post?.img}
+                                        userName={post?.user_details?.name}
+                                        userProfile={userProfile}
+                                        id={post?.user_details?._id}
+                                        blogId={post?._id}
+                                        accessToken={accessToken}
+                                        userPosts={normalResults} // Pass normalResults for onDataReceived if needed
+                                        onDataReceived={receiveDataFromChild}
+                                    />
+                                ))}
+                          
+                                <div className="w-[full] text-center mt-5">
+                                    <button onClick={handleLoadMoreClick} className="btn text-center">
+                                        Load More
+                                    </button>
+                                </div>
+                            
                         </VerticalTimeline>
+
                     </div>
                 </div>
                 <div className="postright order-2 w-[22%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
