@@ -96,7 +96,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
 
           
             <div className="w-full md:flex-1 mt-2 mb-3">
-              <Image width={100} height={90} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px] h-[280px] py-2" alt="test4" />
+              <Image width={600} height={200} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px] h-[280px] py-2" alt="test4" />
             </div>
           
         </div>

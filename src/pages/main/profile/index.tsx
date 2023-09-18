@@ -183,7 +183,7 @@ console.log(profilePicSrc,"==")
     <>
       <div className="profilewrapper pb-[50px] flex flex-col  w-full items-center ms:h-auto">
         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 md-3">
-          <div className="wrapper w-fit flex gap-1 items-center p-1 rounded-b-2xl">
+          <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
             <div className="img">
               {profilePicSrc ?
                 <Image
@@ -221,24 +221,24 @@ console.log(profilePicSrc,"==")
                     <div className="imgdiv relative">
                     {profilePicSrc ?
                 <Image
-                  width={25}
-                  height={25}
+                  width={60}
+                  height={60}
                   alt="Profile"
                   src="/deafult-user.jpg"
-                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                  className="xl:w-[60px] rounded-[50%] w-[60px]"
                 /> :
                 <Image
-                  width={25}
-                  height={25}
+                  width={60}
+                  height={60}
                   alt="Profile Picture"
                   src={imageUrl}
-                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                  className="xl:w-[60px] rounded-[50%] w-[60px]"
                 />
               }
-                      <Image width={25} height={25}
+                      <Image width={20} height={20}
                         alt="badge"
                         src="/badge3.png"
-                        className="rounded-full lg:w-[50px] md:w-[50px] w-[10vw] absolute right-[-10px] bottom-[-10px]"
+                        className="rounded-full lg:w-[40px] md:w-[40px] w-[10vw] absolute right-[-10px] bottom-[-10px]"
                       />
                     </div>
                     <div className="onetwo flex flex-col items-center gap-2 m-4">
@@ -336,8 +336,8 @@ console.log(profilePicSrc,"==")
                               <div className="flex w-full relative mb-1">
                                 <div className="w-full md:flex-1 mt-0 md:mt-0">
                                   <Image
-                                    width={30}
-                                    height={30}
+                                    width={320}
+                                    height={138}
                                     alt={post.title}
                                     src={`http://localhost:9000/public/${post?.img}`}
                                     className="w-full h-[138px] object-cover rounded-[23px]"

@@ -459,7 +459,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
               {blogData?.content}
             </p>
-            <Image width={100} height={100} alt="test5" src={`http://localhost:9000/public/${blogData?.img}`} />
+            <Image width={500} height={400} alt="test5" src={`http://localhost:9000/public/${blogData?.img}`} className="w-[100%] rounded-[30px]" />
             <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
               Thank You for Reading Blog{' '}
             </p>

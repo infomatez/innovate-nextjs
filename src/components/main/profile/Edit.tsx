@@ -232,7 +232,7 @@ console.log(categories,"lllllllllllllssssssssssssssss");
             onClick={handleSubmit(onSubmit)}
             disabled={isLoading} 
           >
-            {isLoading ? "Updating..." : "Edit Profile"}
+            {isLoading ? "Updating..." : "Submit"}
           </button>
         </div>
       </form>

@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useAuth } from "@/src/context/authContext";
 import { followUser, getUserFollowing, getUserProfile, unfollowUser } from "@/src/services/user";
 import { dislikePost, getAllPosts, getAllPostsbyUserId, getTrendingPosts, likePost, savePost, unsavePost } from "@/src/services/post";
+import { useRouter } from 'next/router';
 
 import { useEffect, useState } from 'react';
 import toast from "react-hot-toast";
@@ -22,6 +23,7 @@ import ShareModal from "../profile/ShareModal";
 dashboard.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessToken, userProfile, userPosts, key, blogId, onDataReceived, index }: any) => {
+    const router = useRouter();
 
 
     const initialFollowUser = userProfile?.followers?.includes(id)
@@ -133,7 +135,10 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
             onDataReceived(type, blogId, shareUrl);
         }
     };
-
+    const handleTitleClick = (blogId: string) => {
+        router.push(`/main?blog_id=${blogId}`);
+      };
+    
 
     return (
         <VerticalTimelineElement
@@ -146,8 +151,9 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
                     <Image
                         src={`http://localhost:9000/public/${img}`}
                         alt="blog_img"
-                        width={200}
-                        height={200}
+                        width={60}
+                        height={60}
+                        className="w-full h-full object-cover"
                         style={{ borderRadius: '50%' }}
                     />
                     {/* <Image
@@ -160,10 +166,10 @@ const ExperienceCard = ({ title, img, content, createdAt, userName, id, accessTo
         >
             <div className="relative">
                 <div className="flex justify-end card-img_hover">
-                    <div className="bg-black w-10 h-10 rounded-full border border-1 border-purple-500 flex justify-center items-center cursor-pointer"></div>
+                    <div className="bg-black w-10 h-10 rounded-full border border-1 border-purple-500 flex justify-center items-center cursor-pointer flex-col" onClick={() => handleTitleClick(blogId)}><FaIcons.FaChevronUp /><FaIcons.FaChevronDown /></div>
                 </div>
                 <div className="title">
-                    <h3 className="text-white text-[24px] font-bold" id="aboutush2">
+                    <h3 className="text-white text-[24px] font-bold" id="aboutush2" onClick={() => handleTitleClick(blogId)}>
                         {title}
                     </h3>
                 </div>

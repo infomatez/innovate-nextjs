@@ -126,10 +126,7 @@ console.log(categories)
                         </button>
                     </div>
                 </div>
-
             </div>
-
-
         </section>
     );
 };
