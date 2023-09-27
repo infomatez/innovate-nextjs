@@ -3,11 +3,11 @@ const nextConfig = {
   env: {
     SITE_URL: 'https://blogerbase.com',
     BASE_URL: 'https://api.blogerbase.com',
-    API_BASE_URL: 'http://localhost:9000/api',
+    API_BASE_URL: 'https://api.bytebloggerbase.com/api',
   },
-  
+
   images: {
-    domains: ['file.rendit.io','images.theconversation.com','localhost'],
+    domains: ['file.rendit.io', 'images.theconversation.com', 'localhost'],
     remotePatterns: [
       {
         protocol: 'https',
