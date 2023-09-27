@@ -100,8 +100,8 @@ console.log(userSavedProfileData);
                                         </p>
                                     </div>
                                     <div className="mt-4 flex-wrap gap-2 sm:flex hidden text-white">
-                                        {post?.tags?.map((tag: any) => (
-                                            <p className={`text-[14px]`}>#{tag}</p>
+                                        {post?.tags?.map((tag: any,index:number) => (
+                                            <p className={`text-[14px]`} key={index}>#{tag}</p>
                                         ))}
                                     </div>
                                 </div>

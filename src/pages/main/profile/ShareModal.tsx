@@ -3,8 +3,13 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+interface ShareModalProps {
+  shareType: string; // or the appropriate type
+  onClose: () => void;
+  shareurl: string;
+}
 
-const ShareModal: React.FC = ({shareType,onClose,shareurl}:any) => {
+const ShareModal = ({shareType,onClose,shareurl}:ShareModalProps) => {
   const [url, setUrl] = useState('');
   const closeModal = () => {
     onClose();

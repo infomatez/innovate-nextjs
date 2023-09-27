@@ -70,8 +70,8 @@ export default function HOF() {
       </tr>
     </thead>
     <tbody>
-   {userhalloffameData?.map((user:any)=>(
-     <tr className='py-2'>
+   {userhalloffameData?.map((user:any,index:number)=>(
+     <tr className='py-2' key={index}>
      <td className="border-r animate-border p-2 text-[#BC2FFF] text-center p-[30px] text-lg">{user?.name}</td>
      <td className="border-r border-white p-2 text-[#BC2FFF] text-center p-[30px] text-lg">{user?.description}</td>
      <td className="border-r border-white p-2 text-[#BC2FFF] text-center p-[30px] text-lg">
