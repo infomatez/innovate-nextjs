@@ -5,7 +5,7 @@ import { Link, animateScroll as scroll } from 'react-scroll';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import logoImage from '@/public/logoicon.jpeg';
+import logoImage from '@/public/Logo-Main-image.png';
 import Image from 'next/image';
 import { PATH_AUTH, PATH_DASHBOARD } from '@/src/routes/path';
 import { getUserProfile } from '@/src/services/user';
@@ -63,7 +63,7 @@ const Header = () => {
         )}
       >
         <div className="w-[50%] md:w-[auto] flex justify-between items-center">
-          <Image src={logoImage} alt="logo" className="rounded-3xl w-[75%] md:w-[9vw]" />
+          <Image src={logoImage} alt="logo" className="rounded-3xl w-[85%] md:w-[9vw]" />
         </div>
         <ul className="hidden justify-center md:flex items-center">
           {NAV_ITEM.map((name, index) => (

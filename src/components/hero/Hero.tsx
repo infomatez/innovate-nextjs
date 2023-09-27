@@ -2,7 +2,7 @@
 import { TypeAnimation } from "react-type-animation";
 import SphereEffect from "../canvas/SphereEffect";
 import Image from "next/image";
-import logoIcon from '@/public/logoicon.jpeg'
+import logoIcon from '@/public/Logo-Main-image.png'
 const Hero = () => {
   return (
     <section

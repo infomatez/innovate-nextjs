@@ -74,6 +74,7 @@ post?.likedBy?.includes(userId)
         commentsContainerRef.current.scrollTop = 0;
       }
     } catch (error) {
+      toast.error('Please Login To add commet');
       console.error('Error submitting comment:', error);
     }
   };
@@ -105,6 +106,7 @@ post?.likedBy?.includes(userId)
         );
         setComments(fetchedComments?.data);
       } catch (error) {
+       
         console.error('Error fetching comments:', error);
       }
     };
