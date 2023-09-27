@@ -359,7 +359,7 @@ const Create = () => {
               </label>
               <select value={selectedCategory} onChange={handleCategoryChange} className='cursor-pointer rounded-md outline-none sm:py-3 text-[7px] text-base py-[6px] px-1 bg-[#252525] text-white w-full'>
                 <option className="cursor-pointer" value="">Select a category</option>
-                {categories?.map((category) => (
+                {categories?.map((category:any) => (
                   <option key={category._id} value={category?.name} className='cursor-pointer'>
                     {category?.name}
                   </option>

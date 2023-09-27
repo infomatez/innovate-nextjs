@@ -128,7 +128,7 @@ const ExperienceCard = ({
     }
   };
 
-  const openShareModal = (type) => {
+  const openShareModal = (type: any) => {
     if (type === 'post') {
       const shareUrl = `${window.location.origin}/main?blog_id=${blogId}`;
       onDataReceived(type, blogId, shareUrl);
@@ -232,8 +232,8 @@ export default function Dashboard() {
   const [trendingpostData, setTrendingPostdata] = useState<any>(null);
   const [following, setFollowing] = useState([]);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
-  const [shareurl, setShareUrl] = useState('');
+  const [shareType, setShareType] = useState<any>('profile');
+  const [shareurl, setShareUrl] = useState<any>('');
   const [searchQuery, setSearchQuery] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -293,7 +293,7 @@ export default function Dashboard() {
       setShareUrl(url);
     }
   };
-  const closeShareModal = () => {
+  const closeShareModal: any = () => {
     setIsShareModalOpen(false);
   };
   const handleLoadMoreClick = () => {

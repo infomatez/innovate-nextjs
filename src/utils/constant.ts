@@ -1,5 +1,3 @@
-import BookmarkBorderIcon from "/components/icons/border/BookmarkIcon";
-
 export const NAV_ITEM = ['Home', 'Trending', 'Blogs', 'About Us', 'Hall of Fame'];
 
 export const owners = [

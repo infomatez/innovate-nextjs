@@ -3,7 +3,7 @@ import style from '../blogs/blogs.module.css';
 import Image from 'next/image';
 
 
-const CardSkeleton = ({ index }) => {
+const CardSkeleton = ({ index }:any) => {
   const isRight = index % 2 !== 0;
 
   return (

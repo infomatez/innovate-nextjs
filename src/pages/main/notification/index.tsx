@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import UserPanelLayout from "@/src/layouts/admin/nav";
 import { GetServerSideProps } from "next";
 import { withAuthServerSideProps } from "@/src/components/PrivateRoutes/withAuthServerSideProps";

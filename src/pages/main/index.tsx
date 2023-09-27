@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import UserPanelLayout from '@/src/layouts/admin/nav';
 import * as FaIcons from 'react-icons/fa';
 import { useState, useRef, useEffect } from 'react';
@@ -40,7 +41,7 @@ export default function MainPage() {
   const initialsavePost = userProfileData?.savedPosts?.includes(blog_id)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
-  const commentsContainerRef = useRef(null);
+  const commentsContainerRef = useRef<HTMLDivElement | null>(null);
 
   const initialrealtedLikedPosts = relatedBlogData?.map((post: any) =>
   post?.likedBy?.includes(userId)
@@ -339,8 +340,8 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       await deleteComment(accessTokenFromCookie, commentId);
 
       // Remove the comment from the list of comments
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment._id !== commentId)
+      setComments((prevComments:any) =>
+        prevComments.filter((comment:any) => comment._id !== commentId)
       );
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -802,7 +803,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
         }
       </section>
       {isShareModalOpen && (
-        <ShareModal shareType={shareType} onClose={closeShareModal} />
+        <ShareModal shareType={shareType} onClose={closeShareModal} shareurl='test'/>
       )}
     </>
   );

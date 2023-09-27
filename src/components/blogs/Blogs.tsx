@@ -30,8 +30,8 @@ const Blogs = () => {
         try {
             setLoading(true)
             const limit = 10;
-
-            const response = await getAllPosts(accessTokenFromCookie, limit, skipRef.current);
+            const skip = 0;
+            const response = await getAllPosts(accessTokenFromCookie, limit, skipRef.current,"");
             const data = response?.data[0]?.data;
 
             setRandomBlogs((prevBlogs) => [...prevBlogs, ...(data as Blog[])]);
@@ -89,7 +89,7 @@ console.log(categories)
                     {selectedId && (
                         <div className="w-auto bg-black-100 bg-opacity-50 p-2 rounded-2xl absolute z-10 right-0 top-12">
                             <div className=" flex justify-center flex-col">
-                                {categories.slice(0, 5).map((f:string, index) => (
+                                {categories.slice(0, 5).map((f:any, index) => (
                                     <button className="btn" key={index}>{f.name}</button>
                                 ))}
                             </div>
