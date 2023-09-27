@@ -7,7 +7,7 @@ import GroupSolidIcon from "@/src/components/icons/solid/GroupIcon";
 import TrendingUpIcon from "@/src/components/icons/border/TrendingUpIcon";
 import Link from "next/link";
 import Image from "next/image";
-import LogoIcon from '@/public/logoicon.jpeg'
+import LogoIcon from '@/public/Logo-Main-image.png'
 import NotificationIcon from "@/src/components/icons/solid/NotificationIcon";
 import { PATH_DASHBOARD } from "@/src/routes/path";
 import profileImage from '@/public/alternate.png'
