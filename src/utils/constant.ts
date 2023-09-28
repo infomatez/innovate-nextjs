@@ -15,12 +15,7 @@ export const owners = [
     name: 'Nikhil Chaudhari',
     designation: 'Co-Founder',
   },
-  {
-    id: 4,
-    image: '/amartya.jpg',
-    name: 'Amartya Raj',
-    designation: 'COO',
-  },
+
 ];
 
 export const developers = [
@@ -54,14 +49,6 @@ export const testimonials = [
     designation: 'Founder and CEO',
     company: 'BlogerBase',
     image: '/Yash.jpg',
-  },
-  {
-    testimonial:
-      'As the COO of our blogging platform, my priority is to ensure that our operations run smoothly and efficiently. From managing our team to optimizing our processes, we strive to provide the best possible experience for our users.',
-    name: 'Amartya Raj',
-    designation: 'COO',
-    company: 'BlogerBase',
-    image: '/amartya.jpg',
   },
 ];
 export const newhofitems = [

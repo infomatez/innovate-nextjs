@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { Link } from "react-scroll";
-import logoImage from '@/public/logo1.png'
+import logoImage from '@/public/Logo-Main-image.png'
 const Footer = () => {
   return (
     <div className="bg-black-600">

@@ -63,7 +63,7 @@ const Header = () => {
         )}
       >
         <div className="w-[50%] md:w-[auto] flex justify-between items-center">
-          <Image src={logoImage} alt="logo" className="rounded-3xl w-[85%] md:w-[9vw]" />
+          <Image src={logoImage} alt="logo" className="rounded-3xl w-[85%] md:w-[12vw]" />
         </div>
         <ul className="hidden justify-center md:flex items-center">
           {NAV_ITEM.map((name, index) => (

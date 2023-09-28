@@ -48,7 +48,7 @@ const LoginSignUp: FC<ILoginSignUpProps> = ({ setUserAction }) => {
                             SignUp
                         </motion.button>
                         <button className="text-white text-[24px] font-light font-poppins mt-14 hover:opacity-70 transition-all duration-500 ease-in-out" onClick={()=>router.push(PATH_DASHBOARD.dashboard)}>
-                            continue as a guest
+                            Continue as a guest
                         </button>
                     </div>
                 </div>
