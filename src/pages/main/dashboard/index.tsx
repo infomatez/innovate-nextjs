@@ -277,7 +277,7 @@ export default function Dashboard() {
     };
 
     fetchUserProfileAndPosts();
-  });
+  }, [accessToken, searchQuery]);
 
   const [searchResults, setSearchResults] = useState([]);
   const [normalResults, setNormalResults] = useState<any>([]);
@@ -286,16 +286,23 @@ export default function Dashboard() {
   console.log(profilePicSrc, '==');
 
   useEffect(() => {
-    const fetchUserProfileAndPosts = async () => {
+    const fetchPosts = async () => {
       try {
         if (searchQuery) {
           const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
           setSearchResults(posts?.data[0]?.data);
-
           setNormalResults([]);
         } else {
-          const posts = await getAllPosts(accessToken, currentPage * 10, currentSkipPage * 10 + 4, '');
-          setNormalResults((prevResults: any) => [...prevResults, ...posts?.data[0]?.data]);
+          const posts = await getAllPosts(
+            accessToken,
+            currentPage * 10,
+            (currentSkipPage * 10) + 0,
+            ''
+          );
+          setNormalResults((prevResults: any) => [
+            ...prevResults,
+            ...posts?.data[0]?.data,
+          ]);
           console.log(normalResults, 'render post');
         }
       } catch (error) {
@@ -303,8 +310,8 @@ export default function Dashboard() {
       }
     };
 
-    fetchUserProfileAndPosts();
-  }, [searchQuery, currentPage]);
+    fetchPosts();
+  }, [searchQuery, currentPage, accessToken, currentSkipPage]);
 
   const receiveDataFromChild = (type: any, postId: string, url: string) => {
     setShareType(type);
