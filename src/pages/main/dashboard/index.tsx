@@ -508,7 +508,7 @@ export default function Dashboard() {
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide p-6">
                   {following.map((user: any) => (
-                    <a href="#" className="text-white" key={user._id}>
+                    <a href="#" className="text-white" key={user?._id}>
                       <h5 className="inline-block">{user.name}</h5>
                       {user?.verified === 'true' ? <MdIcons.MdVerified className="fill-[blue] inline-block" /> : ''}
                     </a>

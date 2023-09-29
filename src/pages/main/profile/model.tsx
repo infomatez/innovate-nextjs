@@ -26,13 +26,13 @@ const Modal = ({ userProfile, onClose }: any) => {
                 if (activeTab === 'tab1') {
                     const followersData = await getUserFollowers(
                         accessTokenFromCookie,
-                        userProfile._id
+                        userProfile?._id
                     );
                     setFollowers(followersData?.data?.follower_details);
                 } else {
                     const followingData = await getUserFollowing(
                         accessTokenFromCookie,
-                        userProfile._id
+                        userProfile?._id
                     );
                     setFollowing(followingData?.data[0]?.following_details);
                 }
@@ -52,10 +52,10 @@ const Modal = ({ userProfile, onClose }: any) => {
             await followUser(accessTokenFromCookie, userId);
 
             if (activeTab === 'tab1') {
-                const followersData = await getUserFollowers(accessTokenFromCookie, userProfile._id);
+                const followersData = await getUserFollowers(accessTokenFromCookie, userProfile?._id);
                 setFollowers(followersData?.data?.follower_details);
             } else {
-                const followingData = await getUserFollowing(accessTokenFromCookie, userProfile._id);
+                const followingData = await getUserFollowing(accessTokenFromCookie, userProfile?._id);
                 setFollowing(followingData?.data?.following_details);
             }
         } catch (error) {
@@ -74,9 +74,9 @@ const Modal = ({ userProfile, onClose }: any) => {
 
             if (activeTab === 'tab1') {
 
-                setFollowers((prevFollowers) => prevFollowers.filter((follower: any) => follower._id !== userId));
+                setFollowers((prevFollowers) => prevFollowers.filter((follower: any) => follower?._id !== userId));
             } else {
-                setFollowing((prevFollowing) => prevFollowing.filter((following: any) => following._id !== userId));
+                setFollowing((prevFollowing) => prevFollowing.filter((following: any) => following?._id !== userId));
             }
         } catch (error) {
             console.error('Error unfollowing user:', error);
@@ -153,7 +153,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                                         </div>
                                         <button
                                             className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-2 m-2 w-[80px] p-2 border rounded"
-                                            onClick={() => handleFollowClick(follower._id)}
+                                            onClick={() => handleFollowClick(follower?._id)}
                                             disabled={isLoading}
                                         >
                                             <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[0.58px] text-[#ad00ff] w-5/5">
@@ -174,7 +174,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                                 </p>
                             ) : (
                                 following?.map((following: any) => (
-                                    <div className='follower-list flex justify-between items-center mb-3' key={following._id}>
+                                    <div className='follower-list flex justify-between items-center mb-3' key={following?._id}>
                                         <div className='flex items-center'>
                                             <Image
                                                 src="/deafult-user.jpg"
@@ -195,7 +195,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                                         <button
                                             className="border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-2 m-2 w-[80px] p-2 border rounded"
 
-                                            onClick={() => handleUnfollowClick(following._id)}
+                                            onClick={() => handleUnfollowClick(following?._id)}
                                             disabled={isLoading}
                                         >
                                             <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[0.58px] text-[#ad00ff] w-5/5">

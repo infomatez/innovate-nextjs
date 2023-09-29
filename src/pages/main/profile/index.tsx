@@ -119,7 +119,7 @@ export default function ProfilePage() {
         setUserProfile(userProfileData?.message[0]);
         setIsLoading(false);
 
-        const userId = userProfileData.message[0]._id;
+        const userId = userProfileData.message[0]?._id;
         const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId);
         setUserPosts(posts?.data[0]?.data);
         setIsLoading(false);
@@ -129,7 +129,7 @@ export default function ProfilePage() {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [accessTokenFromCookie]);
 
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
@@ -371,7 +371,7 @@ export default function ProfilePage() {
                                       </button>
                                       <button
                                         className="min-w-0 mr-px"
-                                        onClick={() => handleSaveClick(index, post._id)}
+                                        onClick={() => handleSaveClick(index, post?._id)}
                                       >
                                         {savedPosts.includes(index) ? (
                                           <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
@@ -381,7 +381,7 @@ export default function ProfilePage() {
                                       </button>
                                       <button
                                         className="min-w-0 mr-px"
-                                        onClick={() => openShareModal('post', post._id)}
+                                        onClick={() => openShareModal('post', post?._id)}
                                       >
                                         <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
                                       </button>

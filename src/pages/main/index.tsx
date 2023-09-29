@@ -315,7 +315,7 @@ export default function MainPage() {
       await deleteComment(accessTokenFromCookie, commentId);
 
       // Remove the comment from the list of comments
-      setComments((prevComments: any) => prevComments.filter((comment: any) => comment._id !== commentId));
+      setComments((prevComments: any) => prevComments.filter((comment: any) => comment?._id !== commentId));
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
