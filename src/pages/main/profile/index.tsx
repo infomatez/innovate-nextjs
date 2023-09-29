@@ -10,30 +10,26 @@ import { GetServerSideProps } from 'next';
 import { withAuthServerSideProps } from '@/src/components/PrivateRoutes/withAuthServerSideProps';
 import Cookies from 'js-cookie';
 import { getUserProfile } from '@/src/services/user';
-import { dislikePost, getAllPostsbyUserId, likePost, savePost, unsavePost } from "@/src/services/post"
+import { dislikePost, getAllPostsbyUserId, likePost, savePost, unsavePost } from '@/src/services/post';
 import Modal from './model';
 import PostSkeleton from '@/src/components/Skeleton/PostSkeleton';
 import ShareModal from './ShareModal';
+import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
 
-
-
-
-ProfilePage.getLayout = (page: React.ReactElement) => (
-  <UserPanelLayout>{page}</UserPanelLayout>
-);
+ProfilePage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function ProfilePage() {
   const router = useRouter();
   const { removeAccessToken } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
+  const [showPopup, setShowPopup] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
-  const [shareurl, setShareUrl]= useState("")
-
-
+  const [shareurl, setShareUrl] = useState('');
+  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -44,35 +40,26 @@ export default function ProfilePage() {
 
     if (postId) {
       const shareUrl = `${window.location.origin}/main?blog_id=${postId}`;
-      setShareUrl(shareUrl)
-      
+      setShareUrl(shareUrl);
     }
   };
   const [userPosts, setUserPosts] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const initialLikedPosts = userPosts?.map((post: any, index) =>
-    post?.likedBy?.includes(userProfile?._id)
-  ) || [];
+  const initialLikedPosts = userPosts?.map((post: any, index) => post?.likedBy?.includes(userProfile?._id)) || [];
 
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
 
   useEffect(() => {
-
-    const initialLikedPosts = userPosts?.map((post: any, index) =>
-      post?.likedBy?.includes(userProfile?._id)
-    ) || [];
+    const initialLikedPosts = userPosts?.map((post: any, index) => post?.likedBy?.includes(userProfile?._id)) || [];
 
     setLikedPosts(initialLikedPosts);
   }, [userPosts, userProfile]);
   const [savedPosts, setSavedPosts] = useState<number[]>([]);
 
-
   const handleLikeClick = async (index: number, postId: string) => {
     try {
       if (likedPosts[index]) {
-
         await dislikePost(accessTokenFromCookie, postId);
-
 
         setLikedPosts((prevLikedPosts) => {
           const updatedLikedPosts = [...prevLikedPosts];
@@ -93,24 +80,19 @@ export default function ProfilePage() {
     }
   };
 
-
   const handleSaveClick = (index: number, postId: string) => {
     try {
       if (savedPosts.includes(index)) {
-
         unsavePost(accessTokenFromCookie, postId)
           .then(() => {
-
             setSavedPosts(savedPosts.filter((item) => item !== index));
           })
           .catch((error) => {
             console.error('Error unsaving post:', error);
           });
       } else {
-
         savePost(accessTokenFromCookie, postId)
           .then(() => {
-
             setSavedPosts([...savedPosts, index]);
           })
           .catch((error) => {
@@ -130,7 +112,6 @@ export default function ProfilePage() {
     setIsModalOpen(false);
   };
 
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -142,8 +123,7 @@ export default function ProfilePage() {
         const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId);
         setUserPosts(posts?.data[0]?.data);
         setIsLoading(false);
-      }
-      catch (error) {
+      } catch (error) {
         console.error('Error fetching user profile:', error);
       }
     };
@@ -151,62 +131,80 @@ export default function ProfilePage() {
     fetchUserProfile();
   }, []);
 
-
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
-  const profilePicSrc = imageUrl === "http://localhost:9000/public/undefined"
-console.log(profilePicSrc,"==")
+  const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
+  console.log(profilePicSrc, '==');
 
   const handleEditClick = (blogId: string) => {
     router.push(`/main/create-blog?blog_id=${blogId}`);
   };
 
-
-
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
+
+
 
   const generateShareUrl = (blogId: string) => {
     return `${window.location.origin}/main?blog_id=${blogId}`;
   };
   const handleLogout = async () => {
-    try {
+    setShowPopup(true);
+  };
 
+  const handleConfirmLogout = async () => {
+    try {
       removeAccessToken();
-      router.push("/");
+      router.push('/');
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
+  const handleCancelLogout = () => {
+    setShowPopup(false);
+  };
+
   return (
     <>
+    {showPopup && (
+        <LogoutConfirmationPopup
+          onConfirm={handleConfirmLogout}
+          onCancel={handleCancelLogout}
+        />
+      )}
       <div className="profilewrapper pb-[50px] flex flex-col  w-full items-center ms:h-auto">
-        <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 md-3">
+        <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
           <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
-            <div className="img">
-              {profilePicSrc ?
+            <div className="img w-[30px] h-[30px]">
+              {profilePicSrc ? (
                 <Image
-                  width={25}
-                  height={25}
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
                   alt="Profile"
                   src="/deafult-user.jpg"
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
-                /> :
+                />
+              ) : (
                 <Image
-                  width={25}
-                  height={25}
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
                   alt="Profile Picture"
                   src={imageUrl}
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 />
-              }
+              )}
             </div>
             <div className="name flex items-center">
               <h1 className="text-white font-semibold xl:text-sm text-xs">{userProfile?.name}</h1>
             </div>
             <div className="logout rounded-3xl">
-              <button className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer" onClick={handleLogout}>
+              <button
+                className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer"
+                onClick={handleLogout}
+              >
                 Log Out
               </button>
             </div>
@@ -219,23 +217,28 @@ console.log(profilePicSrc,"==")
                 <div className="top flex flex-col justify-evenly items-center lg:gap-3 gap-2">
                   <div className="one flex flex-col w-full justify-evenly items-center">
                     <div className="imgdiv relative">
-                    {profilePicSrc ?
-                <Image
-                  width={60}
-                  height={60}
-                  alt="Profile"
-                  src="/deafult-user.jpg"
-                  className="xl:w-[60px] rounded-[50%] w-[60px]"
-                /> :
-                <Image
-                  width={60}
-                  height={60}
-                  alt="Profile Picture"
-                  src={imageUrl}
-                  className="xl:w-[60px] rounded-[50%] w-[60px]"
-                />
-              }
-                      <Image width={20} height={20}
+                      {profilePicSrc ? (
+                        <Image
+                          style={{ width: '60px', height: '60px' }}
+                          width={60}
+                          height={60}
+                          alt="Profile"
+                          src="/deafult-user.jpg"
+                          className="xl:w-[60px] rounded-[50%] w-[60px]"
+                        />
+                      ) : (
+                        <Image
+                          style={{ width: '60px', height: '60px' }}
+                          width={60}
+                          height={60}
+                          alt="Profile Picture"
+                          src={imageUrl}
+                          className="xl:w-[60px] rounded-[50%] w-[60px]"
+                        />
+                      )}
+                      <Image
+                        width={20}
+                        height={20}
                         alt="badge"
                         src="/badge3.png"
                         className="rounded-full lg:w-[40px] md:w-[40px] w-[10vw] absolute right-[-10px] bottom-[-10px]"
@@ -252,7 +255,10 @@ console.log(profilePicSrc,"==")
                         >
                           Edit Profile
                         </button>
-                        <button className="py-2 px-3 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ml-3"  onClick={() => openShareModal('profile')}>
+                        <button
+                          className="py-2 px-3 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] ml-3"
+                          onClick={() => openShareModal('profile')}
+                        >
                           Share Profile
                         </button>
                       </div>
@@ -263,11 +269,15 @@ console.log(profilePicSrc,"==")
                       </div>
                       <div className="followers"></div>
                       <h1 className=" text-[12px] xl:text-[14px]">
-                        <button type='button' onClick={openModal}>{userProfile?.follower_details?.length} Followers</button>
+                        <button type="button" onClick={openModal}>
+                          {userProfile?.follower_details?.length} Followers
+                        </button>
                       </h1>
                       <div className="following  text-[12px] xl:text-[14px]">
                         <h1>
-                          <button type='button' onClick={openModal}>{userProfile?.following_details?.length} Following</button>
+                          <button type="button" onClick={openModal}>
+                            {userProfile?.following_details?.length} Following
+                          </button>
                         </h1>
                       </div>
                     </div>
@@ -317,72 +327,84 @@ console.log(profilePicSrc,"==")
                       My Blogs
                     </div>
                     <div className="grid grid-cols-12 gap-4">
-                      {isLoading ? (
-                        Array.from({ length: 6 }).map((_, index) => <PostSkeleton key={index} />)
-                      ) : (
-                        userPosts.map((post: any, index) => (
-                          <div key={index} className="col-span-12 lg:col-span-6 mb-4">
-                            <div className="bg-[#000] p-4 rounded-[15px]">
-                              <div className="flex items-start">
-                                <h3 className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase cursor-pointer"
-                                  onClick={() => handleTitleClick(post?._id)}>
-                                  {post.title}
-                                </h3>
-                                <button className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] " onClick={() => handleEditClick(post?._id)}>
-                                  Edit Blog
-                                </button>
-                              </div>
-
-                              <div className="flex w-full relative mb-1">
-                                <div className="w-full md:flex-1 mt-0 md:mt-0">
-                                  <Image
-                                    width={320}
-                                    height={138}
-                                    alt={post.title}
-                                    src={`http://localhost:9000/public/${post?.img}`}
-                                    className="w-full h-[138px] object-cover rounded-[23px]"
-                                  />
+                      {isLoading
+                        ? Array.from({ length: 6 }).map((_, index) => <PostSkeleton key={index} />)
+                        : userPosts.map((post: any, index) => (
+                            <div key={index} className="col-span-12 lg:col-span-6 mb-4">
+                              <div className="bg-[#000] p-4 rounded-[15px]">
+                                <div className="flex items-start">
+                                  <h3
+                                    className="flex-1 text-md md:text-lg font-['Poppins'] font-semibold leading-[1.3] text-[#ff00f2] w-full mb-2 md:mb-4 uppercase cursor-pointer"
+                                    onClick={() => handleTitleClick(post?._id)}
+                                  >
+                                    {post.title}
+                                  </h3>
+                                  <button
+                                    className="py-1 px-2 rounded-lg bg-[#393939] text-white sm:text-xs text-[10px] "
+                                    onClick={() => handleEditClick(post?._id)}
+                                  >
+                                    Edit Blog
+                                  </button>
                                 </div>
-                                <div className="w-[20%] md:w-[30%]">
-                                  <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
-                                    <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index, post?._id)}>
-                                      {likedPosts[index] ? (
-                                        <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
-                                      ) : (
-                                        <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
-                                      )}
-                                    </button>
-                                    <button className="min-w-0 mr-px" onClick={() => handleSaveClick(index, post._id)}>
-                                      {savedPosts.includes(index) ? (
-                                        <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
-                                      ) : (
-                                        <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
-                                      )}
-                                    </button>
-                                    <button className="min-w-0 mr-px" onClick={() => openShareModal('post', post._id)}>
-                                      <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
-                                    </button>
+
+                                <div className="flex w-full relative mb-1">
+                                  <div className="w-full md:flex-1 mt-0 md:mt-0">
+                                    <Image
+                                      width={320}
+                                      height={138}
+                                      alt={post.title}
+                                      src={`http://localhost:9000/public/${post?.img}`}
+                                      className="w-full h-[138px] object-cover rounded-[23px]"
+                                    />
+                                  </div>
+                                  <div className="w-[20%] md:w-[30%]">
+                                    <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
+                                      <button
+                                        className="min-w-0 mr-px"
+                                        onClick={() => handleLikeClick(index, post?._id)}
+                                      >
+                                        {likedPosts[index] ? (
+                                          <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
+                                        ) : (
+                                          <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
+                                        )}
+                                      </button>
+                                      <button
+                                        className="min-w-0 mr-px"
+                                        onClick={() => handleSaveClick(index, post._id)}
+                                      >
+                                        {savedPosts.includes(index) ? (
+                                          <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                                        ) : (
+                                          <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                                        )}
+                                      </button>
+                                      <button
+                                        className="min-w-0 mr-px"
+                                        onClick={() => openShareModal('post', post._id)}
+                                      >
+                                        <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <div className="flex justify-end items-center mt-3">
-                                <p className="flex-1 mr-2 text-[10px]">
-                                  {expandedIndex === index ? post?.content : post?.content?.slice(0, 50) + '...'}
-                                </p>
-                                <button
-                                  className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]"
-                                  onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
-                                >
-                                  <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                                    {expandedIndex === index ? 'Show Less' : 'Read More'}
-                                  </span>
-                                </button>
+                                <div className="flex justify-end items-center mt-3">
+                                  <p className="flex-1 mr-2 text-[10px]">
+                                    {expandedIndex === index ? post?.content : post?.content?.slice(0, 50) + '...'}
+                                  </p>
+                                  <button
+                                    className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]"
+                                    onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                                  >
+                                    <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
+                                      {expandedIndex === index ? 'Show Less' : 'Read More'}
+                                    </span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))
-                      )}
+                          ))}
                     </div>
                   </div>
                 </div>
@@ -391,15 +413,10 @@ console.log(profilePicSrc,"==")
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <Modal userProfile={userProfile} onClose={closeModal} />
-      )}
-      {isShareModalOpen && (
-       <ShareModal  shareType={shareType} onClose={closeShareModal} shareurl={shareurl}/>
-      )}
+      {isModalOpen && <Modal userProfile={userProfile} onClose={closeModal} />}
+      {isShareModalOpen && <ShareModal shareType={shareType} onClose={closeShareModal} shareurl={shareurl} />}
     </>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = withAuthServerSideProps();
-

@@ -16,49 +16,51 @@ import { likePost, savePost, dislikePost, unsavePost } from '@/src/services/post
 import { followUser, getUserProfile, unfollowUser } from '@/src/services/user';
 import { toast } from 'react-hot-toast';
 import ShareModal from './profile/ShareModal';
-import { commentOnPost, deleteComment, dislikePostComment, fetchAllCommentsForPost, likePostComment } from '@/src/services/comment';
-
+import {
+  commentOnPost,
+  deleteComment,
+  dislikePostComment,
+  fetchAllCommentsForPost,
+  likePostComment,
+} from '@/src/services/comment';
+import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
 
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function MainPage() {
   const router = useRouter();
   const { blog_id } = router.query;
-  const { accessToken } = useAuth();
+  const { accessToken , removeAccessToken} = useAuth();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState('');
   const [blogData, setBlogData] = useState<any>(null);
   const [relatedBlogData, setRelatedBlogData] = useState<any>(null);
-  const userId = blogData?.user_details?._id
+  const userId = blogData?.user_details?._id;
   const [userProfileData, setUserProfileData] = useState<any>(null);
-  const [trendingpostData, setTrendingPostdata] = useState<any>(null)
-  const initialFollowUser = userProfileData?.followers?.includes(userId)
+  const [trendingpostData, setTrendingPostdata] = useState<any>(null);
+  const initialFollowUser = userProfileData?.followers?.includes(userId);
   const [isFollowing, setIsFollowing] = useState(initialFollowUser || false);
   const initialLiked = blogData?.likedBy?.includes(userId);
   const [liked, setLiked] = useState(initialLiked || false);
-  const initialsavePost = userProfileData?.savedPosts?.includes(blog_id)
+  const initialsavePost = userProfileData?.savedPosts?.includes(blog_id);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
   const commentsContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const initialrealtedLikedPosts = relatedBlogData?.map((post: any) =>
-  post?.likedBy?.includes(userId)
-) || [];
-const initialtrendingLikedPosts = trendingpostData?.map((post: any) =>
-post?.likedBy?.includes(userId)
-) || [];
+  const initialrealtedLikedPosts = relatedBlogData?.map((post: any) => post?.likedBy?.includes(userId)) || [];
+  const initialtrendingLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userId)) || [];
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialrealtedLikedPosts);
   const [saved, setSaved] = useState(initialsavePost || false);
-  const [savedrealtedblog,setSavedrealtedBlog] =useState<any[]>(initialrealtedLikedPosts);
-  const [savedtrendingblog,setSavedTrendingBlog] =useState<any[]>(initialtrendingLikedPosts);
-
-
+  const [savedrealtedblog, setSavedrealtedBlog] = useState<any[]>(initialrealtedLikedPosts);
+  const [savedtrendingblog, setSavedTrendingBlog] = useState<any[]>(initialtrendingLikedPosts);
+  const [showPopup, setShowPopup] = useState(false);
 
   const toggleCommentBox = () => {
     setCommentBoxOpen((prevState) => !prevState);
   };
+
   const handleCommentSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -69,7 +71,6 @@ post?.likedBy?.includes(userId)
       const newComment = newCommentResponse.data;
       setComments((prevComments): any => [newComment, ...prevComments]);
 
-
       setContent('');
       if (commentsContainerRef.current) {
         commentsContainerRef.current.scrollTop = 0;
@@ -79,7 +80,7 @@ post?.likedBy?.includes(userId)
       console.error('Error submitting comment:', error);
     }
   };
-  const formatDateToRelative = (dateString:string) => {
+  const formatDateToRelative = (dateString: string) => {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true });
   };
@@ -101,20 +102,15 @@ post?.likedBy?.includes(userId)
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const fetchedComments = await fetchAllCommentsForPost(
-          accessTokenFromCookie,
-          blog_id
-        );
+        const fetchedComments = await fetchAllCommentsForPost(accessTokenFromCookie, blog_id);
         setComments(fetchedComments?.data);
       } catch (error) {
-       
         console.error('Error fetching comments:', error);
       }
     };
 
     fetchComments();
   }, [accessTokenFromCookie, blog_id]);
-
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -125,8 +121,7 @@ post?.likedBy?.includes(userId)
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
         setBlogData(response?.data[0]?.data[0]);
 
-        const category = response?.data[0]?.data[0]?.category
-
+        const category = response?.data[0]?.data[0]?.category;
 
         const relatedBlogResponse = await getPostsByCategory(accessTokenFromCookie, category);
         setRelatedBlogData(relatedBlogResponse?.data[0]?.data);
@@ -138,16 +133,14 @@ post?.likedBy?.includes(userId)
     fetchBlogData();
   }, [blog_id]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getUserProfile(accessTokenFromCookie);
         setUserProfileData(response?.message[0]);
 
-
-        const trendingpostresponse = await getTrendingPosts(accessTokenFromCookie, 10, 0)
-        setTrendingPostdata(trendingpostresponse?.data[0]?.data)
+        const trendingpostresponse = await getTrendingPosts(accessTokenFromCookie, 10, 0);
+        setTrendingPostdata(trendingpostresponse?.data[0]?.data);
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
@@ -156,31 +149,25 @@ post?.likedBy?.includes(userId)
     fetchData();
   }, [accessTokenFromCookie]);
 
-
   useEffect(() => {
-
-    const initialLikedPosts = blogData?.likedBy?.includes(userId)
+    const initialLikedPosts = blogData?.likedBy?.includes(userId);
 
     setLiked(initialLikedPosts);
-    const initialFollowUser = userProfileData?.followers?.includes(userId)
-    setIsFollowing(initialFollowUser)
+    const initialFollowUser = userProfileData?.followers?.includes(userId);
+    setIsFollowing(initialFollowUser);
 
-    const initialsavePost = userProfileData?.savedPosts?.includes(blog_id)
-    setSaved(initialsavePost)
+    const initialsavePost = userProfileData?.savedPosts?.includes(blog_id);
+    setSaved(initialsavePost);
 
+    const initialrealtedLikedPosts = relatedBlogData?.map((post: any) => post?.likedBy?.includes(userId)) || [];
 
-    const initialrealtedLikedPosts = relatedBlogData?.map((post: any) =>
-    post?.likedBy?.includes(userId)
-  ) || [];
- 
-  setLikedPosts(initialrealtedLikedPosts)
-
-  }, [blog_id, blogData,relatedBlogData]);
+    setLikedPosts(initialrealtedLikedPosts);
+  }, [blog_id, blogData, relatedBlogData]);
 
   const handleLikeClick = async () => {
     try {
       if (liked) {
-        await dislikePost(accessTokenFromCookie, blog_id)
+        await dislikePost(accessTokenFromCookie, blog_id);
         setLiked(false);
       } else {
         await likePost(accessTokenFromCookie, blog_id);
@@ -188,39 +175,33 @@ post?.likedBy?.includes(userId)
       }
     } catch (error) {
       console.error('Error liking/unliking post:', error);
-      toast.error("Please Login To Like the Post")
+      toast.error('Please Login To Like the Post');
     }
   };
-  
 
-
-  
-const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
-  try {
+  const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
+    try {
       if (likedPosts[index]) {
+        await dislikePost(accessTokenFromCookie, postId);
 
-          await dislikePost(accessTokenFromCookie, postId);
-
-
-          setLikedPosts((prevLikedPosts) => {
-              const updatedLikedPosts = [...prevLikedPosts];
-              updatedLikedPosts[index] = false;
-              return updatedLikedPosts;
-          });
+        setLikedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = false;
+          return updatedLikedPosts;
+        });
       } else {
-          await likePost(accessTokenFromCookie, postId);
+        await likePost(accessTokenFromCookie, postId);
 
-          setLikedPosts((prevLikedPosts) => {
-              const updatedLikedPosts = [...prevLikedPosts];
-              updatedLikedPosts[index] = true;
-              return updatedLikedPosts;
-          });
+        setLikedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = true;
+          return updatedLikedPosts;
+        });
       }
-  } catch (error) {
+    } catch (error) {
       console.error('Error liking/disliking post:', error);
-  }
-};
-
+    }
+  };
 
   const handleFollowClick = async () => {
     try {
@@ -230,7 +211,6 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       }
 
       if (isFollowing) {
-
         await unfollowUser(accessToken, userId);
         setIsFollowing(false);
       } else {
@@ -242,7 +222,6 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       console.error('Error following/unfollowing user:', error);
     }
   };
- 
 
   const handleSaveClick = async () => {
     try {
@@ -255,17 +234,15 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       }
     } catch (error) {
       console.error('Error saving/unsaving post:', error);
-      toast.error("Please Login To Save the Post")
-
+      toast.error('Please Login To Save the Post');
     }
   };
-
 
   const handlerealtedSaveClick = async (index: number, realtedBlogId: string) => {
     try {
       if (savedrealtedblog[index]) {
         await unsavePost(accessTokenFromCookie, realtedBlogId);
-  
+
         setSavedrealtedBlog((prevSavedState) => {
           const updatedSavedState = [...prevSavedState];
           updatedSavedState[index] = false;
@@ -273,7 +250,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
         });
       } else {
         await savePost(accessTokenFromCookie, realtedBlogId);
-  
+
         setSavedrealtedBlog((prevSavedState) => {
           const updatedSavedState = [...prevSavedState];
           updatedSavedState[index] = true;
@@ -282,7 +259,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       }
     } catch (error) {
       console.error('Error saving/unsaving related blog:', error);
-      toast.error("Please Login To Save the Post");
+      toast.error('Please Login To Save the Post');
     }
   };
 
@@ -290,7 +267,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
     try {
       if (savedtrendingblog[index]) {
         await unsavePost(accessTokenFromCookie, realtedBlogId);
-  
+
         setSavedTrendingBlog((prevSavedState) => {
           const updatedSavedState = [...prevSavedState];
           updatedSavedState[index] = false;
@@ -298,7 +275,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
         });
       } else {
         await savePost(accessTokenFromCookie, realtedBlogId);
-  
+
         setSavedTrendingBlog((prevSavedState) => {
           const updatedSavedState = [...prevSavedState];
           updatedSavedState[index] = true;
@@ -307,7 +284,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       }
     } catch (error) {
       console.error('Error saving/unsaving related blog:', error);
-      toast.error("Please Login To Save the Post");
+      toast.error('Please Login To Save the Post');
     }
   };
   const [likedComments, setLikedComments] = useState<string[]>([]);
@@ -319,9 +296,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
         await dislikePostComment(accessTokenFromCookie, commentId);
 
         // Remove the comment from the likedComments array
-        setLikedComments((prevLikedComments) =>
-          prevLikedComments.filter((id) => id !== commentId)
-        );
+        setLikedComments((prevLikedComments) => prevLikedComments.filter((id) => id !== commentId));
       } else {
         // Call the likeComment API
         await likePostComment(accessTokenFromCookie, commentId);
@@ -340,9 +315,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
       await deleteComment(accessTokenFromCookie, commentId);
 
       // Remove the comment from the list of comments
-      setComments((prevComments:any) =>
-        prevComments.filter((comment:any) => comment._id !== commentId)
-      );
+      setComments((prevComments: any) => prevComments.filter((comment: any) => comment._id !== commentId));
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -358,16 +331,78 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
   };
   const formattedDate = date.toLocaleDateString(undefined, options);
 
-
   const goNext = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideNext();
     }
   };
+  const handleLogout = async () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    try {
+      removeAccessToken();
+      router.push('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  const handleCancelLogout = () => {
+    setShowPopup(false);
+  };
+  const imageUrl = `http://localhost:9000/public/${userProfileData?.profilepic}`;
+  const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
 
   return (
     <>
+      {showPopup && (
+        <LogoutConfirmationPopup
+          onConfirm={handleConfirmLogout}
+          onCancel={handleCancelLogout}
+        />
+      )}
+    {accessToken && (
+         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
+         <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
+           <div className="img w-[30px] h-[30px]">
+             {profilePicSrc ? (
+               <Image
+                 style={{ width: '30px', height: '30px' }}
+                 width={30}
+                 height={30}
+                 alt="Profile"
+                 src="/deafult-user.jpg"
+                 className="xl:w-[2rem] rounded-3xl w-[25px]"
+               />
+             ) : (
+               <Image
+                 style={{ width: '30px', height: '30px' }}
+                 width={30}
+                 height={30}
+                 alt="Profile Picture"
+                 src={imageUrl}
+                 className="xl:w-[2rem] rounded-3xl w-[25px]"
+               />
+             )}
+           </div>
+           <div className="name flex items-center">
+             <h1 className="text-white font-semibold xl:text-sm text-xs">{userProfileData?.name}</h1>
+           </div>
+           <div className="logout rounded-3xl">
+             <button
+               className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer"
+               onClick={handleLogout}
+             >
+               Log Out
+             </button>
+           </div>
+         </div>
+       </div>
+        )}
       <section className="flex  z-10 py-5 overflow-auto">
+        
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
           <h1
             id="pageDiv"
@@ -376,7 +411,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             {blogData?.title}
           </h1>
           <div className="flex flex-row gap-3 w-full items-center mb-3">
-            <Image width={25} height={25}
+            <Image
+              width={25}
+              height={25}
               alt="test"
               src={`http://localhost:9000/public/${blogData?.user_details?.profilepic}`}
               className="w-[30px] h-[30px] shrink-0 rounded-[50%]"
@@ -384,14 +421,15 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             <div className="flex flex-col gap-1">
               <div className="flex flex-row ml-0 gap-3 items-center">
                 <div className="flex flex-row items-center">
-                  <div className="text-sm font-['Poppins'] font-medium leading-[7.75px] text-[#d2d2d2] w-24">
+                  <div className="text-sm font-['Poppins'] font-medium leading-[7.75px] text-[#d2d2d2] w-[7rem]">
                     {blogData?.user_details?.username}
                   </div>
                   {/* <Image width={25} height={25} alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2" /> */}
                 </div>
                 <div
-                  className={`border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border  w-2/5  h-[20px] rounded cursor-pointer ${isFollowing ? 'bg-gray-200' : ''
-                    }`}
+                  className={`border-solid border-white bg-white flex flex-col w-16 shrink-0 h-4 items-center py-1 border  w-2/5  h-[20px] rounded cursor-pointer ${
+                    isFollowing ? 'bg-gray-200' : ''
+                  }`}
                   onClick={handleFollowClick}
                 >
                   <div className="text-xs font-['Poppins'] font-medium tracking-[0.59] leading-[7.58px] text-[#ad00ff] w-5/5">
@@ -407,7 +445,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             </div>
           </div>
 
-          <Image width={25} height={25}
+          <Image
+            width={25}
+            height={25}
             className="w-full h-[70%] rounded-[43px] object-cover"
             src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
             alt="test3"
@@ -427,7 +467,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             <div className="justify-start items-center gap-3 inline-flex mt-4">
               <button className="btn">Convert to speech!</button>
               <button className="min-w-0 w-8">
-                <Image width={25} height={25}
+                <Image
+                  width={25}
+                  height={25}
                   alt="test4"
                   src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
                   className="min-w-0 relative w-8"
@@ -454,20 +496,24 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                 <FaIcons.FaShareSquare className="w-10 fill-white w-[32px] h-[32px]" />
               </button>
             </div>
-
-
           </div>
           <hr className="opacity-25 bg-light relative bg-white w-full h-[2px]  block mt-5" />
           <div className="flex flex-col flex-wrap gap-20 relative w-full     mt-5">
             <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
               {blogData?.content}
             </p>
-            <Image width={500} height={400} alt="test5" src={`http://localhost:9000/public/${blogData?.img}`} className="w-[100%] rounded-[30px]" />
+            <Image
+              width={500}
+              height={400}
+              alt="test5"
+              src={`http://localhost:9000/public/${blogData?.img}`}
+              className="w-[100%] rounded-[30px]"
+            />
             <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
               Thank You for Reading Blog{' '}
             </p>
             <div>
-              <div className="flex flex-row gap-3 w-full items-center cursor-pointer mb-4" >
+              <div className="flex flex-row gap-3 w-full items-center cursor-pointer mb-4">
                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="31" height="31" fill="#3B3B3B" />
                   <g id="view blog &#62;desktop" clipPath="url(#clip0_0_1)">
@@ -504,7 +550,10 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   </defs>
                 </svg>
                 <div className="flex flex-col gap-2 w-[285px] h-5">
-                  <div className="text-xl font-['Poppins'] font-medium leading-[11px] text-white" onClick={toggleCommentBox}>
+                  <div
+                    className="text-xl font-['Poppins'] font-medium leading-[11px] text-white"
+                    onClick={toggleCommentBox}
+                  >
                     Comment Your Thoughts....
                   </div>
                   <div className="border-solid border-[#8d8d8d] mr-1 h-px shrink-0 border-t border-b-0 border-x-0" />
@@ -512,17 +561,22 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
               </div>
 
               <div
-                className={`bg-[#212121] flex-row justify-start flex-column gap-5 relative w-full h-71 items-end pb-2 px-2 rounded-[19.296960830688477px] ${isCommentBoxOpen ? 'block' : 'hidden'
-                  }`}
+                className={`bg-[#212121] flex-row justify-start flex-column gap-5 relative w-full h-71 items-end pb-2 px-2 rounded-[19.296960830688477px] ${
+                  isCommentBoxOpen ? 'block' : 'hidden'
+                }`}
               >
-                <div className='h-[215px] overflow-auto smooth-scroll' style={{ padding: '15px 20px' }} ref={commentsContainerRef}>
+                <div
+                  className="h-[215px] overflow-auto smooth-scroll"
+                  style={{ padding: '15px 20px' }}
+                  ref={commentsContainerRef}
+                >
                   <div style={{ height: '15px' }}></div>
 
                   {comments?.map((comment: any) => (
                     <div key={comment.id} className="flex items-center justify-between mb-5">
-                      <div className='flex flex-col'>
-                      <div className="text-white">{comment.content}</div>
-                      <div className="text-[#ea95ff] text-xs mt-1">{formatDateToRelative(comment?.createdAt)}</div>
+                      <div className="flex flex-col">
+                        <div className="text-white">{comment.content}</div>
+                        <div className="text-[#ea95ff] text-xs mt-1">{formatDateToRelative(comment?.createdAt)}</div>
                       </div>
 
                       <div className="icons flex justify-between items-center gap-2 ">
@@ -556,7 +610,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                       onChange={(e) => setContent(e.target.value)}
                     ></textarea>
                     <button className="min-h-0 min-w-0">
-                      <Image width={25} height={25}
+                      <Image
+                        width={25}
+                        height={25}
                         alt="test5"
                         src="https://file.rendit.io/n/pXhcAcr2az9Z3CozUPlQ.svg"
                         className="min-h-0 min-w-0 mb-1 relative w-6 shrink-0 ml-3"
@@ -571,7 +627,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             <div className="bg-[rgba(36,_35,_35,_0.35)] p-4">
               <div className="flex flex-col justify-start gap-3 relative w-full items-stretch">
                 <div className="flex flex-row justify-start gap-px relative items-center mb-px mr-12">
-                  <Image width={25} height={25}
+                  <Image
+                    width={25}
+                    height={25}
                     alt="test5"
                     className="min-h-0 min-w-0 mr-1 relative w-6 shrink-0 rounded-[50%]"
                     src={blogData?.user_details?.img}
@@ -579,7 +637,13 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   <p className="text-sm font-['Poppins'] font-medium leading-[7.56px] text-white relative inline-block">
                     {blogData?.user_details?.username}
                   </p>
-                  <Image width={25} height={25} alt="test5" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2 w-5" />
+                  <Image
+                    width={25}
+                    height={25}
+                    alt="test5"
+                    src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png"
+                    className="ml-2 w-5"
+                  />
                 </div>
                 <div className="text-xs font-['Poppins'] leading-[11.6px] text-white relative"> 2.5K followers</div>
                 <div className="text-xs font-['Poppins'] font-light leading-[18.6px] text-white relative"></div>
@@ -619,7 +683,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                 >
                   <SwiperSlide>
                     <div className="blog-card">
-                      <Image width={25} height={25}
+                      <Image
+                        width={25}
+                        height={25}
                         alt="test5"
                         src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                         className="w-full h-[200px] object-cover"
@@ -633,7 +699,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   </SwiperSlide>
                   <SwiperSlide>
                     <div className="blog-card">
-                      <Image width={25} height={25}
+                      <Image
+                        width={25}
+                        height={25}
                         alt="test6"
                         src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                         className="w-full h-[200px] object-cover"
@@ -647,7 +715,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   </SwiperSlide>
                   <SwiperSlide>
                     <div className="blog-card">
-                      <Image width={25} height={25}
+                      <Image
+                        width={25}
+                        height={25}
                         alt="test7"
                         src={'https://img.blogerbase.com/api/upload/KlBLAzhWLU'}
                         className="w-full h-[200px] object-cover"
@@ -659,7 +729,6 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                       </div>
                     </div>
                   </SwiperSlide>
-
                 </Swiper>
 
                 <button onClick={goNext} className="custom-next-button ml-5">
@@ -690,7 +759,7 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
             </div>
           </div>
         </div>
-        {accessToken &&
+        {accessToken && (
           <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
             <div className="rightwrapper py-5 flex flex-col justify-between">
               <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">
@@ -700,40 +769,49 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   </h1>
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  {relatedBlogData?.map((post: any,index:number) => (
+                  {relatedBlogData?.map((post: any, index: number) => (
                     <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl" key={post?._id}>
                       <div className="title">
-                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                          {post?.title}
-                        </h1>
+                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{post?.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
                         <div className="left flex gap-1 items-center">
                           <div className="prof">
-                            <Image width={25} height={25} alt="test8" src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png" className="w-4" />
+                            <Image
+                              width={25}
+                              height={25}
+                              alt="test8"
+                              src="https://file.rendit.io/n/DHgSaM3f3YuNXwHCzdKQ.png"
+                              className="w-4"
+                            />
                           </div>
                           <div className="writer xl:text-xs text-[10px]">
                             <h1>{post?.name}</h1>
                           </div>
                           <div className="actions flex gap-1 items-center">
-                          <button className="min-w-0 mr-px" onClick={() => handleRealtedBlogLikeClick(index, post?._id)}>
-                        {likedPosts[index] ? (
-                            <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
-                        ) : (
-                            <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
-                        )}
-                    </button>
-                    <button className="min-w-0 mr-px"  onClick={()=>handlerealtedSaveClick(index, post?._id)}>
-                        {savedrealtedblog[index] ? (
-                            <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
-                        ) : (
-                            <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
-                        )}
-                    </button>
+                            <button
+                              className="min-w-0 mr-px"
+                              onClick={() => handleRealtedBlogLikeClick(index, post?._id)}
+                            >
+                              {likedPosts[index] ? (
+                                <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
+                              ) : (
+                                <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
+                              )}
+                            </button>
+                            <button className="min-w-0 mr-px" onClick={() => handlerealtedSaveClick(index, post?._id)}>
+                              {savedrealtedblog[index] ? (
+                                <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                              ) : (
+                                <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                              )}
+                            </button>
                           </div>
                         </div>
                         <div className="right flex items-center">
-                          <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]">{post?.likes} </div>
+                          <div className="views bg-[#6dc993] font-bold rounded-2xl px-1 xl:text-xs text-[10px]">
+                            {post?.likes}{' '}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -758,26 +836,30 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
                   {trendingpostData?.map((item: any, index: number) => (
                     <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
                       <div className="title">
-                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">
-                          {item.title}
-                        </h1>
+                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{item.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
                         <div className="left flex gap-1 items-center">
                           <div className="prof rounded-3">
-                            <Image width={25} height={25} alt={`user-${index}`} src={item.user_details?.img} className="w-4 rounded-lg" />
+                            <Image
+                              width={25}
+                              height={25}
+                              alt={`user-${index}`}
+                              src={item.user_details?.img}
+                              className="w-4 rounded-lg"
+                            />
                           </div>
                           <div className="writer xl:text-xs text-[10px]">
                             <h1>{item.user_details?.name}</h1>
                           </div>
                           <div className="actions flex gap-1 items-center">
-                          <button className="min-w-0 mr-px"  onClick={()=>handletrendingSaveClick(index, item?._id)}>
-                        {savedtrendingblog[index] ? (
-                            <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
-                        ) : (
-                            <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
-                        )}
-                    </button>
+                            <button className="min-w-0 mr-px" onClick={() => handletrendingSaveClick(index, item?._id)}>
+                              {savedtrendingblog[index] ? (
+                                <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
+                              ) : (
+                                <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
+                              )}
+                            </button>
                           </div>
                         </div>
                         <div className="right flex items-center">
@@ -800,11 +882,9 @@ const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
               </a>
             </div>
           </div>
-        }
+        )}
       </section>
-      {isShareModalOpen && (
-        <ShareModal shareType={shareType} onClose={closeShareModal} shareurl='test'/>
-      )}
+      {isShareModalOpen && <ShareModal shareType={shareType} onClose={closeShareModal} shareurl="test" />}
     </>
   );
 }

@@ -25,8 +25,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
       setIsLoading(false);
     };
 
- 
-
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
 
@@ -39,7 +37,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <>
       {isLoading && <Loader />}
-       <div className={`App-list ${isLoading ? 'loading-App' : ''}`}>
+      <div className={`App-list ${isLoading ? 'loading-App' : ''}`}>
         <Header />
         {children}
         <Footer />

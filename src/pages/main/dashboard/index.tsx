@@ -19,11 +19,12 @@ import {
   savePost,
   unsavePost,
 } from '@/src/services/post';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ShareModal from '../profile/ShareModal';
+import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
 
 Dashboard.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
@@ -51,11 +52,13 @@ const ExperienceCard = ({
   function formatDate(inputDate: any) {
     const date = new Date(inputDate);
     const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthIndex = date.getMonth();
     const year = date.getFullYear().toString();
 
-    return `${day}-${month}-${year}`;
+    return `${day} ${monthNames[monthIndex]}, ${year}`;
   }
+
   const formattedDate = formatDate(createdAt);
 
   const initialsavePost = userProfile?.savedPosts.includes(blogId);
@@ -154,11 +157,6 @@ const ExperienceCard = ({
             className="w-full h-full object-cover"
             style={{ borderRadius: '50%' }}
           />
-          {/* <Image
-                        src="https://images.theconversation.com/files/479421/original/file-20220816-10908-uvh62x.jpg?ixlib=rb-1.1.0&rect=4%2C5%2C994%2C497&q=45&auto=format&w=668&h=324&fit=crop" 
-                        width={200}
-                        height={200}
-                    /> */}
         </div>
       }
     >
@@ -225,7 +223,7 @@ const ExperienceCard = ({
 };
 
 export default function Dashboard() {
-  const { accessToken } = useAuth();
+  const { accessToken, removeAccessToken } = useAuth();
 
   const [userProfile, setUserProfile] = useState<any>(null);
   const [userPosts, setUserPosts] = useState<any>([]);
@@ -238,6 +236,25 @@ export default function Dashboard() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+
+
+  const handleLogout = async () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    try {
+      removeAccessToken();
+      router.push('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  const handleCancelLogout = () => {
+    setShowPopup(false);
+  };
 
   useEffect(() => {
     const fetchUserProfileAndPosts = async () => {
@@ -260,22 +277,32 @@ export default function Dashboard() {
     };
 
     fetchUserProfileAndPosts();
-  }, [accessToken]);
+  }, [accessToken, searchQuery]);
 
   const [searchResults, setSearchResults] = useState([]);
   const [normalResults, setNormalResults] = useState<any>([]);
+  const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
+  const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
+  console.log(profilePicSrc, '==');
 
   useEffect(() => {
-    const fetchUserProfileAndPosts = async () => {
+    const fetchPosts = async () => {
       try {
         if (searchQuery) {
           const posts = await getAllPosts(accessToken, 10, 0, searchQuery);
           setSearchResults(posts?.data[0]?.data);
-
           setNormalResults([]);
         } else {
-          const posts = await getAllPosts(accessToken, currentPage * 10, currentSkipPage * 10 + 4, '');
-          setNormalResults((prevResults: any) => [...prevResults, ...posts?.data[0]?.data]);
+          const posts = await getAllPosts(
+            accessToken,
+            currentPage * 10,
+            (currentSkipPage * 10) + 0,
+            ''
+          );
+          setNormalResults((prevResults: any) => [
+            ...prevResults,
+            ...posts?.data[0]?.data,
+          ]);
           console.log(normalResults, 'render post');
         }
       } catch (error) {
@@ -283,8 +310,8 @@ export default function Dashboard() {
       }
     };
 
-    fetchUserProfileAndPosts();
-  }, [searchQuery, currentPage]);
+    fetchPosts();
+  }, [searchQuery, currentPage, accessToken, currentSkipPage]);
 
   const receiveDataFromChild = (type: any, postId: string, url: string) => {
     setShareType(type);
@@ -320,6 +347,12 @@ export default function Dashboard() {
 
   return (
     <>
+      {showPopup && (
+        <LogoutConfirmationPopup
+          onConfirm={handleConfirmLogout}
+          onCancel={handleCancelLogout}
+        />
+      )}
       <section className="flex z-10 py-5 overflow-auto">
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
           <div className="text-white bg-[#393939] rounded-3xl py-1 px-3 mt-2 flex justify-between items-center mx-10 w-[85%]">
@@ -361,7 +394,7 @@ export default function Dashboard() {
                       id={post?.user_details?._id}
                       blogId={post?._id}
                       accessToken={accessToken}
-                      userPosts={searchResults} // Pass searchResults for onDataReceived if needed
+                      userPosts={searchResults}
                       onDataReceived={receiveDataFromChild}
                     />
                   ))
@@ -392,6 +425,29 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="postright order-2 w-[22%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
+          <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 md-3">
+            <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
+              <div className="img w-[30px] h-[30px]">
+                <Image
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
+                  alt="Profile Picture"
+                  src={imageUrl}
+                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                />
+              </div>
+
+              <div className="logout rounded-3xl">
+                <button
+                  className="bg-gradient-to-r from-purple-500 mb-1 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </div>
           <div className="">
             <div className="rightwrapper py-5 flex flex-col justify-between">
               <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">
