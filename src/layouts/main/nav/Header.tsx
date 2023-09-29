@@ -94,7 +94,7 @@ const Header = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold p-2 rounded-full shadow-md text-sm flex gap-1"
+            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white text-center font-bold p-2 w-[65px] rounded-full shadow-md text-sm flex gap-1"
             onClick={() => router.push(PATH_AUTH.login)}
           >
             {/* <Image
@@ -103,7 +103,7 @@ const Header = () => {
               alt="test5"
               fill={true}
             /> */}
-            <p>Login</p>
+            <p className='m-auto'>Login</p>
           </motion.button>
         </div>
       </nav>

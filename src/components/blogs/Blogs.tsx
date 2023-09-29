@@ -31,7 +31,7 @@ const Blogs = () => {
         const limit = page * 10;
         const skip = limit - 10;
         const category = selectedFilterName;
-        const response = await getAllPosts(accessTokenFromCookie, limit, skip, category);
+        const response = await getAllPosts(accessTokenFromCookie,null,null,category);
         const data = response?.data[0]?.data;
         if (page === 1) {
           setRandomBlogs(data as Blog[]);
@@ -107,11 +107,6 @@ const Blogs = () => {
                     <Card key={index} img={img} title={title} content={content} index={index} _id={_id} />
                   ))}
             </div>
-          </div>
-          <div className="flex justify-center mt-5">
-            <button className="btn" onClick={loadMore}>
-              Load More
-            </button>
           </div>
         </div>
       </div>

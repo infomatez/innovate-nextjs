@@ -515,7 +515,7 @@ export default function Dashboard() {
                   width={30}
                   height={30}
                   alt="Profile Picture"
-                  src={`/${user?.img}`}
+                  src={`${user?.img}`}
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 />
               </div>
