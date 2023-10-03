@@ -506,10 +506,21 @@ export default function Dashboard() {
                     People You Follow
                   </h1>
                 </div>
-                <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide p-6">
+                <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide p-3">
                   {following.map((user: any) => (
-                    <a href="#" className="text-white" key={user._id}>
-                      <h5 className="inline-block">{user.name}</h5>
+                    <a href="#" className="text-white flex"  key={user?._id}>
+                     <div className="img w-[30px] h-[30px]">
+                <Image
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
+                  alt="Profile Picture"
+                  src={`${user?.img}`}
+                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                />
+              </div>
+
+                      <h5 className="inline-block mt-2 ms-2" >{user.name}</h5>
                       {user?.verified === 'true' ? <MdIcons.MdVerified className="fill-[blue] inline-block" /> : ''}
                     </a>
                   ))}

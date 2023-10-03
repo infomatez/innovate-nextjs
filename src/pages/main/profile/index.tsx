@@ -51,10 +51,15 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const initialLikedPosts = userPosts?.map((post: any, index) => post?.likedBy?.includes(userProfile?._id)) || [];
+    const initialSavePosts = userPosts?.map((post: any) => post?.postSaved);
+
 
     setLikedPosts(initialLikedPosts);
+    setSavedPosts(initialSavePosts)
   }, [userPosts, userProfile]);
-  const [savedPosts, setSavedPosts] = useState<number[]>([]);
+  const initialSavePosts = userPosts?.map((post: any) => post?.postSaved);
+
+  const [savedPosts, setSavedPosts] = useState<boolean[]>(initialSavePosts);
 
   const handleLikeClick = async (index: number, postId: string) => {
     try {
@@ -79,30 +84,30 @@ export default function ProfilePage() {
       console.error('Error liking/disliking post:', error);
     }
   };
-
-  const handleSaveClick = (index: number, postId: string) => {
+  const handleSaveClick = async (index: number, postId: string) => {
     try {
-      if (savedPosts.includes(index)) {
-        unsavePost(accessTokenFromCookie, postId)
-          .then(() => {
-            setSavedPosts(savedPosts.filter((item) => item !== index));
-          })
-          .catch((error) => {
-            console.error('Error unsaving post:', error);
-          });
+      if (savedPosts[index]) {
+        await unsavePost(accessTokenFromCookie, postId);
+
+        setSavedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = false;
+          return updatedLikedPosts;
+        });
       } else {
-        savePost(accessTokenFromCookie, postId)
-          .then(() => {
-            setSavedPosts([...savedPosts, index]);
-          })
-          .catch((error) => {
-            console.error('Error saving post:', error);
-          });
+        await savePost(accessTokenFromCookie, postId);
+
+        setSavedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = true;
+          return updatedLikedPosts;
+        });
       }
     } catch (error) {
       console.error('Error saving/unsaving post:', error);
     }
   };
+
 
   const closeShareModal = () => {
     setIsShareModalOpen(false);
@@ -119,8 +124,8 @@ export default function ProfilePage() {
         setUserProfile(userProfileData?.message[0]);
         setIsLoading(false);
 
-        const userId = userProfileData.message[0]._id;
-        const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId);
+        const userId = userProfileData.message[0]?._id;
+        const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId,userId);
         setUserPosts(posts?.data[0]?.data);
         setIsLoading(false);
       } catch (error) {
@@ -129,7 +134,7 @@ export default function ProfilePage() {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [accessTokenFromCookie]);
 
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
@@ -371,9 +376,9 @@ export default function ProfilePage() {
                                       </button>
                                       <button
                                         className="min-w-0 mr-px"
-                                        onClick={() => handleSaveClick(index, post._id)}
+                                        onClick={() => handleSaveClick(index, post?._id)}
                                       >
-                                        {savedPosts.includes(index) ? (
+                                        {savedPosts[index] ? (
                                           <FaIcons.FaBookmark className="min-h-0 relative w-4 shrink-0" />
                                         ) : (
                                           <FaIcons.FaRegBookmark className="min-h-0 relative w-4 shrink-0" />
@@ -381,7 +386,7 @@ export default function ProfilePage() {
                                       </button>
                                       <button
                                         className="min-w-0 mr-px"
-                                        onClick={() => openShareModal('post', post._id)}
+                                        onClick={() => openShareModal('post', post?._id)}
                                       >
                                         <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
                                       </button>

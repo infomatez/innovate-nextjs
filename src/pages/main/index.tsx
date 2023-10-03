@@ -315,7 +315,7 @@ export default function MainPage() {
       await deleteComment(accessTokenFromCookie, commentId);
 
       // Remove the comment from the list of comments
-      setComments((prevComments: any) => prevComments.filter((comment: any) => comment._id !== commentId));
+      setComments((prevComments: any) => prevComments.filter((comment: any) => comment?._id !== commentId));
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -363,44 +363,44 @@ export default function MainPage() {
           onCancel={handleCancelLogout}
         />
       )}
-    {accessToken && (
-         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
-         <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
-           <div className="img w-[30px] h-[30px]">
-             {profilePicSrc ? (
-               <Image
-                 style={{ width: '30px', height: '30px' }}
-                 width={30}
-                 height={30}
-                 alt="Profile"
-                 src="/deafult-user.jpg"
-                 className="xl:w-[2rem] rounded-3xl w-[25px]"
-               />
-             ) : (
-               <Image
-                 style={{ width: '30px', height: '30px' }}
-                 width={30}
-                 height={30}
-                 alt="Profile Picture"
+      {accessToken && (
+        <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
+          <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
+            <div className="img w-[30px] h-[30px]">
+              {profilePicSrc ? (
+                <Image
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
+                  alt="Profile"
+                  src="/deafult-user.jpg"
+                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                />
+              ) : (
+                <Image
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
+                  alt="Profile Picture"
                  src={imageUrl}
-                 className="xl:w-[2rem] rounded-3xl w-[25px]"
-               />
-             )}
-           </div>
-           <div className="name flex items-center">
-             <h1 className="text-white font-semibold xl:text-sm text-xs">{userProfileData?.name}</h1>
-           </div>
-           <div className="logout rounded-3xl">
-             <button
-               className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer"
-               onClick={handleLogout}
-             >
-               Log Out
-             </button>
-           </div>
-         </div>
-       </div>
-        )}
+                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                />
+              )}
+            </div>
+            <div className="name flex items-center">
+              <h1 className="text-white font-semibold xl:text-sm text-xs">{userProfileData?.name}</h1>
+            </div>
+            <div className="logout rounded-3xl">
+              <button
+                className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-1 px-2 rounded-full shadow-md text-xs cursor-pointer"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <section className="flex  z-10 py-5 overflow-auto">
         
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
@@ -574,9 +574,22 @@ export default function MainPage() {
 
                   {comments?.map((comment: any) => (
                     <div key={comment.id} className="flex items-center justify-between mb-5">
-                      <div className="flex flex-col">
+                      <div className='flex'>
+                      <Image
+                        style={{ width: '38px', height: '38px' }}
+                        width={30}
+                        height={30}
+                        alt="Profile Picture"
+                        src={`/${comment?.user_info?.img}`}
+                        className="xl:w-[2rem] rounded-3xl w-[25px] mt-1"
+                      />
+                      <div className="flex flex-col ms-2" >
+                        <span className='flex'>
+                        <h3 className='text-white'>@{comment?.user_info?.username}</h3>
+                        <div className="text-[#ea95ff] text-xs mt-1 ms-2">{formatDateToRelative(comment?.createdAt)}</div>
+                        </span>
                         <div className="text-white">{comment.content}</div>
-                        <div className="text-[#ea95ff] text-xs mt-1">{formatDateToRelative(comment?.createdAt)}</div>
+                      </div>
                       </div>
 
                       <div className="icons flex justify-between items-center gap-2 ">

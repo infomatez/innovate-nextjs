@@ -38,21 +38,29 @@ export const updatePost = async (accessToken: string | undefined , postId :strin
     }
   }
 
-  export const getAllPostsbyUserId = async (accessToken: string | undefined |null, userId: string) => {
+  export const getAllPostsbyUserId = async (accessToken: string | undefined |null, userId: string, loginuser:string) => {
     try {
+      let url = `${API_BASE_URL}/post/getAllPost?user_id=${userId}`;
+      
+      if (loginuser) {
+        // Only add the loginuser parameter if it's not empty
+        url += `&loginuser=${loginuser}`;
+      }
+      
       const response = await axios({
         method: 'get',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        url: `${API_BASE_URL}/post/getAllPost?user_id=${userId}`,
+        url: url,
       });
       return response.data;
     } catch (error) {
       throw error;
     }
   };
+  
   
   export const getAllSavePostsbyUserId = async (accessToken: string | undefined |null) => {
     try {
