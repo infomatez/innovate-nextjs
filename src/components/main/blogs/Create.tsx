@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { AnimatePresence, motion } from 'framer-motion';
-// import Loader from "../Loader.jsx";
 import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
