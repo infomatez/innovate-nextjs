@@ -9,13 +9,13 @@ interface ShareModalProps {
   shareurl: string;
 }
 
-const ShareModal = ({shareType,onClose,shareurl}:ShareModalProps) => {
+const ShareModal = ({ shareType, onClose, shareurl }: ShareModalProps) => {
   const [url, setUrl] = useState('');
   const closeModal = () => {
     onClose();
-};
+  };
   const handleCopy = () => {
-    console.log("lInk copied")
+    console.log('lInk copied');
   };
   let modalTitle = '';
   if (shareType === 'post') {

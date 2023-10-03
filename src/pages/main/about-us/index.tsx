@@ -7,10 +7,9 @@ AboutUsPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</U
 
 export default function AboutUsPage() {
   return (
-      <div className="text-white">
-        <AboutUs />
-      </div>
-    
+    <div className="text-white">
+      <AboutUs />
+    </div>
   );
 }
 

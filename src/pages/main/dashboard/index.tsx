@@ -238,9 +238,11 @@ export default function Dashboard() {
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
 
-
   const handleLogout = async () => {
     setShowPopup(true);
+  };
+  const handleTitleClick = (blogId: string) => {
+    router.push(`/main?blog_id=${blogId}`);
   };
 
   const handleConfirmLogout = async () => {
@@ -293,16 +295,8 @@ export default function Dashboard() {
           setSearchResults(posts?.data[0]?.data);
           setNormalResults([]);
         } else {
-          const posts = await getAllPosts(
-            accessToken,
-            currentPage * 10,
-            (currentSkipPage * 10) + 0,
-            ''
-          );
-          setNormalResults((prevResults: any) => [
-            ...prevResults,
-            ...posts?.data[0]?.data,
-          ]);
+          const posts = await getAllPosts(accessToken, currentPage * 10, currentSkipPage * 10 + 0, '');
+          setNormalResults((prevResults: any) => [...prevResults, ...posts?.data[0]?.data]);
           console.log(normalResults, 'render post');
         }
       } catch (error) {
@@ -347,12 +341,7 @@ export default function Dashboard() {
 
   return (
     <>
-      {showPopup && (
-        <LogoutConfirmationPopup
-          onConfirm={handleConfirmLogout}
-          onCancel={handleCancelLogout}
-        />
-      )}
+      {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
       <section className="flex z-10 py-5 overflow-auto">
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
           <div className="text-white bg-[#393939] rounded-3xl py-1 px-3 mt-2 flex justify-between items-center mx-10 w-[85%]">
@@ -459,7 +448,7 @@ export default function Dashboard() {
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
                   {trendingpostData?.map((item: any, index: number) => (
                     <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                      <div className="title">
+                      <div className="title" onClick={() => handleTitleClick(item?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{item.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
@@ -508,19 +497,19 @@ export default function Dashboard() {
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide p-3">
                   {following.map((user: any) => (
-                    <a href="#" className="text-white flex"  key={user?._id}>
-                     <div className="img w-[30px] h-[30px]">
-                <Image
-                  style={{ width: '30px', height: '30px' }}
-                  width={30}
-                  height={30}
-                  alt="Profile Picture"
-                  src={`${user?.img}`}
-                  className="xl:w-[2rem] rounded-3xl w-[25px]"
-                />
-              </div>
+                    <a href="#" className="text-white flex" key={user?._id}>
+                      <div className="img w-[30px] h-[30px]">
+                        <Image
+                          style={{ width: '30px', height: '30px' }}
+                          width={30}
+                          height={30}
+                          alt="Profile Picture"
+                          src={`${user?.img}`}
+                          className="xl:w-[2rem] rounded-3xl w-[25px]"
+                        />
+                      </div>
 
-                      <h5 className="inline-block mt-2 ms-2" >{user.name}</h5>
+                      <h5 className="inline-block mt-2 ms-2">{user.name}</h5>
                       {user?.verified === 'true' ? <MdIcons.MdVerified className="fill-[blue] inline-block" /> : ''}
                     </a>
                   ))}

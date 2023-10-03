@@ -1,5 +1,5 @@
 export enum LoginEnums {
-    LOGIN='login',
-    SIGN_UP='singUp',
-    INDEX='index'
+  LOGIN = 'login',
+  SIGN_UP = 'singUp',
+  INDEX = 'index',
 }

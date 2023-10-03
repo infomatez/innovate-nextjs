@@ -57,9 +57,8 @@ const Create = () => {
     setBlogState((prev) => ({ ...prev, tags: prev.tags.filter((tag) => tag !== target) }));
   };
   const handleCategoryChange = (event: any) => {
-    setSelectedCategory(event.target.value); 
+    setSelectedCategory(event.target.value);
   };
-
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -69,12 +68,10 @@ const Create = () => {
         }
 
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-        console.log(response)
+        console.log(response);
         if (response.message) {
           const contentFromAPI = response?.data[0]?.data[0]?.content;
-          const contentState = ContentState.createFromBlockArray(
-            convertFromHTML(contentFromAPI).contentBlocks
-          );
+          const contentState = ContentState.createFromBlockArray(convertFromHTML(contentFromAPI).contentBlocks);
           const newEditorState = EditorState.createWithContent(contentState);
           setBlogState({
             title: response?.data[0]?.data[0]?.title,
@@ -84,12 +81,12 @@ const Create = () => {
             font: response?.data[0]?.data[0]?.font,
           });
           setEditorState(newEditorState);
-          setSelectedCategory(response?.data[0]?.data[0]?.category)
+          setSelectedCategory(response?.data[0]?.data[0]?.category);
         } else {
-          console.error("Failed to fetch blog post data.");
+          console.error('Failed to fetch blog post data.');
         }
       } catch (error) {
-        console.error("An error occurred while fetching blog post data:", error);
+        console.error('An error occurred while fetching blog post data:', error);
       }
     };
 
@@ -102,14 +99,14 @@ const Create = () => {
         const categoryData = await getAllCategory(accessTokenFromCookie);
         setCategories(categoryData?.data);
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error('Error fetching user profile:', error);
       }
     };
 
     fetchCategories();
   }, []);
 
-  console.log(categories, "okokokokokoko")
+  console.log(categories, 'okokokokokoko');
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isLoading) {
@@ -163,8 +160,6 @@ const Create = () => {
     }
   };
 
-
-
   function filterWords(prefix: string) {
     return fonts.filter((font: any) => font.family.toLowerCase().startsWith(prefix));
   }
@@ -199,7 +194,6 @@ const Create = () => {
     }
   };
 
-
   const handleBlogStateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
     if (name !== 'previewImage') {
@@ -209,11 +203,10 @@ const Create = () => {
     if (files && files.length) {
       const selectedImageFile = files[0];
       const imageURL = URL.createObjectURL(selectedImageFile);
-      setImagePreviewURL(imageURL)
+      setImagePreviewURL(imageURL);
       setBlogState((prev) => ({ ...prev, [name]: selectedImageFile }));
     }
   };
-
 
   return (
     <>
@@ -321,7 +314,13 @@ const Create = () => {
               {blogState.previewImage ? (
                 <div className="flex sm:flex-col flex-col-reverse gap-5 ">
                   <div className="sm:w-60 sm:h-[188px] w-28 h-[91px]">
-                    <Image width={25} height={25} src={imagePreviewURL} alt="preview image" className="w-full h-full object-contain" />
+                    <Image
+                      width={25}
+                      height={25}
+                      src={imagePreviewURL}
+                      alt="preview image"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <button
                     className="lg:p-2 p-1 text-white bg-black lg:text-sm sm:text-[10px] text-[10px] rounded-2xl border border-purple-500"
@@ -353,14 +352,20 @@ const Create = () => {
                 Add Image <br /> (JPG, JPEG AND PNG)
               </label>
             </div>
-            <div className=' flex flex-col gap-1 mb-4 cursor-pointer'>
+            <div className=" flex flex-col gap-1 mb-4 cursor-pointer">
               <label htmlFor="tags" className="text-white font-inter text-[6px] text-sm font-semibold ">
                 Select Your Category
               </label>
-              <select value={selectedCategory} onChange={handleCategoryChange} className='cursor-pointer rounded-md outline-none sm:py-3 text-[7px] text-base py-[6px] px-1 bg-[#252525] text-white w-full'>
-                <option className="cursor-pointer" value="">Select a category</option>
-                {categories?.map((category:any) => (
-                  <option key={category?._id} value={category?.name} className='cursor-pointer'>
+              <select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className="cursor-pointer rounded-md outline-none sm:py-3 text-[7px] text-base py-[6px] px-1 bg-[#252525] text-white w-full"
+              >
+                <option className="cursor-pointer" value="">
+                  Select a category
+                </option>
+                {categories?.map((category: any) => (
+                  <option key={category?._id} value={category?.name} className="cursor-pointer">
                     {category?.name}
                   </option>
                 ))}
@@ -378,7 +383,6 @@ const Create = () => {
                   placeholder="Enter Tags and press Enter"
                   onKeyDown={(event) => handleTagInputKeyDown(event)}
                 />
-
               </div>
               <div
                 className={`flex flex-wrap gap-3 items-start rounded-lg border-[1px] border-[#666]  sm:h-40 h-24 sm:w-full w-[152px]`}

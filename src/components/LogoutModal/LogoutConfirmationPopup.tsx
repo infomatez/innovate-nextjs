@@ -5,21 +5,18 @@ type LogoutConfirmationPopupProps = {
   onCancel: () => void;
 };
 
-const LogoutConfirmationPopup: React.FC<LogoutConfirmationPopupProps> = ({
-  onConfirm,
-  onCancel,
-}) => {
+const LogoutConfirmationPopup: React.FC<LogoutConfirmationPopupProps> = ({ onConfirm, onCancel }) => {
   return (
     <div className="popup-background">
       <div className="popup">
         <p>Are you sure you want to log out?</p>
-        <div className='popup-buttons'>
-        <button className="confirm-button" onClick={onConfirm}>
-          Yes
-        </button>
-        <button className="cancel-button" onClick={onCancel}>
-          No
-        </button>
+        <div className="popup-buttons">
+          <button className="confirm-button" onClick={onConfirm}>
+            Yes
+          </button>
+          <button className="cancel-button" onClick={onCancel}>
+            No
+          </button>
         </div>
       </div>
     </div>

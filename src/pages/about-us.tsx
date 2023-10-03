@@ -5,7 +5,7 @@ import { owners, testimonials } from '../utils/constant';
 import CanvasLayout from '../layouts/canvas';
 import { FeedbackCard } from '../sections/about-us/feedback-card';
 import { useRouter } from 'next/router';
-import {  PATH_AUTH } from '../routes/path';
+import { PATH_AUTH } from '../routes/path';
 
 AboutUs.getLayout = (page: React.ReactElement) => <CanvasLayout>{page}</CanvasLayout>;
 

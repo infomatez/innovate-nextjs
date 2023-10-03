@@ -29,7 +29,6 @@ export default function ProfilePage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
   const [shareurl, setShareUrl] = useState('');
-  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -53,9 +52,8 @@ export default function ProfilePage() {
     const initialLikedPosts = userPosts?.map((post: any, index) => post?.likedBy?.includes(userProfile?._id)) || [];
     const initialSavePosts = userPosts?.map((post: any) => post?.postSaved);
 
-
     setLikedPosts(initialLikedPosts);
-    setSavedPosts(initialSavePosts)
+    setSavedPosts(initialSavePosts);
   }, [userPosts, userProfile]);
   const initialSavePosts = userPosts?.map((post: any) => post?.postSaved);
 
@@ -84,6 +82,7 @@ export default function ProfilePage() {
       console.error('Error liking/disliking post:', error);
     }
   };
+
   const handleSaveClick = async (index: number, postId: string) => {
     try {
       if (savedPosts[index]) {
@@ -108,7 +107,6 @@ export default function ProfilePage() {
     }
   };
 
-
   const closeShareModal = () => {
     setIsShareModalOpen(false);
   };
@@ -125,7 +123,7 @@ export default function ProfilePage() {
         setIsLoading(false);
 
         const userId = userProfileData.message[0]?._id;
-        const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId,userId);
+        const posts = await getAllPostsbyUserId(accessTokenFromCookie, userId, userId);
         setUserPosts(posts?.data[0]?.data);
         setIsLoading(false);
       } catch (error) {
@@ -147,8 +145,6 @@ export default function ProfilePage() {
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-
-
 
   const generateShareUrl = (blogId: string) => {
     return `${window.location.origin}/main?blog_id=${blogId}`;
@@ -172,12 +168,7 @@ export default function ProfilePage() {
 
   return (
     <>
-    {showPopup && (
-        <LogoutConfirmationPopup
-          onConfirm={handleConfirmLogout}
-          onCancel={handleCancelLogout}
-        />
-      )}
+      {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
       <div className="profilewrapper pb-[50px] flex flex-col  w-full items-center ms:h-auto">
         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
           <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">

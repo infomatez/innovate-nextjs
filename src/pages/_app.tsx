@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AuthProvider } from '../context/authContext'; 
+import { AuthProvider } from '../context/authContext';
 import './globalnew.css';
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
@@ -15,44 +15,39 @@ interface MyAppProps extends AppProps {
   Component: NextPageWithLayout;
 }
 
-
 export default function MyApp(props: MyAppProps) {
   const { Component, pageProps } = props;
-  const [isLoading , setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-
 
   useEffect(() => {
     const handleRouteChangeStart = () => {
-      setIsLoading(true); 
+      setIsLoading(true);
     };
-  
+
     const handleRouteChangeComplete = () => {
       setIsLoading(false);
     };
-  
+
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
-  
+
     return () => {
       router.events.off('routeChangeStart', handleRouteChangeStart);
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
     };
   }, []);
-  
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
-     {isLoading && <Loader />}
-    <Toaster />
+      {isLoading && <Loader />}
+      <Toaster />
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <AuthProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </AuthProvider>
+      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
     </>
   );
 }

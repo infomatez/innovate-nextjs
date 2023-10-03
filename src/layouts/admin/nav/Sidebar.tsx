@@ -1,54 +1,53 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { motion } from "framer-motion";
-import BookmarkSolidIcon from "@/src/components/icons/solid/BookmarkIcon";
-import HomeSolidIcon from "@/src/components/icons/solid/HomeIcon";
-import GroupSolidIcon from "@/src/components/icons/solid/GroupIcon";
-import TrendingUpIcon from "@/src/components/icons/border/TrendingUpIcon";
-import Link from "next/link";
-import Image from "next/image";
-import LogoIcon from '@/public/Logo-Main-image.png'
-import NotificationIcon from "@/src/components/icons/solid/NotificationIcon";
-import { PATH_DASHBOARD } from "@/src/routes/path";
-import profileImage from '@/public/alternate.png'
+import { motion } from 'framer-motion';
+import BookmarkSolidIcon from '@/src/components/icons/solid/BookmarkIcon';
+import HomeSolidIcon from '@/src/components/icons/solid/HomeIcon';
+import GroupSolidIcon from '@/src/components/icons/solid/GroupIcon';
+import TrendingUpIcon from '@/src/components/icons/border/TrendingUpIcon';
+import Link from 'next/link';
+import Image from 'next/image';
+import LogoIcon from '@/public/Logo-Main-image.png';
+import NotificationIcon from '@/src/components/icons/solid/NotificationIcon';
+import { PATH_DASHBOARD } from '@/src/routes/path';
+import profileImage from '@/public/alternate.png';
 
 const Sidebar = () => {
-
   const [view, setView] = useState(false);
   const sideItems = [
     {
       id: 1,
-      text: "Home",
+      text: 'Home',
       icon: <HomeSolidIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.dashboard,
     },
     {
       id: 2,
-      text: "Saved",
+      text: 'Saved',
       icon: <BookmarkSolidIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.saved,
     },
     {
       id: 3,
-      text: "Create",
+      text: 'Create',
       icon: <TrendingUpIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.create,
     },
     {
       id: 4,
-      text: "Notification",
+      text: 'Notification',
       icon: <NotificationIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.notification,
     },
     {
       id: 5,
-      text: "About Us",
+      text: 'About Us',
       icon: <GroupSolidIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.aboutUs,
     },
     {
-      id:65,
-      text: "Profile",
+      id: 65,
+      text: 'Profile',
       icon: (
         <>
           <Image
@@ -64,10 +63,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div
-      className='hidden sm:block w-[15%] xl:w-[14%]'
-      id="sidebar"
-    >
+    <div className="hidden sm:block w-[15%] xl:w-[14%]" id="sidebar">
       <div className="w-full flex flex-col justify-between h-[100vh] sticky top-0">
         <div className="title flex">
           {/* <img src="../BLOGERBASELOGO.jpg" alt="" className="w-[13vw] hidden" /> */}
@@ -80,10 +76,7 @@ const Sidebar = () => {
               key={s.id}
             >
               <div className="icon">{s.icon}</div>
-              <Link
-                href={s.to}
-                className="text font-semibold text-white xl:text-lg text-xs whitespace-nowrap"
-              >
+              <Link href={s.to} className="text font-semibold text-white xl:text-lg text-xs whitespace-nowrap">
                 {s.text}
               </Link>
             </div>
@@ -102,7 +95,6 @@ const Sidebar = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

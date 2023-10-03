@@ -30,7 +30,7 @@ MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</User
 export default function MainPage() {
   const router = useRouter();
   const { blog_id } = router.query;
-  const { accessToken , removeAccessToken} = useAuth();
+  const { accessToken, removeAccessToken } = useAuth();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
   const [comments, setComments] = useState([]);
@@ -320,7 +320,9 @@ export default function MainPage() {
       console.error('Error deleting comment:', error);
     }
   };
-
+  const handleTitleClick = (blogId: string) => {
+    router.push(`/main?blog_id=${blogId}`);
+  };
   const dateStr = blogData?.createdAt;
   const date = new Date(dateStr);
 
@@ -357,12 +359,7 @@ export default function MainPage() {
 
   return (
     <>
-      {showPopup && (
-        <LogoutConfirmationPopup
-          onConfirm={handleConfirmLogout}
-          onCancel={handleCancelLogout}
-        />
-      )}
+      {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
       {accessToken && (
         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mt-2 md-3">
           <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
@@ -382,7 +379,7 @@ export default function MainPage() {
                   width={30}
                   height={30}
                   alt="Profile Picture"
-                 src={imageUrl}
+                  src={imageUrl}
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 />
               )}
@@ -402,7 +399,6 @@ export default function MainPage() {
         </div>
       )}
       <section className="flex  z-10 py-5 overflow-auto">
-        
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
           <h1
             id="pageDiv"
@@ -574,22 +570,24 @@ export default function MainPage() {
 
                   {comments?.map((comment: any) => (
                     <div key={comment.id} className="flex items-center justify-between mb-5">
-                      <div className='flex'>
-                      <Image
-                        style={{ width: '38px', height: '38px' }}
-                        width={30}
-                        height={30}
-                        alt="Profile Picture"
-                        src={`/${comment?.user_info?.img}`}
-                        className="xl:w-[2rem] rounded-3xl w-[25px] mt-1"
-                      />
-                      <div className="flex flex-col ms-2" >
-                        <span className='flex'>
-                        <h3 className='text-white'>@{comment?.user_info?.username}</h3>
-                        <div className="text-[#ea95ff] text-xs mt-1 ms-2">{formatDateToRelative(comment?.createdAt)}</div>
-                        </span>
-                        <div className="text-white">{comment.content}</div>
-                      </div>
+                      <div className="flex">
+                        <Image
+                          style={{ width: '38px', height: '38px' }}
+                          width={30}
+                          height={30}
+                          alt="Profile Picture"
+                          src={`/${comment?.user_info?.img}`}
+                          className="xl:w-[2rem] rounded-3xl w-[25px] mt-1"
+                        />
+                        <div className="flex flex-col ms-2">
+                          <span className="flex">
+                            <h3 className="text-white">@{comment?.user_info?.username}</h3>
+                            <div className="text-[#ea95ff] text-xs mt-1 ms-2">
+                              {formatDateToRelative(comment?.createdAt)}
+                            </div>
+                          </span>
+                          <div className="text-white">{comment.content}</div>
+                        </div>
                       </div>
 
                       <div className="icons flex justify-between items-center gap-2 ">
@@ -784,7 +782,7 @@ export default function MainPage() {
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
                   {relatedBlogData?.map((post: any, index: number) => (
                     <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl" key={post?._id}>
-                      <div className="title">
+                      <div className="title cursor-pointer" onClick={() => handleTitleClick(post?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{post?.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
@@ -848,7 +846,7 @@ export default function MainPage() {
                 <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide">
                   {trendingpostData?.map((item: any, index: number) => (
                     <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
-                      <div className="title">
+                      <div className="title cursor-pointer" onClick={() => handleTitleClick(item?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{item.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
