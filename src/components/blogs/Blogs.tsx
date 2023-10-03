@@ -31,7 +31,7 @@ const Blogs = () => {
         const limit = page * 10;
         const skip = limit - 10;
         const category = selectedFilterName;
-        const response = await getAllPosts(accessTokenFromCookie,null,null,category);
+        const response = await getAllPosts(accessTokenFromCookie, null, null, category);
         const data = response?.data[0]?.data;
         if (page === 1) {
           setRandomBlogs(data as Blog[]);

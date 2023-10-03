@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import LogoIcon from '@/public/byteBlogger1.png';
 import Image from 'next/image';
-import { getUserProfile, editUserProfile } from "../../../services/user"
+import { getUserProfile, editUserProfile } from '../../../services/user';
 import { useAuth } from '@/src/context/authContext';
 import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
@@ -18,7 +18,7 @@ interface IProfileEditForm {
 }
 
 const ProfileEdit = () => {
-  const router = useRouter()
+  const router = useRouter();
   const accessTokenFromCookie = Cookies.get('accessToken');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [favcategories, setFavCategories] = useState<string[]>([]);
@@ -35,30 +35,30 @@ const ProfileEdit = () => {
   });
 
   const onSubmit: SubmitHandler<IProfileEditForm> = async (data: IProfileEditForm) => {
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
       const updatedProfileData = {
         username: data.username,
         profilename: data.name,
         bio: data.bio,
-        sociallinks: data.socialLinks?.split("\n").map((link) => link.trim()),
+        sociallinks: data.socialLinks?.split('\n').map((link) => link.trim()),
         image: profileImage,
         favcategories: favcategories,
       };
 
       const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
 
-      console.log("Profile updated:", result);
-      toast.success("Profile updated successfully");
+      console.log('Profile updated:', result);
+      toast.success('Profile updated successfully');
 
       setIsLoading(false);
     } catch (error: any) {
-      console.error("Error updating profile", error);
+      console.error('Error updating profile', error);
       if (error.message) {
         toast.error(error.message);
       } else {
-        toast.error("Error updating profile");
+        toast.error('Error updating profile');
       }
 
       setIsLoading(false);
@@ -82,27 +82,23 @@ const ProfileEdit = () => {
         const categoryData = await getAllCategory(accessTokenFromCookie);
         setCategories(categoryData?.data);
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error('Error fetching user profile:', error);
       }
     };
 
     fetchUserProfile();
   }, []);
-console.log(categories,"lllllllllllllssssssssssssssss");
-
+  console.log(categories, 'lllllllllllllssssssssssssssss');
 
   const handleFavCategory = (value: string) => {
     setFavCategories((prev) => {
       if (prev?.includes(value)) {
-      
         return prev.filter((category) => category !== value);
       } else {
-
         return [...(prev || []), value];
       }
     });
   };
-
 
   const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -111,7 +107,6 @@ console.log(categories,"lllllllllllllssssssssssssssss");
       setProfileImage(originalFile);
     }
   };
-
 
   return (
     <div className="mt-8 bg-sidebar w-full rounded-2xl p-0 md:py-[30px] md:px-[30px] xl:py-14 xl:px-[82px] mb-14">
@@ -136,7 +131,6 @@ console.log(categories,"lllllllllllllssssssssssssssss");
                 id="name"
                 {...register('name')}
                 className="rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-
               />
             </div>
             <div>
@@ -147,7 +141,6 @@ console.log(categories,"lllllllllllllssssssssssssssss");
                 rows={4}
                 id="bio"
                 className="resize-none rounded-[10px] w-full py-2 text-sm sm:text-base sm:py-4  text-[#fff]  font-poppins outline-none bg-[#252525] pl-3"
-
                 {...register('bio')}
               />
             </div>
@@ -169,7 +162,7 @@ console.log(categories,"lllllllllllllssssssssssssssss");
                 Favorite Categories
               </p>
               <div className="flex flex-wrap justify-center gap-1 sm:gap-2 ">
-                {categories.map((f:any, index) => (
+                {categories.map((f: any, index) => (
                   <button
                     type="button"
                     key={`filter-button-${index}`}
@@ -190,7 +183,8 @@ console.log(categories,"lllllllllllllssssssssssssssss");
               {profileImage ? (
                 <Image
                   src={URL.createObjectURL(profileImage)}
-                  height={24} width={25}
+                  height={24}
+                  width={25}
                   className="rounded-lg object-contain sm:w-52 w-28 h-24 sm:h-52"
                   alt="profile image"
                 />
@@ -230,9 +224,9 @@ console.log(categories,"lllllllllllllssssssssssssssss");
           <button
             className="rounded-[20px] py-1 sm:py-3 px-2 sm:px-4 bg-[#a801df] text-white font-inter text-xs sm:text-lg font-semibold"
             onClick={handleSubmit(onSubmit)}
-            disabled={isLoading} 
+            disabled={isLoading}
           >
-            {isLoading ? "Updating..." : "Submit"}
+            {isLoading ? 'Updating...' : 'Submit'}
           </button>
         </div>
       </form>

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 interface AuthContextData {
   accessToken: string | null;
   setAccessToken: (token: string | null) => void;
-  removeAccessToken: () => void; 
+  removeAccessToken: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
@@ -30,15 +30,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeAccessToken = () => {
-    Cookies.remove('accessToken'); 
+    Cookies.remove('accessToken');
     setAccessTokenState(null);
-  
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, removeAccessToken }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ accessToken, setAccessToken, removeAccessToken }}>{children}</AuthContext.Provider>
   );
 };
 

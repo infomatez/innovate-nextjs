@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { MeshDistortMaterial, OrbitControls, Sphere } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
@@ -19,4 +19,3 @@ export default function SphereEffect() {
     </Canvas>
   );
 }
-  

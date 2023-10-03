@@ -11,7 +11,6 @@ import { PATH_AUTH, PATH_DASHBOARD } from '@/src/routes/path';
 import { getUserProfile } from '@/src/services/user';
 import Cookies from 'js-cookie';
 
-
 const Header = () => {
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
 
@@ -31,7 +30,6 @@ const Header = () => {
       getUserProfile(accessTokenFromCookie)
         .then((response) => {
           setUsername(response?.message[0]?.username);
-          
         })
         .catch((error) => {
           console.error('Error fetching user profile:', error);
@@ -89,7 +87,7 @@ const Header = () => {
             </div>
           ))}
         </ul>
-       
+
         <div className="w-[50%] md:w-[16vw] flex sm:w-[22vw] justify-end lg:w-[12vw]">
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -103,7 +101,7 @@ const Header = () => {
               alt="test5"
               fill={true}
             /> */}
-            <p className='m-auto'>Login</p>
+            <p className="m-auto">Login</p>
           </motion.button>
         </div>
       </nav>

@@ -9,10 +9,10 @@ interface ICardProps {
   title: string;
   content: string;
   index: number;
-  _id:string
+  _id: string;
 }
 
-const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
+const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
   const router = useRouter();
   const [showMore, setShowMore] = useState(false);
 
@@ -20,11 +20,9 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
     setShowMore(!showMore);
   };
 
-  
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-
 
   return (
     <div
@@ -44,7 +42,9 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
         </picture>
       </div>
       <div className={`${style['timeline-content']} rounded-lg`}>
-        <h3 className='mb-3 cursor-pointer' onClick={() => handleTitleClick(_id)}>{title}</h3>
+        <h3 className="mb-3 cursor-pointer" onClick={() => handleTitleClick(_id)}>
+          {title}
+        </h3>
         <div className={`${style['image-box-inner']} mt-3 d-flex flex-col`}>
           <div className="w-full md:w-[40%] mt-3">
             {/* <div className="flex flex-row justify-end gap-3 relative items-center mt-[10px] md:mt-[50px] md:mb-50">
@@ -94,17 +94,24 @@ const Card: FC<ICardProps> = ({ img, title, content, index ,_id}) => {
             </div>
           </div>
 
-          
-            <div className="w-full md:flex-1 mt-2 mb-3">
-              <Image width={600} height={200} src={`http://localhost:9000/public/${img}`} className="w-full rounded-[23px] h-[280px] py-2" alt="test4" />
-            </div>
-          
+          <div className="w-full md:flex-1 mt-2 mb-3">
+            <Image
+              width={600}
+              height={200}
+              src={`http://localhost:9000/public/${img}`}
+              className="w-full rounded-[23px] h-[280px] py-2"
+              alt="test4"
+            />
+          </div>
         </div>
         <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white ">
           {showMore ? parse(content) : parse(content.split(' ').slice(0, 20).join(' '))}
         </p>
         <div className="flex justify-end">
-          <button className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]" onClick={toggleShowMore}>
+          <button
+            className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]"
+            onClick={toggleShowMore}
+          >
             <span className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative">
               {showMore ? 'Show Less' : 'Read More'}
             </span>

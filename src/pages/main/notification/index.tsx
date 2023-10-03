@@ -20,6 +20,9 @@ export default function NotificationPage() {
   const handleLogout = async () => {
     setShowPopup(true);
   };
+  const handleTitleClick = (blogId: string) => {
+    router.push(`/main?blog_id=${blogId}`);
+  };
 
   const handleConfirmLogout = async () => {
     try {
@@ -67,12 +70,7 @@ export default function NotificationPage() {
   };
   return (
     <>
-      {showPopup && (
-        <LogoutConfirmationPopup
-          onConfirm={handleConfirmLogout}
-          onCancel={handleCancelLogout}
-        />
-      )}
+      {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
       <section className="wrapper w-full px-2 py-10">
         <div className="row1 flex justify-center w-full md:justify-end ms:mb-5 mb-3 md-3">
           <div className="wrapper w-fit flex gap-3 items-center p-1 rounded-b-2xl">
@@ -99,7 +97,7 @@ export default function NotificationPage() {
           <div className="mt-4 py-4 px-4 md:px-8">
             {fetchUserNotification?.map((notification: any) => (
               <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4" key={notification?._id}>
-                <div className="flex md:items-center">
+                <div className="flex md:items-center cursor-pointer" onClick={() => handleTitleClick(notification?.post_id)}>
                   <div className="mt-2 mr-2">
                     <svg
                       width="25"

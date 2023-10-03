@@ -1,7 +1,7 @@
-import Image from "next/image";
-import React from "react";
-import { Link } from "react-scroll";
-import logoImage from '@/public/Logo-Main-image.png'
+import Image from 'next/image';
+import React from 'react';
+import { Link } from 'react-scroll';
+import logoImage from '@/public/Logo-Main-image.png';
 const Footer = () => {
   return (
     <div className="bg-black-600">
@@ -18,7 +18,9 @@ const Footer = () => {
               <h2 className="text-2xl font-bold mb-4">Categories</h2>
               <ul>
                 <li className="mb-2">
-                  <a href="#" className="hover:text-gray-300">Technology</a>
+                  <a href="#" className="hover:text-gray-300">
+                    Technology
+                  </a>
                 </li>
                 <li className="mb-2">
                   <Link
@@ -34,10 +36,7 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li className="mb-2">
-                  <a
-                    href="#"
-                    className="hover:text-gray-300"
-                  >
+                  <a href="#" className="hover:text-gray-300">
                     Hall of Fame
                   </a>
                 </li>
@@ -67,7 +66,6 @@ const Footer = () => {
         </div>
       </footer>
     </div>
-
   );
 };
 
