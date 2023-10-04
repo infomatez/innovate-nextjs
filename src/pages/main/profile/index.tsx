@@ -136,7 +136,7 @@ export default function ProfilePage() {
 
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
-  console.log(profilePicSrc, '==');
+
 
   const handleEditClick = (blogId: string) => {
     router.push(`/main/create-blog?blog_id=${blogId}`);

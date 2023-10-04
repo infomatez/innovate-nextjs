@@ -23,6 +23,19 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
+  const synth = window.speechSynthesis;
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const handleConvertToSpeech = () => {
+    if (isSpeaking) {
+      synth.cancel();
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(title);
+      synth.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
 
   return (
     <div
@@ -80,9 +93,9 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
               />
             </div> */}
             <div className="justify-start items-start gap-3 inline-flex mt-4 relative  bottom-0 left-0">
-              <button className="px-[10px] py-2 bg-fuchsia-700 rounded-md justify-center items-center gap-2.5 flex mb-3 mt-3">
-                <div className="text-white text-[13.021600723266602px] font-medium leading-3 ">Convert To Speech!</div>
-              </button>
+            <button className="button-34" onClick={handleConvertToSpeech}>
+          {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
+        </button>
               {/* <button className="min-w-0 w-8">
                 <Image
                   src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"

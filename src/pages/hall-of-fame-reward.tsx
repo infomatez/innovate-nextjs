@@ -26,8 +26,6 @@ export default function HOF() {
     fetchUserHofData();
   }, []);
 
-  console.log(userhalloffameData, 'jjjjjjjjjjjjjjj');
-
   return (
     <div className="w-full h-[100vh] overflow-y-scroll scrollbar-hide flex flex-col pt-10 p-5 text-slate-300 gap-20 ">
       <div className="titleofhof md:w-[80%] w-[90%] mx-auto flex items-center justify-between"></div>

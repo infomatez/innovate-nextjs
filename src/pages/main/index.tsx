@@ -56,6 +56,15 @@ export default function MainPage() {
   const [savedrealtedblog, setSavedrealtedBlog] = useState<any[]>(initialrealtedLikedPosts);
   const [savedtrendingblog, setSavedTrendingBlog] = useState<any[]>(initialtrendingLikedPosts);
   const [showPopup, setShowPopup] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  let synth:SpeechSynthesis | null = null;
+  const shareUrl = `${window.location.origin}/main?blog_id=${blog_id}`
+  useEffect(() => {
+    // Check if we are in a browser environment
+    if (typeof window !== 'undefined') {
+      synth = window.speechSynthesis;
+    }
+  }, []);
 
   const toggleCommentBox = () => {
     setCommentBoxOpen((prevState) => !prevState);
@@ -357,6 +366,17 @@ export default function MainPage() {
   const imageUrl = `http://localhost:9000/public/${userProfileData?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
 
+  const handleConvertToSpeech = () => {
+    if (isSpeaking) {
+      synth?.cancel();
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(blogData?.title);
+      synth?.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
+
   return (
     <>
       {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
@@ -461,7 +481,9 @@ export default function MainPage() {
           </div>
           <div className="flex flex-col-reverse md:flex-row justify-between">
             <div className="justify-start items-center gap-3 inline-flex mt-4">
-              <button className="btn">Convert to speech!</button>
+              <button className="button-34" onClick={handleConvertToSpeech}>
+                {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
+              </button>
               <button className="min-w-0 w-8">
                 <Image
                   width={25}
@@ -895,7 +917,7 @@ export default function MainPage() {
           </div>
         )}
       </section>
-      {isShareModalOpen && <ShareModal shareType={shareType} onClose={closeShareModal} shareurl="test" />}
+      {isShareModalOpen && <ShareModal shareType={shareType} onClose={closeShareModal} shareurl={shareUrl} />}
     </>
   );
 }
