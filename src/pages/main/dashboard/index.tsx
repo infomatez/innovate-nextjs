@@ -79,7 +79,7 @@ const ExperienceCard = ({
     }
   };
   const initialLikedPosts = userPosts?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
-  console.log(initialFollowUser, 'ppppppppppppp');
+
 
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
 
@@ -90,6 +90,8 @@ const ExperienceCard = ({
 
     const initialsavePost = userProfile?.savedPosts.includes(blogId);
     setSaved(initialsavePost);
+    const initialFollowUser = userProfile?.followers?.includes(id);
+    setIsFollowing(initialFollowUser)
   }, [userPosts, userProfile]);
 
   const handleSaveClick = async () => {
@@ -131,17 +133,26 @@ const ExperienceCard = ({
     }
   };
   const synth = window.speechSynthesis;
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleConvertToSpeech = () => {
-    if (synth.speaking) {
-      // If speech synthesis is currently active, stop it
+    if (isSpeaking) {
       synth.cancel();
+      setIsSpeaking(false);
     } else {
-      // Create an utterance from the title and speak it
       const utterance = new SpeechSynthesisUtterance(title);
       synth.speak(utterance);
+      setIsSpeaking(true);
     }
   };
+
+  // setInterval(() => {
+  //   if (synth.speaking && !isSpeaking) {
+  //     setIsSpeaking(true);
+  //   } else if (!synth.speaking && isSpeaking) {
+  //     setIsSpeaking(false);
+  //   }
+  // }, 500);
 
   const openShareModal = (type: any) => {
     if (type === 'post') {
@@ -202,7 +213,7 @@ const ExperienceCard = ({
               className="border border-[#cc00ff] rounded-2xl py-1 px-2 text-sm font-semibold"
               onClick={handleFollowClick}
             >
-              {userProfile?.followers?.includes(id) ? 'Following' : 'Follow'}
+              {isFollowing ? 'Following' : 'Follow'}
             </button>
           </div>
         </div>
@@ -229,8 +240,8 @@ const ExperienceCard = ({
           </button>
         </div>
         <button className="button-34" onClick={handleConvertToSpeech}>
-        {synth.speaking ? 'Stop Speaking' : 'Convert to Speech!'}
-      </button>
+          {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
+        </button>
       </div>
     </VerticalTimelineElement>
   );
@@ -251,6 +262,16 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+ 
+  const initialLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
+  const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
+
+  useEffect(() => {
+    const initialLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
+
+    setLikedPosts(initialLikedPosts);
+
+  }, [trendingpostData, userProfile]);
 
   const handleLogout = async () => {
     setShowPopup(true);
@@ -282,7 +303,7 @@ export default function Dashboard() {
         const posts = await getAllPosts(accessToken, 10, 4, searchQuery);
         setUserPosts(posts?.data[0]?.data);
 
-        const trendingpostresponse = await getTrendingPosts(accessToken, 10, 0);
+        const trendingpostresponse = await getTrendingPosts(accessToken, 20, 0);
         setTrendingPostdata(trendingpostresponse?.data[0]?.data);
 
         const followingData = await getUserFollowing(accessToken, userId);
@@ -299,7 +320,6 @@ export default function Dashboard() {
   const [normalResults, setNormalResults] = useState<any>([]);
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
-  console.log(profilePicSrc, '==');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -310,16 +330,21 @@ export default function Dashboard() {
           setNormalResults([]);
         } else {
           const posts = await getAllPosts(accessToken, currentPage * 10, currentSkipPage * 10 + 0, '');
-          setNormalResults((prevResults: any) => [...prevResults, ...posts?.data[0]?.data]);
-          console.log(normalResults, 'render post');
+          setNormalResults((prevResults: any) => {
+            const uniquePosts = posts?.data[0]?.data.filter((post:any) => 
+              !prevResults.some((prevPost:any) => prevPost._id === post._id)
+            );
+            return [...prevResults, ...uniquePosts];
+          });
         }
       } catch (error) {
         console.error('Error fetching user profile and posts:', error);
       }
     };
-
+  
     fetchPosts();
   }, [searchQuery, currentPage, accessToken, currentSkipPage]);
+  
 
   const receiveDataFromChild = (type: any, postId: string, url: string) => {
     setShareType(type);
@@ -335,7 +360,29 @@ export default function Dashboard() {
     setCurrentPage((prevPage) => prevPage + 1);
     setCurrentSkipPage((prevPage) => prevPage + 1);
   };
+  const handleLikeClick = async (index: number, postId: string) => {
+    try {
+      if (likedPosts[index]) {
+        await dislikePost(accessToken, postId);
 
+        setLikedPosts((prevLikedPosts:any) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = false;
+          return updatedLikedPosts;
+        });
+      } else {
+        await likePost(accessToken, postId);
+
+        setLikedPosts((prevLikedPosts:any) => {
+          const updatedLikedPosts = [...prevLikedPosts];
+          updatedLikedPosts[index] = true;
+          return updatedLikedPosts;
+        });
+      }
+    } catch (error) {
+      console.error('Error liking/disliking post:', error);
+    }
+  };
   const styles = {
     paddingX: 'sm:px-16 px-6',
     paddingY: 'sm:py-16 py-6',
@@ -414,7 +461,7 @@ export default function Dashboard() {
                       id={post?.user_details?._id}
                       blogId={post?._id}
                       accessToken={accessToken}
-                      userPosts={normalResults} // Pass normalResults for onDataReceived if needed
+                      userPosts={normalResults} 
                       onDataReceived={receiveDataFromChild}
                     />
                   ))}
@@ -480,8 +527,12 @@ export default function Dashboard() {
                             <h1>{item.user_details?.name}</h1>
                           </div>
                           <div className="actions flex gap-1 items-center">
-                            <button>
-                              <FaIcons.FaHeart className="min-h-0 text-[#0D7C83] relative w-4 shrink-0" />
+                            <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index,item?._id)}>
+                              {likedPosts[index] ? (
+                                <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
+                              ) : (
+                                <FaIcons.FaRegHeart className="min-h-0 relative w-4 shrink-0" />
+                              )}
                             </button>
                           </div>
                         </div>

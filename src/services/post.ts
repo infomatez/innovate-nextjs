@@ -152,7 +152,7 @@ export const getTrendingPosts = async (accessToken: string | undefined | null, l
   }
 };
 
-export const dislikePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
+export const dislikePost = async (accessToken: string | undefined | null, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post',
@@ -171,7 +171,7 @@ export const dislikePost = async (accessToken: string | undefined, postId: strin
   }
 };
 
-export const likePost = async (accessToken: string | undefined, postId: string | string[] | undefined) => {
+export const likePost = async (accessToken: string | undefined |null, postId: string | string[] | undefined) => {
   try {
     const response = await axios({
       method: 'post',

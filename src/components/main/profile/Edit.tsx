@@ -48,8 +48,6 @@ const ProfileEdit = () => {
       };
 
       const result = await editUserProfile(accessTokenFromCookie, updatedProfileData);
-
-      console.log('Profile updated:', result);
       toast.success('Profile updated successfully');
 
       setIsLoading(false);
@@ -88,7 +86,6 @@ const ProfileEdit = () => {
 
     fetchUserProfile();
   }, []);
-  console.log(categories, 'lllllllllllllssssssssssssssss');
 
   const handleFavCategory = (value: string) => {
     setFavCategories((prev) => {

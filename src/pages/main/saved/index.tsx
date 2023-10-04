@@ -51,7 +51,6 @@ export default function SavedBlogPage() {
 
     fetchUserProfile();
   }, [accessTokenFromCookie]);
-  console.log(userSavedProfileData);
 
   const styles = {
     paddingX: 'sm:px-16 px-6',

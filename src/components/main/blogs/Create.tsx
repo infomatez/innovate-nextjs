@@ -67,7 +67,6 @@ const Create = () => {
         }
 
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-        console.log(response);
         if (response.message) {
           const contentFromAPI = response?.data[0]?.data[0]?.content;
           const contentState = ContentState.createFromBlockArray(convertFromHTML(contentFromAPI).contentBlocks);
@@ -105,7 +104,6 @@ const Create = () => {
     fetchCategories();
   }, []);
 
-  console.log(categories, 'okokokokokoko');
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isLoading) {
@@ -143,10 +141,8 @@ const Create = () => {
         }
       } else {
         const response = await createPost(accessTokenFromCookie, formData);
-        console.log('Post created successfully!');
-
         if (response.message) {
-          console.log('Post created successfully!');
+          toast.success('Post created successfully!');
           router.push(PATH_DASHBOARD.profile);
         } else {
           console.error('Error creating post:', response.error);

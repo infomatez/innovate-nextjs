@@ -50,7 +50,7 @@ export default function NotificationPage() {
     fetchUserNotification();
   }, []);
 
-  console.log(fetchUserNotification);
+
 
   const styles = {
     paddingX: 'sm:px-16 px-6',
