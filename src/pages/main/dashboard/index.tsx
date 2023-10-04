@@ -130,6 +130,18 @@ const ExperienceCard = ({
       console.error('Error liking/disliking post:', error);
     }
   };
+  const synth = window.speechSynthesis;
+
+  const handleConvertToSpeech = () => {
+    if (synth.speaking) {
+      // If speech synthesis is currently active, stop it
+      synth.cancel();
+    } else {
+      // Create an utterance from the title and speak it
+      const utterance = new SpeechSynthesisUtterance(title);
+      synth.speak(utterance);
+    }
+  };
 
   const openShareModal = (type: any) => {
     if (type === 'post') {
@@ -216,7 +228,9 @@ const ExperienceCard = ({
             <FaIcons.FaShareSquare className="min-h-0 relative w-4 shrink-0" />
           </button>
         </div>
-        <button className="button-34">Convert to speech!</button>
+        <button className="button-34" onClick={handleConvertToSpeech}>
+        {synth.speaking ? 'Stop Speaking' : 'Convert to Speech!'}
+      </button>
       </div>
     </VerticalTimelineElement>
   );
@@ -422,7 +436,7 @@ export default function Dashboard() {
                   width={30}
                   height={30}
                   alt="Profile Picture"
-                  src={imageUrl}
+                  src={`/${imageUrl}`}
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 />
               </div>
@@ -447,9 +461,9 @@ export default function Dashboard() {
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
                   {trendingpostData?.map((item: any, index: number) => (
-                    <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
+                    <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl ">
                       <div className="title" onClick={() => handleTitleClick(item?._id)}>
-                        <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{item.title}</h1>
+                        <h1 className="font-[600] text-[#2e2e2e] text-[12px] cursor-pointer">{item.title}</h1>
                       </div>
                       <div className="details flex justify-between mt-2">
                         <div className="left flex gap-1 items-center">
@@ -458,7 +472,7 @@ export default function Dashboard() {
                               width={25}
                               height={25}
                               alt={`user-${index}`}
-                              src={item.user_details?.img}
+                              src={`/${item.user_details?.img}`}
                               className="w-4 rounded-lg"
                             />
                           </div>
@@ -504,7 +518,7 @@ export default function Dashboard() {
                           width={30}
                           height={30}
                           alt="Profile Picture"
-                          src={`${user?.img}`}
+                          src={`/${user?.img}`}
                           className="xl:w-[2rem] rounded-3xl w-[25px]"
                         />
                       </div>
