@@ -793,3 +793,167 @@ h2 {
 .cancel-button:hover {
   background-color: #a801df;
 }
+
+.skeleton-title {
+  background-color: #3f3f3f;
+  margin-bottom: 10px;
+  height: 38px;
+  width: 60%;
+}
+.skeleton-paragraph {
+  height: 42px;
+}
+.skeleton-avatar {
+  background-color: #3f3f3f;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-username {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 100px;
+}
+.skeleton-username-notification {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 220px;
+}
+
+.skeleton-follow-button {
+  background-color: #3f3f3f;
+  height: 30px;
+  width: 80px;
+}
+
+.skeleton-stats {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 100px;
+}
+.skeleton-stats-notification {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 280px;
+}
+.swiper-slide{
+  width: 33.3% !important;
+}
+.skeleton-image {
+  background-color: #3f3f3f;
+  height: 400px;
+  width: 100%;
+}
+
+.skeleton-category {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 80px;
+}
+
+.skeleton-icon {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 20px;
+}
+
+.skeleton-comment {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 100px;
+}
+
+.skeleton-comment-box {
+  background-color: #3f3f3f;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.skeleton-comment-header {
+  display: flex;
+  align-items: center;
+}
+
+.skeleton-comment-details {
+  margin-left: 10px;
+}
+
+.skeleton-comment-time {
+  background-color: #3f3f3f;
+  height: 10px;
+  width: 60px;
+  margin-top: 5px;
+}
+
+.skeleton-comment-content {
+  background-color: #3f3f3f;
+  height: 30px;
+  width: 100%;
+}
+
+.skeleton-comment-input {
+  background-color: #3f3f3f;
+  height: 50px;
+  width: 80%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.skeleton-comment-submit {
+  background-color: #3f3f3f;
+  height: 50px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+}
+
+.skeleton-avatar-bg {
+  background-color: #3f3f3f;
+}
+
+.skeleton-username-bg {
+  background-color: #3f3f3f;
+}
+
+.skeleton-icon-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.skeleton-follower-count {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 60px;
+}
+
+.skeleton-following {
+  background-color: #3f3f3f;
+  height: 20px;
+  width: 60px;
+}
+
+.skeleton-subtitle {
+  background-color: #3f3f3f;
+  height: 30px;
+  width: 80%;
+  margin: 20px auto;
+}
+
+.skeleton-card-text {
+  background-color: #3f3f3f;
+  height: 50px;
+  width: 100%;
+}
+
+.blog-card {
+  background-color: #3f3f3f;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}

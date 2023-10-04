@@ -304,7 +304,7 @@ const Create = () => {
           </form>
         </div>
         <div className="flex sm:flex-col flex-col-reverse sm:mt-12 sm:col-span-3 col-span-12 sm:order-2 order-1 sm:mr-9">
-          <div className="flex sm:flex-col flex-row justify-between sm:justify-normal px-2 mt-[14px] sm:mt-0">
+          <div className="flex sm:flex-col md:flex-col flex-col justify-between sm:justify-normal px-2 mt-[14px] sm:mt-0">
             <div className="flex sm:flex-col flex-col-reverse items-center gap-4 sm:mb-12 mt-3 sm:mt-0">
               {blogState.previewImage ? (
                 <div className="flex sm:flex-col flex-col-reverse gap-5 ">
@@ -402,7 +402,7 @@ const Create = () => {
           </div>
 
           <div className="flex sm:justify-center justify-between sm:mt-28">
-            <Image src={LogoIcon} fill={true} alt="logo icon" className="sm:hidden block" />
+            <Image src={LogoIcon} fill={true} alt="logo icon" className="hidden"/>
             <button
               className="rounded-md bg-[#bf02b5] sm:py-2 sm:px-5 py-1 px-[10px] sm:mr-0 mr-2 text-white font-inter font-semibold text-xs sm:text-xl mt-4"
               onClick={handleSubmit}

@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import router from 'next/router';
 import { useAuth } from '@/src/context/authContext';
 import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
+import NotificationSkeleton from '@/src/components/Skeleton/NotificationSkeleton';
 
 NotificationPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
@@ -16,6 +17,8 @@ export default function NotificationPage() {
   const [fetchUserNotification, setUserNotification] = useState<any>(null);
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [showPopup, setShowPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const handleLogout = async () => {
     setShowPopup(true);
@@ -42,6 +45,7 @@ export default function NotificationPage() {
       try {
         const userProfileData = await getUserAllNotifications(accessTokenFromCookie);
         setUserNotification(userProfileData?.data);
+        setIsLoading(false)
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
@@ -87,7 +91,7 @@ export default function NotificationPage() {
             </div>
           </div>
         </div>
-        <div className="bg-black-100 rounded-[20px] h-full overflow-y-scroll scrollbar-hide">
+        <div className="bg-black-100 rounded-[20px] min-h-[88vh] overflow-y-scroll scrollbar-hide">
           <div className={`${styles.padding} sidebar-bg-ct rounded-2xl`}>
             <p className={`${styles.sectionSubText} text-slate-400`}>See What's New!</p>
             <h2 className={styles.sectionHeadText} id="aboutush2">
@@ -95,7 +99,8 @@ export default function NotificationPage() {
             </h2>
           </div>
           <div className="mt-4 py-4 px-4 md:px-8">
-            {fetchUserNotification?.map((notification: any) => (
+            {isLoading ? <NotificationSkeleton/> : (
+            fetchUserNotification?.map((notification: any) => (
               <div className="bg-[#1f1f1f] rounded-[10px] p-4 shadow-md mb-4" key={notification?._id}>
                 <div className="flex md:items-center cursor-pointer" onClick={() => handleTitleClick(notification?.post_id)}>
                   <div className="mt-2 mr-2">
@@ -129,7 +134,8 @@ export default function NotificationPage() {
                   </div>
                 </div>
               </div>
-            ))}
+            )))
+}
           </div>
         </div>
       </section>
