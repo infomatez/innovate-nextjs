@@ -59,20 +59,20 @@ export default function MainPage() {
   const [savedtrendingblog, setSavedTrendingBlog] = useState<any[]>(initialtrendingLikedPosts);
   const [showPopup, setShowPopup] = useState(false);
 
-  const shareUrl = `${window.location.origin}/main?blog_id=${blog_id}`
-
-  const synth = window.speechSynthesis;
+  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/main?blog_id=${blog_id}`;
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const handleConvertToSpeech = () => {
-    if (isSpeaking) {
-      synth.cancel();
-      setIsSpeaking(false);
-    } else {
-      const utterance = new SpeechSynthesisUtterance(blogData?.title);
-      synth.speak(utterance);
-      setIsSpeaking(true);
-    }
-  };
+
+  // const synth = window.speechSynthesis;
+  // const handleConvertToSpeech = () => {
+  //   if (isSpeaking) {
+  //     synth.cancel();
+  //     setIsSpeaking(false);
+  //   } else {
+  //     const utterance = new SpeechSynthesisUtterance(blogData?.title);
+  //     synth.speak(utterance);
+  //     setIsSpeaking(true);
+  //   }
+  // };
 
   const toggleCommentBox = () => {
     setCommentBoxOpen((prevState) => !prevState);
@@ -484,7 +484,7 @@ export default function MainPage() {
           </div>
           <div className="flex flex-col-reverse md:flex-row justify-between">
             <div className="justify-start items-center gap-3 inline-flex mt-4">
-              <button className="button-34" onClick={handleConvertToSpeech}>
+              <button className="button-34">
                 {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
               </button>
               <button className="min-w-0 w-8">
