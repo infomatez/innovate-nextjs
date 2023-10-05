@@ -61,7 +61,7 @@ const Header = () => {
         )}
       >
         <div className="w-[50%] md:w-[auto] flex justify-between items-center">
-          <Image src={logoImage} alt="logo" className="rounded-3xl w-[85%] md:w-[12vw]" />
+          <Image src={logoImage} alt="logo" className="rounded-3xl w-[100%] md:w-[15vw]" />
         </div>
         <ul className="hidden justify-center md:flex items-center">
           {NAV_ITEM.map((name, index) => (
@@ -92,7 +92,7 @@ const Header = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white text-center font-bold p-2 w-[65px] rounded-full shadow-md text-sm flex gap-1"
+            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white text-center font-bold py-2 px-5 rounded-full shadow-md text-md flex gap-1 transition-all"
             onClick={() => router.push(PATH_AUTH.login)}
           >
             {/* <Image

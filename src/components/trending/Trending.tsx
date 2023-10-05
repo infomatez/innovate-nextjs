@@ -43,14 +43,13 @@ const Trending = () => {
   }, []);
 
   return (
-    <section id="Trending" className="py-14 w-full h-[auto] flex flex-col justify-center bg-grey-100">
+    <section id="Trending" className="py-14 w-full bg-gradient-to-r from-black-800 to-black-300 h-[auto] flex flex-col justify-center">
       <div className="text-4xl sm:text-3xl font-bold text-black-0 flex justify-center items-start w-full mb-10">
         <motion.p
-          className="font-bold text-3xl"
-          style={{ textShadow: '0px 0px 4px white' }}
+          className="font-bold text-3xl text-white"
+          style={{ textShadow: '0px 0px 4px black' }}
           whileHover={{
             scale: 1.05,
-            backgroundColor: 'white',
             cursor: 'pointer',
           }}
         >

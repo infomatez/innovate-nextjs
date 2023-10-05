@@ -1,6 +1,6 @@
 import { OrbitControls, Preload, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useRef } from 'react';
 import CanvasLoader from './CanvasLoader';
 
 const Earth = () => {
@@ -10,12 +10,44 @@ const Earth = () => {
 };
 
 const EarthCanvas = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const { clientWidth, clientHeight } = canvas.parentElement;
+        canvas.style.width = `${clientWidth}px`;
+        canvas.style.height = `${clientHeight}px`;
+        canvas.width = clientWidth;
+        canvas.height = clientHeight;
+      }
+    };
+
+    // Attach the resize event listener
+    window.addEventListener('resize', handleResize);
+
+    // Initial resize
+    handleResize();
+
+    // Clean up the event listener on unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <Canvas shadows>
+    <Canvas
+      ref={canvasRef}
+      shadows
+    //   onCreated={({ gl }) => {
+    //     gl.setClearColor('#000000'); // Set background color if needed
+    //   }}
+      className='canvas-main-area'
+    >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls autoRotate enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
-        <Earth />
-
+        <Earth canvasRef/>
         <Preload all />
       </Suspense>
     </Canvas>

@@ -506,6 +506,10 @@ h2 {
   overflow: hidden;
 }
 
+.canvas-main-area canvas{
+    width: 100% !important;
+}
+
 .h2tag::before {
   content: '';
   position: absolute;
@@ -956,4 +960,12 @@ h2 {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+}
+@media (max-width: 767px){
+    .blog-home-timeline-title{
+        font-size: 20px !important;
+    }
+    .timeline-dex-ct{
+        margin: 10px 0;
+    }
 }

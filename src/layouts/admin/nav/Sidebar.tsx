@@ -17,7 +17,7 @@ const Sidebar = () => {
   const sideItems = [
     {
       id: 1,
-      text: 'Home',
+      text: 'Dashboard',
       icon: <HomeSolidIcon fill="#cc00ff" />,
       to: PATH_DASHBOARD.dashboard,
     },

@@ -219,7 +219,7 @@ const ExperienceCard = ({
         </div>
       </div>
       <p>{content}</p>
-      <div className="icons flex justify-between items-center gap-2 mt-5">
+      <div className="icons flex flex-col items-start md:flex-row justify-between mb-3 mt-3 md:mt-0 md:mb-0 gap-4 md:gap-2 mt-5">
         <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
           <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index, blogId)}>
             {likedPosts[index] ? (
@@ -396,7 +396,7 @@ export default function Dashboard() {
       'text-[#dfd9ff] font-medium lg:text-[20px] sm:text-[26px] xs:text-[20px] text-[16px] lg:leading-[40px]',
 
     sectionHeadText:
-      "text-white text-center  font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px] font-family: 'Fjalla One'",
+      "text-white text-center  font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px] font-family: 'Fjalla One' mt-5",
     sectionSubText: 'sm:text-[18px] text-[14px] text-secondary uppercase tracking-wider',
   };
 
@@ -404,7 +404,7 @@ export default function Dashboard() {
     <>
       {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
       <section className="flex z-10 py-5 overflow-auto">
-        <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
+        <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] md:pr-[30px]">
           <div className="text-white bg-[#393939] rounded-3xl py-1 px-3 mt-2 flex justify-between items-center mx-10 w-[85%]">
             <div className="left flex gap-3">
               <div className="search">
@@ -428,7 +428,7 @@ export default function Dashboard() {
               Our Blogs
             </h2>
           </div>
-          <div className="mt-10 w-full flex flex-col overflow-y-scroll scrollbar-hide">
+          <div className="mt-10 w-full flex flex-col ">
             <VerticalTimeline>
               {searchQuery
                 ? searchResults.map((post: any, index: number) => (

@@ -368,7 +368,7 @@ const Create = () => {
             </div>
             <div className="h-fit mt-2">
               <div className="flex flex-col gap-1 mb-4">
-                <label htmlFor="tags" className="text-white font-inter text-[6px] sm:text-xs font-semibold ">
+                <label htmlFor="tags" className="text-white font-inter text-[14px] font-semibold ">
                   Add Tags
                 </label>
                 <input

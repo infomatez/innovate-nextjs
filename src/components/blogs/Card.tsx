@@ -55,7 +55,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
         </picture>
       </div>
       <div className={`${style['timeline-content']} rounded-lg`}>
-        <h3 className="mb-3 cursor-pointer" onClick={() => handleTitleClick(_id)}>
+        <h3 className="mb-3 cursor-pointer blog-home-timeline-title" onClick={() => handleTitleClick(_id)}>
           {title}
         </h3>
         <div className={`${style['image-box-inner']} mt-3 d-flex flex-col`}>
@@ -117,7 +117,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
             />
           </div>
         </div>
-        <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white ">
+        <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white timeline-dex-ct">
           {showMore ? parse(content) : parse(content.split(' ').slice(0, 20).join(' '))}
         </p>
         <div className="flex justify-end">
