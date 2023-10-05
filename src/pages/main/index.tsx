@@ -24,6 +24,7 @@ import {
   likePostComment,
 } from '@/src/services/comment';
 import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
+import BlogPostSkeleton from '@/src/components/Skeleton/BlogPostSkeleton';
 
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
@@ -34,6 +35,7 @@ export default function MainPage() {
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
   const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [content, setContent] = useState('');
   const [blogData, setBlogData] = useState<any>(null);
   const [relatedBlogData, setRelatedBlogData] = useState<any>(null);
@@ -56,15 +58,21 @@ export default function MainPage() {
   const [savedrealtedblog, setSavedrealtedBlog] = useState<any[]>(initialrealtedLikedPosts);
   const [savedtrendingblog, setSavedTrendingBlog] = useState<any[]>(initialtrendingLikedPosts);
   const [showPopup, setShowPopup] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  let synth:SpeechSynthesis | null = null;
+
   const shareUrl = `${window.location.origin}/main?blog_id=${blog_id}`
-  useEffect(() => {
-    // Check if we are in a browser environment
-    if (typeof window !== 'undefined') {
-      synth = window.speechSynthesis;
+
+  const synth = window.speechSynthesis;
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const handleConvertToSpeech = () => {
+    if (isSpeaking) {
+      synth.cancel();
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(blogData?.title);
+      synth.speak(utterance);
+      setIsSpeaking(true);
     }
-  }, []);
+  };
 
   const toggleCommentBox = () => {
     setCommentBoxOpen((prevState) => !prevState);
@@ -127,6 +135,7 @@ export default function MainPage() {
         if (!blog_id) {
           return;
         }
+        
         const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
         setBlogData(response?.data[0]?.data[0]);
 
@@ -134,6 +143,7 @@ export default function MainPage() {
 
         const relatedBlogResponse = await getPostsByCategory(accessTokenFromCookie, category);
         setRelatedBlogData(relatedBlogResponse?.data[0]?.data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching blog data:', error);
       }
@@ -150,6 +160,7 @@ export default function MainPage() {
 
         const trendingpostresponse = await getTrendingPosts(accessTokenFromCookie, 10, 0);
         setTrendingPostdata(trendingpostresponse?.data[0]?.data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
@@ -366,16 +377,7 @@ export default function MainPage() {
   const imageUrl = `http://localhost:9000/public/${userProfileData?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
 
-  const handleConvertToSpeech = () => {
-    if (isSpeaking) {
-      synth?.cancel();
-      setIsSpeaking(false);
-    } else {
-      const utterance = new SpeechSynthesisUtterance(blogData?.title);
-      synth?.speak(utterance);
-      setIsSpeaking(true);
-    }
-  };
+
 
   return (
     <>
@@ -419,6 +421,7 @@ export default function MainPage() {
         </div>
       )}
       <section className="flex  z-10 py-5 overflow-auto">
+        {isLoading ? <BlogPostSkeleton/> :(
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
           <h1
             id="pageDiv"
@@ -461,13 +464,13 @@ export default function MainPage() {
             </div>
           </div>
 
-          <Image
+          {/* <Image
             width={25}
             height={25}
             className="w-full h-[70%] rounded-[43px] object-cover"
             src="https://img.blogerbase.com/api/upload/KlBLAzhWLU"
             alt="test3"
-          />
+          /> */}
 
           <div className="relative flex gap-4 flex-row justify-start flex-wrap mt-4 mb-5">
             {userProfileData?.favCategories?.map((category: string[], index: number) => (
@@ -792,6 +795,7 @@ export default function MainPage() {
             </div>
           </div>
         </div>
+        )}
         {accessToken && (
           <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
             <div className="rightwrapper py-5 flex flex-col justify-between">
