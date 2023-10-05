@@ -4,7 +4,7 @@ const SavedBlogsSkeleton = () => {
   return (
   <>
       {Array.from({ length: 3 }).map((_, index) => (
-        <div className="blog-bg-ct p-5 rounded-2xl mt-16 w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto cursor-pointer">
+        <div key={index} className="blog-bg-ct p-5 rounded-2xl mt-16 w-full col-span-12 md:col-span-6 xl:col-span-4 h-auto cursor-pointer">
           <div className="relative w-full sm:h-[230px] h-fit bg-[#1f1f1f] rounded-2xl" />
           <div className="mt-5">
             <h3 className="text-white font-bold sm:text-[24px] text-[14px] cursor-pointer">

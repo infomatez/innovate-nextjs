@@ -18,6 +18,7 @@ const ExperienceCardSkeleton = () => {
             borderLeft: isEven(index) ? 'none' : '7px solid #232631',
           }}
           className="cursor-pointer"
+          key={index}
           icon={
             <div className="flex justify-center items-center w-full h-full">
               <div className="skeleton-image w-20 h-20 rounded-full"></div>

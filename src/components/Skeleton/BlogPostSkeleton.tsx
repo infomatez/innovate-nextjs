@@ -5,8 +5,8 @@ const BlogPostSkeleton: React.FC = () => {
   return (
     <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] pr-[30px]">
       {Array.from({ length: 1 }).map((_, index) => (
-        <div>
-        <div key={index} className="skeleton-text skeleton-title bg-[#3f3f3f] animate-pulse"></div>
+        <div key={index}>
+        <div className="skeleton-text skeleton-title bg-[#3f3f3f] animate-pulse"></div>
       </div>  
       ))}
       <div className="flex flex-row gap-3 w-full items-center mb-3">
