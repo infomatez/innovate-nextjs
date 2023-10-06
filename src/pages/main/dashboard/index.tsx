@@ -129,7 +129,7 @@ const ExperienceCard = ({
         });
       }
     } catch (error) {
-      console.error('Error liking/disliking post:', error);
+      console.error('Error liking post:', error);
     }
   };
   const synth = window.speechSynthesis;
@@ -140,7 +140,7 @@ const ExperienceCard = ({
       synth.cancel();
       setIsSpeaking(false);
     } else {
-      const utterance = new SpeechSynthesisUtterance(title);
+      const utterance = new SpeechSynthesisUtterance(content);
       synth.speak(utterance);
       setIsSpeaking(true);
     }
@@ -220,7 +220,7 @@ const ExperienceCard = ({
       </div>
       <p>{content}</p>
       <div className="icons flex flex-col items-start md:flex-row justify-between mb-3 mt-3 md:mt-0 md:mb-0 gap-4 md:gap-2 mt-5">
-        <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-[0] h-full">
+        <div className="flex flex-wrap flex-row justify-end gap-3 relative items-center mt-4  h-full">
           <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index, blogId)}>
             {likedPosts[index] ? (
               <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
@@ -453,7 +453,7 @@ export default function Dashboard() {
                       index={index}
                       key={post?._id}
                       title={post?.title}
-                      content={post?.content}
+                      content={post?.sort_content}
                       createdAt={post?.createdAt}
                       img={post?.img}
                       userName={post?.user_details?.name}

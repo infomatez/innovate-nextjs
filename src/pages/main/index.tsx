@@ -33,12 +33,15 @@ export default function MainPage() {
     const { blog_id } = router.query;
     const { accessToken, removeAccessToken } = useAuth();
     const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
-    const [isCommentBoxOpen, setCommentBoxOpen] = useState(true);
+    const [isCommentBoxOpen, setCommentBoxOpen] = useState(false);
     const [comments, setComments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [content, setContent] = useState('');
     const [blogData, setBlogData] = useState<any>(null);
     const [relatedBlogData, setRelatedBlogData] = useState<any>(null);
+    const [isCooldown, setIsCooldown] = useState(false);
+    const [isCooldown2, setIsCooldown2] = useState(false);
+
     const userId = blogData?.user_details?._id;
     const [userProfileData, setUserProfileData] = useState<any>(null);
     const [trendingpostData, setTrendingPostdata] = useState<any>(null);
@@ -71,7 +74,7 @@ export default function MainPage() {
             synth.cancel();
             setIsSpeaking(false);
         } else {
-            const utterance = new SpeechSynthesisUtterance(blogData?.title);
+            const utterance = new SpeechSynthesisUtterance(blogData?.content);
             synth.speak(utterance);
             setIsSpeaking(true);
         }
@@ -96,7 +99,7 @@ export default function MainPage() {
                 commentsContainerRef.current.scrollTop = 0;
             }
         } catch (error) {
-            toast.error('Please Login To add commet');
+            toast.error('Please Login To add comment');
             console.error('Error submitting comment:', error);
         }
     };
@@ -188,19 +191,34 @@ export default function MainPage() {
     }, [blog_id, blogData, relatedBlogData]);
 
     const handleLikeClick = async () => {
-        try {
-            if (liked) {
-                await dislikePost(accessTokenFromCookie, blog_id);
-                setLiked(false);
-            } else {
-                await likePost(accessTokenFromCookie, blog_id);
-                setLiked(true);
-            }
-        } catch (error) {
-            console.error('Error liking/unliking post:', error);
-            toast.error('Please Login To Like the Post');
+        if (isCooldown) {
+          return;   
         }
-    };
+    
+        try {
+          setIsCooldown(true)
+          if (liked) {
+            await dislikePost(accessTokenFromCookie, blog_id);
+            setLiked(false);
+          } else {
+            await likePost(accessTokenFromCookie, blog_id);
+            setLiked(true);
+          }
+      
+      
+        } catch (error) {
+          console.error('Error liking/unliking post:', error);
+          toast.error('Please Login To Like the Post');
+        }
+        finally {
+            // Set a timeout to reset isCooldown after 5 seconds
+            setTimeout(() => {
+              setIsCooldown(false);
+            }, 7000);
+          }
+      };
+
+
 
     const handleRealtedBlogLikeClick = async (index: number, postId: string) => {
         try {
@@ -222,7 +240,7 @@ export default function MainPage() {
                 });
             }
         } catch (error) {
-            console.error('Error liking/disliking post:', error);
+            console.error('Error liking post:', error);
         }
     };
 
@@ -247,7 +265,12 @@ export default function MainPage() {
     };
 
     const handleSaveClick = async () => {
+        if (isCooldown2) {
+            return; 
+          }
+      
         try {
+            setIsCooldown2(true); 
             if (saved) {
                 await unsavePost(accessTokenFromCookie, blog_id);
                 setSaved(false);
@@ -255,10 +278,17 @@ export default function MainPage() {
                 await savePost(accessTokenFromCookie, blog_id);
                 setSaved(true);
             }
+
         } catch (error) {
             console.error('Error saving/unsaving post:', error);
             toast.error('Please Login To Save the Post');
         }
+        finally {
+            // Set a timeout to reset isCooldown after 5 seconds
+            setTimeout(() => {
+              setIsCooldown2(false);
+            }, 7000);
+          }
     };
 
     const handlerealtedSaveClick = async (index: number, realtedBlogId: string) => {
@@ -282,7 +312,7 @@ export default function MainPage() {
             }
         } catch (error) {
             console.error('Error saving/unsaving related blog:', error);
-            toast.error('Please Login To Save the Post');
+            toast.error('Error in Saving the Post');
         }
     };
 
@@ -307,7 +337,7 @@ export default function MainPage() {
             }
         } catch (error) {
             console.error('Error saving/unsaving related blog:', error);
-            toast.error('Please Login To Save the Post');
+            toast.error('Error in Saving the Post');
         }
     };
     const [likedComments, setLikedComments] = useState<string[]>([]);
