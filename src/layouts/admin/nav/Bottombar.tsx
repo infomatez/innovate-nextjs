@@ -53,7 +53,9 @@ const Footerbar = () => {
             // src={userData.img}
             src={profileImage}
             alt="UserImg"
-            className="lg:w-[1.5vw] w-[3.5vw] rounded-3xl mr-1"
+            width={22}
+            height={22}
+            className=" rounded-3xl mr-1"
           />
         </>
       ),
