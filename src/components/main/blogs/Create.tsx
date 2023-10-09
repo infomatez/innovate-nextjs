@@ -18,6 +18,7 @@ import { createPost, getAllCategory, updatePost } from '@/src/services/post';
 import Loader from '../../Loader/Loader';
 import { toast } from 'react-hot-toast';
 import { getPostsByBlogId } from '@/src/services/post';
+import EditorImage from './EditorImage';
 
 const Editor = dynamic<EditorProps>(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false });
 interface IBlogState {
@@ -26,7 +27,7 @@ interface IBlogState {
   tags: string[];
   previewImage: File | null;
   font: string;
-  sort_content:string;
+  sort_content: string;
 }
 
 const Create = () => {
@@ -40,7 +41,7 @@ const Create = () => {
     tags: [],
     previewImage: null,
     font: '',
-    sort_content:'',
+    sort_content: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreviewURL, setImagePreviewURL] = useState('');
@@ -76,7 +77,7 @@ const Create = () => {
           setBlogState({
             title: response?.data[0]?.data[0]?.title,
             description: response?.data[0]?.data[0]?.description,
-            sort_content:response?.data[0]?.data[0]?.sort_content,
+            sort_content: response?.data[0]?.data[0]?.sort_content,
             tags: response?.data[0]?.data[0]?.tags,
             previewImage: response?.data[0]?.data[0]?.img,
             font: response?.data[0]?.data[0]?.font,
@@ -93,7 +94,6 @@ const Create = () => {
 
     fetchBlogData();
   }, [blog_id, accessTokenFromCookie]);
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -130,7 +130,7 @@ const Create = () => {
       const formData = new FormData();
       formData.append('image', blogState.previewImage);
       formData.append('title', blogState.title);
-      formData.append('sort_content', blogState.sort_content)
+      formData.append('sort_content', blogState.sort_content);
       formData.append('content', editorState.getCurrentContent().getPlainText());
       formData.append('tags', JSON.stringify(blogState.tags));
       formData.append('font', blogState.font);
@@ -292,18 +292,18 @@ const Create = () => {
               </div>
             </div>
             <div className="mt-3">
-  <textarea
-    placeholder="Short description"
-    className="rounded-3xl border-[1px] border-[#747474] bg-transparent w-full resize-none outline-none px-7 py-2 sm:py-3 placeholder:text-[#626262] sm:placeholder:text-base text-xs font-medium text-[#bcbcbc]"
-    rows={4}
-    id='sort_content'
-    name="sort_content"
-    value={blogState.sort_content}
-    onChange={handleBlogStateChange}
-  />
-</div>
+              <textarea
+                placeholder="Short description"
+                className="rounded-3xl border-[1px] border-[#747474] bg-transparent w-full resize-none outline-none px-7 py-2 sm:py-3 placeholder:text-[#626262] sm:placeholder:text-base text-xs font-medium text-[#bcbcbc]"
+                rows={4}
+                id="sort_content"
+                name="sort_content"
+                value={blogState.sort_content}
+                onChange={handleBlogStateChange}
+              />
+            </div>
 
-            <Editor
+            <EditorImage
               editorState={editorState}
               onEditorStateChange={setEditorState}
               wrapperClassName="wrapper-class !mt-4 sm:!mt-7"
@@ -412,7 +412,7 @@ const Create = () => {
           </div>
 
           <div className="flex sm:justify-center justify-between sm:mt-28">
-            <Image src={LogoIcon} fill={true} alt="logo icon" className="hidden"/>
+            <Image src={LogoIcon} fill={true} alt="logo icon" className="hidden" />
             <button
               className="rounded-md bg-[#bf02b5] sm:py-2 sm:px-5 py-1 px-[10px] sm:mr-0 mr-2 text-white font-inter font-semibold text-xs sm:text-xl mt-4"
               onClick={handleSubmit}
