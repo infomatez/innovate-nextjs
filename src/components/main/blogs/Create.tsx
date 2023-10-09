@@ -26,6 +26,7 @@ interface IBlogState {
   tags: string[];
   previewImage: File | null;
   font: string;
+  sort_content:string;
 }
 
 const Create = () => {
@@ -39,6 +40,7 @@ const Create = () => {
     tags: [],
     previewImage: null,
     font: '',
+    sort_content:'',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreviewURL, setImagePreviewURL] = useState('');
@@ -74,6 +76,7 @@ const Create = () => {
           setBlogState({
             title: response?.data[0]?.data[0]?.title,
             description: response?.data[0]?.data[0]?.description,
+            sort_content:response?.data[0]?.data[0]?.sort_content,
             tags: response?.data[0]?.data[0]?.tags,
             previewImage: response?.data[0]?.data[0]?.img,
             font: response?.data[0]?.data[0]?.font,
@@ -90,6 +93,7 @@ const Create = () => {
 
     fetchBlogData();
   }, [blog_id, accessTokenFromCookie]);
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -112,6 +116,7 @@ const Create = () => {
     if (
       !blogState.title ||
       !editorState.getCurrentContent().hasText() ||
+      !blogState.sort_content ||
       !blogState.tags.length ||
       !blogState.previewImage ||
       !selectedCategory
@@ -125,7 +130,7 @@ const Create = () => {
       const formData = new FormData();
       formData.append('image', blogState.previewImage);
       formData.append('title', blogState.title);
-      formData.append('description', blogState.description);
+      formData.append('sort_content', blogState.sort_content)
       formData.append('content', editorState.getCurrentContent().getPlainText());
       formData.append('tags', JSON.stringify(blogState.tags));
       formData.append('font', blogState.font);
@@ -189,7 +194,7 @@ const Create = () => {
     }
   };
 
-  const handleBlogStateChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleBlogStateChange = (event: ChangeEvent<any>) => {
     const { name, value, files } = event.target;
     if (name !== 'previewImage') {
       return setBlogState((prev) => ({ ...prev, [name]: value }));
@@ -287,12 +292,17 @@ const Create = () => {
               </div>
             </div>
             <div className="mt-3">
-              <textarea
-                placeholder="Short description"
-                className="rounded-3xl border-[1px] border-[#747474] bg-transparent w-full resize-none outline-none px-7 py-2 sm:py-3 placeholder:text-[#626262] sm:placeholder:text-base text-xs font-medium text-[#bcbcbc]"
-                rows={4}
-              />
-            </div>
+  <textarea
+    placeholder="Short description"
+    className="rounded-3xl border-[1px] border-[#747474] bg-transparent w-full resize-none outline-none px-7 py-2 sm:py-3 placeholder:text-[#626262] sm:placeholder:text-base text-xs font-medium text-[#bcbcbc]"
+    rows={4}
+    id='sort_content'
+    name="sort_content"
+    value={blogState.sort_content}
+    onChange={handleBlogStateChange}
+  />
+</div>
+
             <Editor
               editorState={editorState}
               onEditorStateChange={setEditorState}

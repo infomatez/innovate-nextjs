@@ -7,12 +7,12 @@ import { useRouter } from 'next/router';
 interface ICardProps {
   img: string;
   title: string;
-  content: string;
+  sort_content: string;
   index: number;
   _id: string;
 }
 
-const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
+const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
   const router = useRouter();
   const [showMore, setShowMore] = useState(false);
 
@@ -31,7 +31,7 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
       synth.cancel();
       setIsSpeaking(false);
     } else {
-      const utterance = new SpeechSynthesisUtterance(title);
+      const utterance = new SpeechSynthesisUtterance(sort_content);
       synth.speak(utterance);
       setIsSpeaking(true);
     }
@@ -118,15 +118,16 @@ const Card: FC<ICardProps> = ({ img, title, content, index, _id }) => {
           </div>
         </div>
         <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white timeline-dex-ct">
-          {showMore ? parse(content) : parse(content.split(' ').slice(0, 20).join(' '))}
-        </p>
+  {sort_content ? (showMore ? parse(sort_content) : parse(sort_content.split(' ').slice(0, 20).join(' '))) : ''}
+</p>
+
         <div className="flex justify-end">
           <button
             className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]"
             onClick={toggleShowMore}
           >
-            <span className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative">
-              {showMore ? 'Show Less' : 'Read More'}
+            <span className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative" onClick={() => handleTitleClick(_id)}>   
+              Read More
             </span>
           </button>
         </div>

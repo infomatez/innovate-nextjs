@@ -137,7 +137,6 @@ export default function ProfilePage() {
   const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
 
-
   const handleEditClick = (blogId: string) => {
     router.push(`/main/create-blog?blog_id=${blogId}`);
   };
@@ -387,14 +386,22 @@ export default function ProfilePage() {
 
                                 <div className="flex justify-end items-center mt-3">
                                   <p className="flex-1 mr-2 text-[10px]">
-                                    {expandedIndex === index ? post?.content : post?.content?.slice(0, 50) + '...'}
+                                    {expandedIndex === index
+                                      ? post?.sort_content !== undefined
+                                        ? post.sort_content
+                                        : ''
+                                      : post?.sort_content !== undefined ? post?.sort_content?.slice(0, 50) + '...' : ''}
                                   </p>
+
                                   <button
                                     className="bg-white inline-flex flex-col justify-center relative text-black-100 items-stretch py-2 px-2  rounded-[19.5px]"
                                     onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                                   >
-                                    <span className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative">
-                                      {expandedIndex === index ? 'Show Less' : 'Read More'}
+                                    <span
+                                      className="whitespace-nowrap text-[10px] font-poppins leading-[1] text-black-100 relative"
+                                      onClick={() => handleTitleClick(post?._id)}
+                                    >
+                                      Read More
                                     </span>
                                   </button>
                                 </div>

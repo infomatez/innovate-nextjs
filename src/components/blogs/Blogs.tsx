@@ -10,7 +10,7 @@ import CardSkeleton from '../Skeleton/AllbogsSkeleton';
 interface Blog {
   img: string;
   title: string;
-  content: string;
+  sort_content: string;
   _id: string;
 }
 
@@ -103,8 +103,8 @@ const Blogs = () => {
             <div className="h-full ">
               {loading
                 ? Array.from({ length: 8 }, (_, index) => <CardSkeleton key={index} index={index} />)
-                : randomBlogs.map(({ img, title, content, _id }, index) => (
-                    <Card key={index} img={img} title={title} content={content} index={index} _id={_id} />
+                : randomBlogs.map(({ img, title, sort_content, _id }, index) => (
+                    <Card key={index} img={img} title={title} sort_content={sort_content} index={index} _id={_id} />
                   ))}
             </div>
           </div>
