@@ -173,7 +173,7 @@ const ExperienceCard = ({
       icon={
         <div className="flex justify-center items-center w-full h-full">
           <Image
-            src={`http://localhost:9000/public/${img}`}
+            src={`http://localhost:9000/public${img}`}
             alt="blog_img"
             width={60}
             height={60}
@@ -318,7 +318,7 @@ export default function Dashboard() {
 
   const [searchResults, setSearchResults] = useState([]);
   const [normalResults, setNormalResults] = useState<any>([]);
-  const imageUrl = `http://localhost:9000/public/${userProfile?.profilepic}`;
+  const imageUrl = `http://localhost:9000/public${userProfile?.profilepic}`;
   const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
 
   useEffect(() => {
@@ -519,7 +519,7 @@ export default function Dashboard() {
                               width={25}
                               height={25}
                               alt={`user-${index}`}
-                              src={`/${item.user_details?.img}`}
+                              src={`http://localhost:9000/public${item.user_details?.img}`}
                               className="w-4 rounded-lg"
                             />
                           </div>
@@ -569,7 +569,7 @@ export default function Dashboard() {
                           width={30}
                           height={30}
                           alt="Profile Picture"
-                          src={`${user?.img}`}
+                          src={`http://localhost:9000/public${user?.img}`}
                           className="xl:w-[2rem] rounded-3xl w-[25px]"
                         />
                       </div>

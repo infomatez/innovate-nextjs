@@ -111,7 +111,7 @@ const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
             <Image
               width={600}
               height={200}
-              src={`http://localhost:9000/public/${img}`}
+              src={`http://localhost:9000/public${img}`}
               className="w-full rounded-[23px] h-[280px] py-2"
               alt="test4"
             />
