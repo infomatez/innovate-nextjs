@@ -634,7 +634,7 @@ export default function MainPage() {
                                                         width={30}
                                                         height={30}
                                                         alt="Profile Picture"
-                                                        src={`/${comment?.user_info?.img}`}
+                                                        src={`${comment?.user_info?.img}`}
                                                         className="xl:w-[2rem] rounded-3xl w-[25px] mt-1"
                                                     />
                                                     <div className="flex flex-col ms-2">
@@ -657,9 +657,11 @@ export default function MainPage() {
                                                                 <FaIcons.FaRegHeart className="text-white min-h-0 relative w-4 shrink-0 border-white" />
                                                             )}
                                                         </button>
-                                                        <button className="min-w-0 mr-px" onClick={() => handleDeleteClick(comment?._id)}>
+                                                        {userProfileData?._id === comment?.user && (
+                                                            <button className="min-w-0 mr-px" onClick={() => handleDeleteClick(comment?._id)}>
                                                             <FaIcons.FaTrashAlt className="text-white min-h-0 relative w-4 shrink-0" />
                                                         </button>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -701,7 +703,7 @@ export default function MainPage() {
                                             height={25}
                                             alt="test5"
                                             className="min-h-0 min-w-0 mr-1 relative w-6 shrink-0 rounded-[50%]"
-                                            src={'/' + blogData?.user_details?.img}
+                                            src={blogData?.user_details?.img}
                                         />
                                         <p className="text-sm font-['Poppins'] font-medium leading-[7.56px] text-white relative inline-block">
                                             {blogData?.user_details?.username}
