@@ -116,7 +116,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                   <div className="follower-list flex justify-between items-center mb-3" key={follower._id}>
                     <div className="flex items-center">
                       <Image
-                        src={`http://localhost:9000/public${follower?.img}`}
+                        src={`https://api.bytebloggerbase.com/public${follower?.img}`}
                         // src="/deafult-user.jpg"
                         height="48"
                         width="48"

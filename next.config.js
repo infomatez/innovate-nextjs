@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    SITE_URL: 'https://blogerbase.com',
-    BASE_URL: 'https://api.blogerbase.com',
-    API_BASE_URL: 'https://api.bytebloggerbase.com/api',
-  },
+    env: {
+      SITE_URL: 'https://blogerbase.com',
+      BASE_URL: 'https://api.blogerbase.com',
+      API_BASE_URL: 'https://api.bytebloggerbase.com/api',
+      IMAGE_URl:'https://api.bytebloggerbase.com/public'
+    },
   images: {
-    domains: ['file.rendit.io', 'images.theconversation.com', 'localhost'],
+    domains: ['file.rendit.io', 'images.theconversation.com', 'localhost','api.bytebloggerbase.com'],
     remotePatterns: [
       {
         protocol: 'https',

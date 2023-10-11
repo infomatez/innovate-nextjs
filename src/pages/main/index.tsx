@@ -401,8 +401,8 @@ export default function MainPage() {
   const handleCancelLogout = () => {
     setShowPopup(false);
   };
-  const imageUrl = `http://localhost:9000/public${userProfileData?.profilepic}`;
-  const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
+  const imageUrl = `https://api.bytebloggerbase.com/public${userProfileData?.profilepic}`;
+  const profilePicSrc = imageUrl === 'https://api.bytebloggerbase.com/public/undefined';
 
   return (
     <>
@@ -461,7 +461,7 @@ export default function MainPage() {
                 width={25}
                 height={25}
                 alt="test"
-                src={`http://localhost:9000/public${blogData?.user_details?.profilepic}`}
+                src={`https://api.bytebloggerbase.com/public${blogData?.user_details?.profilepic}`}
                 className="w-[30px] h-[30px] shrink-0 rounded-[50%]"
               />
               <div className="flex flex-col gap-1 flex-1">
@@ -556,7 +556,7 @@ export default function MainPage() {
                 width={100}
                 height={400}
                 alt="test5"
-                src={`http://localhost:9000/public${blogData?.img}`}
+                src={`https://api.bytebloggerbase.com/public${blogData?.img}`}
                 className="w-[100%] rounded-[30px]"
               />
               <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
@@ -630,7 +630,7 @@ export default function MainPage() {
                             width={30}
                             height={30}
                             alt="Profile Picture"
-                            src={`http://localhost:9000/public${comment?.user_info?.img}`}
+                            src={`https://api.bytebloggerbase.com/public${comment?.user_info?.img}`}
                             className="xl:w-[2rem] rounded-3xl w-[25px] mt-1"
                           />
                           <div className="flex flex-col ms-2">
@@ -699,7 +699,7 @@ export default function MainPage() {
                       height={25}
                       alt="test5"
                       className="min-h-0 min-w-0 mr-1 relative w-6 shrink-0 rounded-[50%]"
-                      src={`http://localhost:9000/public${blogData?.user_details?.img}`}
+                      src={`https://api.bytebloggerbase.com/public${blogData?.user_details?.img}`}
                     />
                     <p className="text-sm font-['Poppins'] font-medium leading-[7.56px] text-white relative inline-block">
                       {blogData?.user_details?.username}
@@ -914,7 +914,7 @@ export default function MainPage() {
                               width={25}
                               height={25}
                               alt={`user-${index}`}
-                              src={`http://localhost:9000/public${item.user_details?.img}`}
+                              src={`https://api.bytebloggerbase.com/public${item.user_details?.img}`}
                               className="w-4 rounded-lg"
                             />
                           </div>

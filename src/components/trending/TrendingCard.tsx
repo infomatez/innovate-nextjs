@@ -24,7 +24,7 @@ const TrendingCard: FC<ITrendingCardProps> = ({ id, title, name, userImg, date, 
                 <div className="flex flex-col w-[80%] ml-2 pb-4">
                     <span className="flex justify-start items-center">
                         <div className="relative w-[20px] h-[20px]">
-                            {userImg && <Image fill={true} src={`/http://localhost:9000/public${userImg}`} alt="" className="w-8 object-cover rounded-full" />}
+                            {userImg && <Image fill={true} src={`https://api.bytebloggerbase.com/public${userImg}`} alt="" className="w-8 object-cover rounded-full" />}
                         </div>
                         <p className="ml-2 font-semibold text-md capitalize text-white">{name}</p>
                     </span>
