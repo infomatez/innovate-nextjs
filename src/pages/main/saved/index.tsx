@@ -113,7 +113,7 @@ export default function SavedBlogPage() {
             >
               <div className="relative w-full sm:h-[230px] h-fit">
                 <img
-                  src={`http://localhost:9000/public/${post?.img}`}
+                  src={`http://localhost:9000/public${post?.img}`}
                   alt="name"
                   className="sm:w-full sm:h-full w-fit object-cover rounded-2xl"
                 />

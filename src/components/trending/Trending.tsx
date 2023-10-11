@@ -83,7 +83,7 @@ const Trending = () => {
               id={index + 1}
               name={b?.user_details?.name}
               title={b?.title}
-              userImg={b?.img}
+              userImg={b?.user_details?.img}
               date={b?.createdAt}
               likes={b?.likes}
             />
