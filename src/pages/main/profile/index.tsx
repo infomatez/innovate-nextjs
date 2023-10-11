@@ -134,8 +134,8 @@ export default function ProfilePage() {
     fetchUserProfile();
   }, [accessTokenFromCookie]);
 
-  const imageUrl = `http://localhost:9000/public${userProfile?.profilepic}`;
-  const profilePicSrc = imageUrl === 'http://localhost:9000/public/undefined';
+  const imageUrl = `https://api.bytebloggerbase.com/public${userProfile?.profilepic}`;
+  const profilePicSrc = imageUrl === 'https://api.bytebloggerbase.com/public/undefined';
 
   const handleEditClick = (blogId: string) => {
     router.push(`/main/create-blog?blog_id=${blogId}`);
@@ -348,7 +348,7 @@ export default function ProfilePage() {
                                       width={320}
                                       height={138}
                                       alt={post.title}
-                                      src={`http://localhost:9000/public${post?.img}`}
+                                      src={`https://api.bytebloggerbase.com/public${post?.img}`}
                                       className="w-full h-[138px] object-cover rounded-[23px]"
                                     />
                                   </div>
