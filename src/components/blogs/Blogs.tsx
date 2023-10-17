@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import TuneIcon from '../icons/solid/TuneIcon';
 import { filters } from '@/src/utils/constant';
 import Card from './Card';
+import { useRouter } from 'next/router';
 import { getAllCategory, getAllPosts } from '@/src/services/post';
 import Cookies from 'js-cookie';
 import CardSkeleton from '../Skeleton/AllbogsSkeleton';
@@ -15,6 +16,7 @@ interface Blog {
 }
 
 const Blogs = () => {
+  const router = useRouter();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [randomBlogs, setRandomBlogs] = useState<Blog[]>([]);
   const [selectedFilterName, setselectedFilterName] = useState('');
@@ -28,10 +30,9 @@ const Blogs = () => {
     try {
       if (!loading) {
         setLoading(true);
-        const limit = page * 10;
-        const skip = limit - 10;
+        const limit = 11;
         const category = selectedFilterName;
-        const response = await getAllPosts(accessTokenFromCookie, null, null, category);
+        const response = await getAllPosts(accessTokenFromCookie, limit, null, category);
         const data = response?.data[0]?.data;
         if (page === 1) {
           setRandomBlogs(data as Blog[]);
@@ -50,9 +51,12 @@ const Blogs = () => {
     }
   };
 
-  const loadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData();
+  const handleRedirect = () => {
+    if (accessTokenFromCookie) {
+      router.push('/main/profile');
+    } else {
+      router.push('/login');
+    }
   };
 
   useEffect(() => {
@@ -107,6 +111,9 @@ const Blogs = () => {
                     <Card key={index} img={img} title={title} sort_content={sort_content} index={index} _id={_id} />
                   ))}
             </div>
+          </div>
+          <div className="flex justify-center" onClick={handleRedirect}>
+            <button className="btn">Read More Blogs</button>
           </div>
         </div>
       </div>

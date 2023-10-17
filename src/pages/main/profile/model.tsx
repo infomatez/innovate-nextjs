@@ -116,12 +116,13 @@ const Modal = ({ userProfile, onClose }: any) => {
                   <div className="follower-list flex justify-between items-center mb-3" key={follower._id}>
                     <div className="flex items-center">
                       <Image
-                        src={`https://api.bytebloggerbase.com/public${follower?.img}`}
-                        // src="/deafult-user.jpg"
+                        src={
+                          follower.img ? `https://api.bytebloggerbase.com/public${follower?.img}` : '/deafult-user.jpg'
+                        }
                         height="48"
                         width="48"
-                        className="rounded-[50%] mr-3"
-                        alt="Follower Dp"
+                        className="rounded-[50%] mr-3 color-white"
+                        alt="Profile Pic"
                       />
                       <div className="follow-info">
                         <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide">
@@ -156,7 +157,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                   <div className="follower-list flex justify-between items-center mb-3" key={following?._id}>
                     <div className="flex items-center">
                       <Image
-                        src="/deafult-user.jpg"
+                        src={`https://api.bytebloggerbase.com/public${following?.img}`}
                         height="48"
                         width="48"
                         className="rounded-[50%] mr-3"

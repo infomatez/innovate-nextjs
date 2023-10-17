@@ -506,8 +506,8 @@ h2 {
   overflow: hidden;
 }
 
-.canvas-main-area canvas{
-    width: 100% !important;
+.canvas-main-area canvas {
+  width: 100% !important;
 }
 
 .h2tag::before {
@@ -841,7 +841,7 @@ h2 {
   height: 20px;
   width: 280px;
 }
-.swiper-slide{
+.swiper-slide {
   width: 31.6% !important;
 }
 .skeleton-image {
@@ -960,12 +960,36 @@ h2 {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+  width: 300px;
 }
-@media (max-width: 767px){
-    .blog-home-timeline-title{
-        font-size: 20px !important;
-    }
-    .timeline-dex-ct{
-        margin: 10px 0;
-    }
+@media (max-width: 767px) {
+  .blog-home-timeline-title {
+    font-size: 20px !important;
+  }
+  .timeline-dex-ct {
+    margin: 10px 0;
+  }
+}
+
+.MainPage-Logo-Image {
+  height: 20rem;
+}
+@media (max-width: 1000px) {
+  .MainPage-Logo-Image {
+    height: 17rem;
+  }
+}
+@media (max-width: 767px) {
+  .MainPage-Logo-Image {
+    height: 14rem;
+  }
+}
+@media (max-width: 382px) {
+  .MainPage-Logo-Image {
+    height: 12rem;
+  }
+}
+
+.slider-image {
+  width: 100px;
 }

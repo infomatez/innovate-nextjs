@@ -23,16 +23,16 @@ const EarthCanvas = () => {
         canvas.height = clientHeight;
       }
     };
-
-    // Attach the resize event listener
-    window.addEventListener('resize', handleResize);
-
-    // Initial resize
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+    } 
     handleResize();
 
-    // Clean up the event listener on unmount
+
     return () => {
-      window.removeEventListener('resize', handleResize);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
     };
   }, []);
 
@@ -40,14 +40,14 @@ const EarthCanvas = () => {
     <Canvas
       ref={canvasRef}
       shadows
-    //   onCreated={({ gl }) => {
-    //     gl.setClearColor('#000000'); // Set background color if needed
-    //   }}
-      className='canvas-main-area'
+      //   onCreated={({ gl }) => {
+      //     gl.setClearColor('#000000'); // Set background color if needed
+      //   }}
+      className="canvas-main-area"
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls autoRotate enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
-        <Earth canvasRef/>
+        <Earth canvasRef />
         <Preload all />
       </Suspense>
     </Canvas>

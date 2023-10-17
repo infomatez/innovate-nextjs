@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
-const EditorImage = ({ editorState,contentStateUpdate, onEditorStateChange,onContentStateChange, wrapperClassName, editorClassName, toolbarClassName, placeholder }:any) => {
+const DynamicEditor = dynamic(
+  () => import('react-draft-wysiwyg').then((module) => module.Editor),
+  { ssr: false }, // Use the ssr: false option to prevent server-side rendering
+);
+
+const EditorImage = ({
+  editorState,
+  onEditorStateChange,
+  wrapperClassName,
+  editorClassName,
+  toolbarClassName,
+  placeholder,
+}: any) => {
   const [isEditorLoaded, setIsEditorLoaded] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      import('react-draft-wysiwyg').then((module) => {
-        setIsEditorLoaded(true);
-      });
+      setIsEditorLoaded(true);
     }
   }, []);
 
@@ -15,10 +26,8 @@ const EditorImage = ({ editorState,contentStateUpdate, onEditorStateChange,onCon
     return <div>Loading editor...</div>;
   }
 
-  const { Editor } = require('react-draft-wysiwyg');
-
   return (
-    <Editor
+    <DynamicEditor
       editorState={editorState}
       onEditorStateChange={onEditorStateChange}
       wrapperClassName={wrapperClassName}
@@ -31,12 +40,9 @@ const EditorImage = ({ editorState,contentStateUpdate, onEditorStateChange,onCon
         textAlign: { inDropdown: true },
         link: { inDropdown: true },
         history: { inDropdown: false },
-        
       }}
     />
   );
 };
 
 export default EditorImage;
-
-
