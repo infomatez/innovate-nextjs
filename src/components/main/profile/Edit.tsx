@@ -176,7 +176,7 @@ const ProfileEdit = () => {
             </div>
 
             <div className="flex sm:flex-row flex-col sm:mt-12 items-center gap-4 sm:ml-10 ">
-              <Image src={LogoIcon} fill={true} alt="logo icon" className="sm:hidden block" />
+              <Image src={LogoIcon} width={150} height={50} alt="logo icon" className="p-[20px] pb-0 sm:hidden block" />
               {profileImage ? (
                 <Image
                   src={URL.createObjectURL(profileImage)}
