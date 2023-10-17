@@ -1,16 +1,13 @@
 import React, { useState, useEffect, KeyboardEvent, ChangeEvent, FormEvent } from 'react';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Cookies from 'js-cookie';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { PATH_DASHBOARD } from '@/src/routes/path';
 import CloseIcon from '@/src/components/icons/border/CloseIcon';
 import AddCircleIcon from '@/src/components/icons/border/AddCircleIcon';
-import { EditorProps } from 'react-draft-wysiwyg';
 import LogoIcon from '@/public/byteBlogger1.png';
 import { createPost, getAllCategory, updatePost } from '@/src/services/post';
 import Loader from '../../Loader/Loader';
@@ -18,7 +15,6 @@ import { toast } from 'react-hot-toast';
 import { getPostsByBlogId } from '@/src/services/post';
 import EditorImage from './EditorImage';
 
-const Editor = dynamic<EditorProps>(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false });
 interface IBlogState {
   title: string;
   description: string;
@@ -43,122 +39,121 @@ const Create = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreviewURL, setImagePreviewURL] = useState('');
-    const [editorState, setEditorState] = useState<any>(() => EditorState.createEmpty()); 
-    const rawContent = convertToRaw(editorState.getCurrentContent());
+  const [editorState, setEditorState] = useState<any>(() => EditorState.createEmpty());
+  const rawContent = convertToRaw(editorState.getCurrentContent());
 
-    const [suggestions, setSuggestions] = useState([]);
-    const [fontToggle, setFontToggle] = useState(false);
-    const [suggestionToggle, setSuggestionToggle] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [fontToggle, setFontToggle] = useState(false);
+  const [suggestionToggle, setSuggestionToggle] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-    const [selectedFont, setSelectedFont] = useState('');
-    const fonts = [''];
+  const [selectedFont, setSelectedFont] = useState('');
+  const fonts = [''];
 
-    const handleRemoveTag = (target: string) => {
-      setBlogState((prev) => ({ ...prev, tags: prev.tags.filter((tag) => tag !== target) }));
-    };
-    const handleCategoryChange = (event: any) => {
-      setSelectedCategory(event.target.value);
-    };
+  const handleRemoveTag = (target: string) => {
+    setBlogState((prev) => ({ ...prev, tags: prev.tags.filter((tag) => tag !== target) }));
+  };
+  const handleCategoryChange = (event: any) => {
+    setSelectedCategory(event.target.value);
+  };
 
-    useEffect(() => {
-      const fetchBlogData = async () => {
-        try {
-          if (!blog_id) {
-            return;
-          }
-
-          const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
-          if (response.message) {
-            const contentFromAPI = response?.data[0]?.data[0]?.content;
-            const contentState = ContentState.createFromBlockArray(convertFromHTML(contentFromAPI).contentBlocks);
-          const newEditorState = EditorState.createWithContent(contentState);
-            setBlogState({
-              title: response?.data[0]?.data[0]?.title,
-              description: response?.data[0]?.data[0]?.description,
-              sort_content: response?.data[0]?.data[0]?.sort_content,
-              tags: response?.data[0]?.data[0]?.tags,
-              previewImage: response?.data[0]?.data[0]?.img,
-              font: response?.data[0]?.data[0]?.font,
-            });
-          setEditorState(newEditorState);
-            setSelectedCategory(response?.data[0]?.data[0]?.category);
-          } else {
-            console.error('Failed to fetch blog post data.');
-          }
-        } catch (error) {
-          console.error('An error occurred while fetching blog post data:', error);
-        }
-      };
-
-      fetchBlogData();
-    }, [blog_id, accessTokenFromCookie]);
-
-    useEffect(() => {
-      const fetchCategories = async () => {
-        try {
-          const categoryData = await getAllCategory(accessTokenFromCookie);
-          setCategories(categoryData?.data);
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-        }
-      };
-
-      fetchCategories();
-    }, []);
-
-    const handleSubmit = async (e: FormEvent) => {
-      e.preventDefault();
-      if (isLoading) {
-        return;
-      }
-      if (
-        !blogState.title ||
-        !editorState.getCurrentContent().hasText() ||
-        !blogState.sort_content ||
-        !blogState.tags.length ||
-        !blogState.previewImage ||
-        !selectedCategory
-      ) {
-        toast.error('Please fill in all required fields.');
-        return;
-      }
-
+  useEffect(() => {
+    const fetchBlogData = async () => {
       try {
-        setIsLoading(true);
-        const formData = new FormData();
-        formData.append('image', blogState.previewImage);
-        formData.append('title', blogState.title);
-        formData.append('sort_content', blogState.sort_content);
-        formData.append('content', JSON.stringify(rawContent));
-        formData.append('tags', JSON.stringify(blogState.tags));
-        formData.append('font', blogState.font);
-        formData.append('category', selectedCategory);
+        if (!blog_id) {
+          return;
+        }
 
-        if (blog_id) {
-          const response = await updatePost(accessTokenFromCookie, blog_id, formData);
-          if (response.message) {
-            toast.success(response.message);
-            router.push(PATH_DASHBOARD.profile);
-          } else {
-            console.error('Error updating post:', response.error);
-          }
+        const response = await getPostsByBlogId(accessTokenFromCookie, blog_id);
+        if (response.message) {
+          const contentFromAPI = JSON.parse(response?.data[0]?.data[0]?.content);
+          const newEditorState = EditorState.createWithContent(convertFromRaw(contentFromAPI));
+          setBlogState({
+            title: response?.data[0]?.data[0]?.title,
+            description: response?.data[0]?.data[0]?.description,
+            sort_content: response?.data[0]?.data[0]?.sort_content,
+            tags: response?.data[0]?.data[0]?.tags,
+            previewImage: response?.data[0]?.data[0]?.img,
+            font: response?.data[0]?.data[0]?.font,
+          });
+          setEditorState(newEditorState);
+          setSelectedCategory(response?.data[0]?.data[0]?.category);
         } else {
-          const response = await createPost(accessTokenFromCookie, formData);
-          if (response.message) {
-            toast.success('Post created successfully!');
-            router.push(PATH_DASHBOARD.profile);
-          } else {
-            console.error('Error creating post:', response.error);
-          }
+          console.error('Failed to fetch blog post data.');
         }
       } catch (error) {
-        console.error('An error occurred:', error);
-      } finally {
-        setIsLoading(false);
+        console.error('An error occurred while fetching blog post data:', error);
       }
     };
+
+    fetchBlogData();
+  }, [blog_id, accessTokenFromCookie]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getAllCategory(accessTokenFromCookie);
+        setCategories(categoryData?.data);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (isLoading) {
+      return;
+    }
+    if (
+      !blogState.title ||
+      !editorState.getCurrentContent().hasText() ||
+      !blogState.sort_content ||
+      !blogState.tags.length ||
+      !blogState.previewImage ||
+      !selectedCategory
+    ) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('image', blogState.previewImage);
+      formData.append('title', blogState.title);
+      formData.append('sort_content', blogState.sort_content);
+      formData.append('content', JSON.stringify(rawContent));
+      formData.append('tags', JSON.stringify(blogState.tags));
+      formData.append('font', blogState.font);
+      formData.append('category', selectedCategory);
+
+      if (blog_id) {
+        const response = await updatePost(accessTokenFromCookie, blog_id, formData);
+        if (response.message) {
+          toast.success(response.message);
+          router.push(PATH_DASHBOARD.profile);
+        } else {
+          console.error('Error updating post:', response.error);
+        }
+      } else {
+        const response = await createPost(accessTokenFromCookie, formData);
+        if (response.message) {
+          toast.success('Post created successfully!');
+          router.push(PATH_DASHBOARD.profile);
+        } else {
+          console.error('Error creating post:', response.error);
+        }
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   function filterWords(prefix: string) {
     return fonts.filter((font: any) => font.family.toLowerCase().startsWith(prefix));
@@ -300,14 +295,14 @@ const Create = () => {
                 onChange={handleBlogStateChange}
               />
             </div>
-                <EditorImage
-                  editorState={editorState}
-                  onEditorStateChange={setEditorState}
-                  wrapperClassName="wrapper-class !mt-4 sm:!mt-7"
-                  editorClassName="editor-class sm:!h-[60vh] !h-[28vh]"
-                  toolbarClassName="toolbar-class"
-                  placeholder="Write yor blog here"
-                />
+            <EditorImage
+              editorState={editorState}
+              onEditorStateChange={setEditorState}
+              wrapperClassName="wrapper-class !mt-4 sm:!mt-7"
+              editorClassName="editor-class sm:!h-[60vh] !h-[28vh]"
+              toolbarClassName="toolbar-class"
+              placeholder="Write yor blog here"
+            />
           </form>
         </div>
         <div className="flex sm:flex-col flex-col-reverse sm:mt-12 sm:col-span-3 col-span-12 sm:order-2 order-1 sm:mr-9">

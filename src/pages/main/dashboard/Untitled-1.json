@@ -1,0 +1,206 @@
+{
+    "_immutable": {
+        "allowUndo": true,
+        "currentContent": {
+            "entityMap": {},
+            "blockMap": {
+                "44s5h": {
+                    "key": "44s5h",
+                    "type": "unstyled",
+                    "text": "new",
+                    "characterList": [
+                        {
+                            "style": [],
+                            "entity": null
+                        },
+                        {
+                            "style": [],
+                            "entity": null
+                        },
+                        {
+                            "style": [],
+                            "entity": null
+                        }
+                    ],
+                    "depth": 0,
+                    "data": {}
+                },
+                "dhm4f": {
+                    "key": "dhm4f",
+                    "type": "atomic",
+                    "text": " ",
+                    "characterList": [
+                        {
+                            "style": [],
+                            "entity": "42453825-a676-41ba-970a-6a3fe8a1ee99"
+                        }
+                    ],
+                    "depth": 0,
+                    "data": {}
+                },
+                "4edql": {
+                    "key": "4edql", 
+                    "type": "unstyled",
+                    "text": "",
+                    "characterList": [],
+                    "depth": 0,
+                    "data": {}
+                }
+            },
+            "selectionBefore": {
+                "anchorKey": "44s5h",
+                "anchorOffset": 3,
+                "focusKey": "44s5h",
+                "focusOffset": 3,
+                "isBackward": false,
+                "hasFocus": false
+            },
+            "selectionAfter": {
+                "anchorKey": "4edql",
+                "anchorOffset": 0,
+                "focusKey": "4edql",
+                "focusOffset": 0,
+                "isBackward": false,
+                "hasFocus": true
+            }
+        },
+        "decorator": {
+            "_decorators": [
+                {}
+            ]
+        },
+        "directionMap": {
+            "44s5h": "LTR",
+            "dhm4f": "LTR",
+            "4edql": "LTR"
+        },
+        "forceSelection": false,
+        "inCompositionMode": false,
+        "inlineStyleOverride": null,
+        "lastChangeType": "insert-fragment",
+        "nativelyRenderedContent": null,
+        "redoStack": [],
+        "selection": {
+            "anchorKey": "4edql",
+            "anchorOffset": 0,
+            "focusKey": "4edql",
+            "focusOffset": 0,
+            "isBackward": false,
+            "hasFocus": false
+        },
+        "treeMap": {
+            "44s5h": [
+                {
+                    "start": 0,
+                    "end": 3,
+                    "decoratorKey": null,
+                    "leaves": [
+                        {
+                            "start": 0,
+                            "end": 3
+                        }
+                    ]
+                }
+            ],
+            "dhm4f": [
+                {
+                    "start": 0,
+                    "end": 1,
+                    "decoratorKey": null,
+                    "leaves": [
+                        {
+                            "start": 0,
+                            "end": 1
+                        }
+                    ]
+                }
+            ],
+            "4edql": [
+                {
+                    "start": 0,
+                    "end": 0,
+                    "decoratorKey": null,
+                    "leaves": [
+                        {
+                            "start": 0,
+                            "end": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        "undoStack": [
+            {
+                "entityMap": {},
+                "blockMap": {
+                    "44s5h": {
+                        "key": "44s5h",
+                        "type": "unstyled",
+                        "text": "new",
+                        "characterList": [
+                            {
+                                "style": [],
+                                "entity": null
+                            },
+                            {
+                                "style": [],
+                                "entity": null
+                            },
+                            {
+                                "style": [],
+                                "entity": null
+                            }
+                        ],
+                        "depth": 0,
+                        "data": {}
+                    }
+                },
+                "selectionBefore": {
+                    "anchorKey": "44s5h",
+                    "anchorOffset": 0,
+                    "focusKey": "44s5h",
+                    "focusOffset": 0,
+                    "isBackward": false,
+                    "hasFocus": true
+                },
+                "selectionAfter": {
+                    "anchorKey": "44s5h",
+                    "anchorOffset": 3,
+                    "focusKey": "44s5h",
+                    "focusOffset": 3,
+                    "isBackward": false,
+                    "hasFocus": true
+                }
+            },
+            {
+                "entityMap": {},
+                "blockMap": {
+                    "44s5h": {
+                        "key": "44s5h",
+                        "type": "unstyled",
+                        "text": "",
+                        "characterList": [],
+                        "depth": 0,
+                        "data": {}
+                    }
+                },
+                "selectionBefore": {
+                    "anchorKey": "44s5h",
+                    "anchorOffset": 0,
+                    "focusKey": "44s5h",
+                    "focusOffset": 0,
+                    "isBackward": false,
+                    "hasFocus": false
+                },
+                "selectionAfter": {
+                    "anchorKey": "44s5h",
+                    "anchorOffset": 0,
+                    "focusKey": "44s5h",
+                    "focusOffset": 0,
+                    "isBackward": false,
+                    "hasFocus": false
+                }
+            }
+        ]
+    }
+}

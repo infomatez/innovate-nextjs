@@ -12,8 +12,7 @@ interface ICardProps {
   _id: string;
 }
 
-const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
-  console.log(img)
+const Card: FC<ICardProps> = ({ img, title, sort_content, index, _id }) => {
   const router = useRouter();
   const [showMore, setShowMore] = useState(false);
 
@@ -24,16 +23,17 @@ const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-  const synth = window.speechSynthesis;
+  const synth = (typeof window !== 'undefined' && window.speechSynthesis) || undefined;
+
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleConvertToSpeech = () => {
     if (isSpeaking) {
-      synth.cancel();
+      synth?.cancel();
       setIsSpeaking(false);
     } else {
       const utterance = new SpeechSynthesisUtterance(sort_content);
-      synth.speak(utterance);
+      synth?.speak(utterance);
       setIsSpeaking(true);
     }
   };
@@ -94,9 +94,9 @@ const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
               />
             </div> */}
             <div className="justify-start items-start gap-3 inline-flex mt-4 relative  bottom-0 left-0">
-            <button className="button-34" onClick={handleConvertToSpeech}>
-          {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
-        </button>
+              <button className="button-34" onClick={handleConvertToSpeech}>
+                {isSpeaking ? 'Stop Speaking' : 'Convert to Speech!'}
+              </button>
               {/* <button className="min-w-0 w-8">
                 <Image
                   src="https://file.rendit.io/n/cELKXuCA0nyFDKqGOTnh.svg"
@@ -119,15 +119,18 @@ const Card: FC<ICardProps> = ({ img, title, sort_content  , index, _id }) => {
           </div>
         </div>
         <p className="w-[100%] h-full text-sm font-poppins tracking-[1.2151619052886964] leading-[19.6px] text-white timeline-dex-ct">
-  {sort_content ? (showMore ? parse(sort_content) : parse(sort_content.split(' ').slice(0, 20).join(' '))) : ''}
-</p>
+          {sort_content ? (showMore ? parse(sort_content) : parse(sort_content.split(' ').slice(0, 20).join(' '))) : ''}
+        </p>
 
         <div className="flex justify-end">
           <button
             className="bg-white inline-flex flex-col justify-center relative h-10 text-black-100 items-stretch px-3 rounded-[19.5px]"
             onClick={toggleShowMore}
           >
-            <span className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative" onClick={() => handleTitleClick(_id)}>   
+            <span
+              className="whitespace-nowrap text-base font-poppins leading-[7.97px] text-black-100 relative"
+              onClick={() => handleTitleClick(_id)}
+            >
               Read More
             </span>
           </button>

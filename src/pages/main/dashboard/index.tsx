@@ -80,7 +80,6 @@ const ExperienceCard = ({
   };
   const initialLikedPosts = userPosts?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
 
-
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
 
   useEffect(() => {
@@ -91,7 +90,7 @@ const ExperienceCard = ({
     const initialsavePost = userProfile?.savedPosts.includes(blogId);
     setSaved(initialsavePost);
     const initialFollowUser = userProfile?.followers?.includes(id);
-    setIsFollowing(initialFollowUser)
+    setIsFollowing(initialFollowUser);
   }, [userPosts, userProfile]);
 
   const handleSaveClick = async () => {
@@ -132,16 +131,17 @@ const ExperienceCard = ({
       console.error('Error liking post:', error);
     }
   };
-  const synth = window.speechSynthesis;
+  const synth = (typeof window !== 'undefined' && window.speechSynthesis) || undefined;
+
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleConvertToSpeech = () => {
     if (isSpeaking) {
-      synth.cancel();
+      synth?.cancel();
       setIsSpeaking(false);
     } else {
       const utterance = new SpeechSynthesisUtterance(content);
-      synth.speak(utterance);
+      synth?.speak(utterance);
       setIsSpeaking(true);
     }
   };
@@ -156,7 +156,8 @@ const ExperienceCard = ({
 
   const openShareModal = (type: any) => {
     if (type === 'post') {
-      const shareUrl = `${window.location.origin}/main?blog_id=${blogId}`;
+      const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/main?blog_id=${blogId}` : '';
+
       onDataReceived(type, blogId, shareUrl);
     }
   };
@@ -262,7 +263,7 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
- 
+
   const initialLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialLikedPosts);
 
@@ -270,16 +271,15 @@ export default function Dashboard() {
     const initialLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userProfile?._id)) || [];
 
     setLikedPosts(initialLikedPosts);
-
   }, [trendingpostData, userProfile]);
-console.log(userProfile)
+
   const handleLogout = async () => {
     setShowPopup(true);
   };
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-console.log(trendingpostData)
+
   const handleConfirmLogout = async () => {
     try {
       removeAccessToken();
@@ -303,7 +303,7 @@ console.log(trendingpostData)
         const posts = await getAllPosts(accessToken, 10, 4, searchQuery);
         setUserPosts(posts?.data[0]?.data);
 
-        const trendingpostresponse = await getTrendingPosts(accessToken, 20, 0);
+        const trendingpostresponse = await getTrendingPosts(accessToken, 50, 0);
         setTrendingPostdata(trendingpostresponse?.data[0]?.data);
 
         const followingData = await getUserFollowing(accessToken, userId);
@@ -331,8 +331,8 @@ console.log(trendingpostData)
         } else {
           const posts = await getAllPosts(accessToken, currentPage * 10, currentSkipPage * 10 + 0, '');
           setNormalResults((prevResults: any) => {
-            const uniquePosts = posts?.data[0]?.data.filter((post:any) => 
-              !prevResults.some((prevPost:any) => prevPost._id === post._id)
+            const uniquePosts = posts?.data[0]?.data.filter(
+              (post: any) => !prevResults.some((prevPost: any) => prevPost._id === post._id),
             );
             return [...prevResults, ...uniquePosts];
           });
@@ -341,10 +341,9 @@ console.log(trendingpostData)
         console.error('Error fetching user profile and posts:', error);
       }
     };
-  
+
     fetchPosts();
   }, [searchQuery, currentPage, accessToken, currentSkipPage]);
-  
 
   const receiveDataFromChild = (type: any, postId: string, url: string) => {
     setShareType(type);
@@ -365,7 +364,7 @@ console.log(trendingpostData)
       if (likedPosts[index]) {
         await dislikePost(accessToken, postId);
 
-        setLikedPosts((prevLikedPosts:any) => {
+        setLikedPosts((prevLikedPosts: any) => {
           const updatedLikedPosts = [...prevLikedPosts];
           updatedLikedPosts[index] = false;
           return updatedLikedPosts;
@@ -373,7 +372,7 @@ console.log(trendingpostData)
       } else {
         await likePost(accessToken, postId);
 
-        setLikedPosts((prevLikedPosts:any) => {
+        setLikedPosts((prevLikedPosts: any) => {
           const updatedLikedPosts = [...prevLikedPosts];
           updatedLikedPosts[index] = true;
           return updatedLikedPosts;
@@ -461,7 +460,7 @@ console.log(trendingpostData)
                       id={post?.user_details?._id}
                       blogId={post?._id}
                       accessToken={accessToken}
-                      userPosts={normalResults} 
+                      userPosts={normalResults}
                       onDataReceived={receiveDataFromChild}
                     />
                   ))}
@@ -483,7 +482,7 @@ console.log(trendingpostData)
                   width={30}
                   height={30}
                   alt="Profile Picture"
-                  src={`https://api.bytebloggerbase.com/public${userProfile?.profilepic}`}
+                  src={`https://api.bytebloggerbase.com/public${userProfile?.img}`}
                   className="xl:w-[2rem] rounded-3xl w-[25px]"
                 />
               </div>
@@ -527,7 +526,7 @@ console.log(trendingpostData)
                             <h1>{item.user_details?.name}</h1>
                           </div>
                           <div className="actions flex gap-1 items-center">
-                            <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index,item?._id)}>
+                            <button className="min-w-0 mr-px" onClick={() => handleLikeClick(index, item?._id)}>
                               {likedPosts[index] ? (
                                 <FaIcons.FaHeart className="min-h-0 relative w-4 shrink-0" />
                               ) : (
