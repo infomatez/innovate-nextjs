@@ -38,7 +38,7 @@ export default function ProfilePage() {
     setIsShareModalOpen(true);
 
     if (postId) {
-      const shareUrl = `${window.location.origin}/main?blog_id=${postId}`;
+      const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/main?blog_id=${postId}` : '';
       setShareUrl(shareUrl);
     }
   };
@@ -134,7 +134,7 @@ export default function ProfilePage() {
     fetchUserProfile();
   }, [accessTokenFromCookie]);
 
-  const imageUrl = `https://api.bytebloggerbase.com/public${userProfile?.profilepic}`;
+  const imageUrl = `https://api.bytebloggerbase.com/public${userProfile?.img}`;
   const profilePicSrc = imageUrl === 'https://api.bytebloggerbase.com/public/undefined';
 
   const handleEditClick = (blogId: string) => {
@@ -145,9 +145,6 @@ export default function ProfilePage() {
     router.push(`/main?blog_id=${blogId}`);
   };
 
-  const generateShareUrl = (blogId: string) => {
-    return `${window.location.origin}/main?blog_id=${blogId}`;
-  };
   const handleLogout = async () => {
     setShowPopup(true);
   };
@@ -390,7 +387,9 @@ export default function ProfilePage() {
                                       ? post?.sort_content !== undefined
                                         ? post.sort_content
                                         : ''
-                                      : post?.sort_content !== undefined ? post?.sort_content?.slice(0, 50) + '...' : ''}
+                                      : post?.sort_content !== undefined
+                                      ? post?.sort_content?.slice(0, 50) + '...'
+                                      : ''}
                                   </p>
 
                                   <button

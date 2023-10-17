@@ -8,13 +8,15 @@ import { useAuth } from '@/src/context/authContext';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Image from 'next/image';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { getPostsByBlogId, getPostsByCategory, getTrendingPosts } from '@/src/services/post';
+import { EditorState, convertFromRaw } from 'draft-js';
+import { Editor as DraftEditor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Cookies from 'js-cookie';
 import { formatDistanceToNow } from 'date-fns';
 import { useRouter } from 'next/router';
-import { likePost, savePost, dislikePost, unsavePost } from '@/src/services/post';
+import { likePost, savePost, dislikePost, unsavePost, getAllPostsbyUserId } from '@/src/services/post';
 import { followUser, getUserProfile, unfollowUser } from '@/src/services/user';
 import { toast } from 'react-hot-toast';
 import ShareModal from './profile/ShareModal';
@@ -27,23 +29,32 @@ import {
 } from '@/src/services/comment';
 import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
 import BlogPostSkeleton from '@/src/components/Skeleton/BlogPostSkeleton';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { PATH_AUTH } from '@/src/routes/path';
 
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
-export default function MainPage() {
+const DynamicEditor = dynamic(
+  () => import('react-draft-wysiwyg').then((module) => module.Editor),
+  { ssr: false }, // Use the ssr: false option to prevent server-side rendering
+);
+
+function MainPage() {
   const router = useRouter();
   const { blog_id } = router.query;
   const { accessToken, removeAccessToken } = useAuth();
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [isCommentBoxOpen, setCommentBoxOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [content, setContent] = useState('');
+  const [userpost, setUserPosts] = useState([]);
   const [blogData, setBlogData] = useState<any>(null);
   const [relatedBlogData, setRelatedBlogData] = useState<any>(null);
   const [isCooldown, setIsCooldown] = useState(false);
   const [isCooldown2, setIsCooldown2] = useState(false);
-
   const userId = blogData?.user_details?._id;
   const [userProfileData, setUserProfileData] = useState<any>(null);
   const [trendingpostData, setTrendingPostdata] = useState<any>(null);
@@ -55,7 +66,6 @@ export default function MainPage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareType, setShareType] = useState<'profile' | 'post'>('profile');
   const commentsContainerRef = useRef<HTMLDivElement | null>(null);
-
   const initialrealtedLikedPosts = relatedBlogData?.map((post: any) => post?.likedBy?.includes(userId)) || [];
   const initialtrendingLikedPosts = trendingpostData?.map((post: any) => post?.likedBy?.includes(userId)) || [];
   const [likedPosts, setLikedPosts] = useState<boolean[]>(initialrealtedLikedPosts);
@@ -64,7 +74,8 @@ export default function MainPage() {
   const [savedtrendingblog, setSavedTrendingBlog] = useState<any[]>(initialtrendingLikedPosts);
   const [showPopup, setShowPopup] = useState(false);
 
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/main?blog_id=${blog_id}`;
+  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/main?blog_id=${blog_id}` : '';
+
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const synth = (typeof window !== 'undefined' && window.speechSynthesis) || undefined;
@@ -104,6 +115,7 @@ export default function MainPage() {
       console.error('Error submitting comment:', error);
     }
   };
+
   const formatDateToRelative = (dateString: string) => {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true });
@@ -167,6 +179,10 @@ export default function MainPage() {
 
         const trendingpostresponse = await getTrendingPosts(accessTokenFromCookie, 10, 0);
         setTrendingPostdata(trendingpostresponse?.data[0]?.data);
+
+        const MainUserPost = await getAllPostsbyUserId(accessTokenFromCookie, response?.message[0]?._id, '');
+        setUserPosts(MainUserPost?.data[0]?.data);
+
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -285,6 +301,19 @@ export default function MainPage() {
     }
   };
 
+  useEffect(() => {
+    if (blogData?.content) {
+      try {
+        const contentState = JSON.parse(blogData?.content);
+
+        const newEditorState = EditorState.createWithContent(convertFromRaw(contentState));
+        setEditorState(newEditorState);
+      } catch (error) {
+        console.error('Error parsing content data:', error);
+      }
+    }
+  }, [blogData]);
+
   const handlerealtedSaveClick = async (index: number, realtedBlogId: string) => {
     try {
       if (savedrealtedblog[index]) {
@@ -401,7 +430,7 @@ export default function MainPage() {
   const handleCancelLogout = () => {
     setShowPopup(false);
   };
-  const imageUrl = `https://api.bytebloggerbase.com/public${userProfileData?.profilepic}`;
+  const imageUrl = `https://api.bytebloggerbase.com/public${userProfileData?.img}`;
   const profilePicSrc = imageUrl === 'https://api.bytebloggerbase.com/public/undefined';
 
   return (
@@ -450,29 +479,39 @@ export default function MainPage() {
           <BlogPostSkeleton />
         ) : (
           <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] md:pr-[30px]">
-            <h1
-              id="pageDiv"
-              className="text-md lg:text-4xl font-['Poppins'] font-semibold leading-[1.3] text-white relative w-full mb-10 mt-10"
-            >
-              {blogData?.title}
-            </h1>
+            <div className="flex">
+              <h1
+                id="pageDiv"
+                className="text-md lg:text-4xl font-['Poppins'] font-semibold leading-[1.3] text-white relative w-full mb-10 mt-10"
+              >
+                {blogData?.title}
+              </h1>
+              {!accessTokenFromCookie && (
+                <div>
+                  <button className="button-34" onClick={() => router.push(PATH_AUTH.root)}>
+                    Home
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="flex flex-row gap-3 w-full items-center mb-3">
               <Image
                 width={25}
                 height={25}
                 alt="test"
-                src={`https://api.bytebloggerbase.com/public${blogData?.user_details?.profilepic}`}
+                src={`https://api.bytebloggerbase.com/public${blogData?.user_details?.img}`}
                 className="w-[30px] h-[30px] shrink-0 rounded-[50%]"
               />
               <div className="flex flex-col gap-1 flex-1">
                 <div className="flex items-start md:flex-row flex-col ml-0 gap-3 md:items-start flex-1 ">
-                  <div className="flex-1 flex  flex-row items-center">
+                  <div className="flex  flex-row items-center">
                     <div className="text-sm w-full font-['Poppins'] font-medium leading-[1.2] text-[#d2d2d2] w-[auto]">
                       {blogData?.user_details?.username}
                     </div>
+
                     {/* <Image width={25} height={25} alt="test2" src="https://file.rendit.io/n/k5mrVfCDc9tO8JNiDnLR.png" className="ml-2" /> */}
                   </div>
-                  <div className="flex-1 items-start flex">
+                  <div className="flex">
                     <div
                       className={`border-solid border-white bg-white flex flex-col w-auto shrink-0 h-4 items-center py-1 border  w-2/5  h-[20px] rounded cursor-pointer ${
                         isFollowing ? 'bg-gray-200' : ''
@@ -485,14 +524,22 @@ export default function MainPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row justify-between mr-12 items-center mt-1">
+                <div className="flex flex-row mr-12 items-center mt-1">
                   <div className="text-xs font-['Inter'] font-light text-[#b7b7b7] ">2 min read</div>
                   <div className="text-xs font-['Inter'] font-light text-[#b7b7b7]">.</div>
                   <div className="text-xs font-['Inter'] font-light  text-[#b7b7b7] ms-1">{formattedDate}</div>
                 </div>
               </div>
             </div>
-
+            <div className="m-2">
+              <Image
+                width={100}
+                height={400}
+                alt="test5"
+                src={`https://api.bytebloggerbase.com/public${blogData?.img}`}
+                className="w-[100%] rounded-[30px] MainPage-Logo-Image"
+              />
+            </div>
             {/* <Image
             width={25}
             height={25}
@@ -550,15 +597,15 @@ export default function MainPage() {
             <hr className="opacity-25 bg-light relative bg-white w-full h-[2px]  block mt-5" />
             <div className="flex flex-col flex-wrap gap-20 relative w-full     mt-5">
               <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
-                {blogData?.content}
+                <div>
+                  <DynamicEditor
+                    editorState={editorState}
+                    readOnly={true} // Set the editor to read-only
+                    toolbarHidden={true} // Hide the toolbar
+                  />
+                </div>
               </p>
-              <Image
-                width={100}
-                height={400}
-                alt="test5"
-                src={`https://api.bytebloggerbase.com/public${blogData?.img}`}
-                className="w-[100%] rounded-[30px]"
-              />
+
               <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
                 Thank You for Reading Blog{' '}
               </p>
@@ -796,7 +843,6 @@ export default function MainPage() {
                         </div>
                       </div>
                     </SwiperSlide>
-            
                   </Swiper>
 
                   <button onClick={goNext} className="custom-next-button ml-5">
@@ -828,7 +874,7 @@ export default function MainPage() {
             </div>
           </div>
         )}
-        {accessToken && (
+        {accessTokenFromCookie && (
           <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
             <div className="rightwrapper py-5 flex flex-col justify-between">
               <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">
@@ -957,3 +1003,5 @@ export default function MainPage() {
     </>
   );
 }
+
+export default MainPage;

@@ -19,7 +19,7 @@ const Header = () => {
   const router = useRouter();
 
   const changeNav = () => {
-    if (window.scrollY >= 100) {
+    if (typeof window !== 'undefined' && window.scrollY >= 100) {
       setScrollNav(true);
     } else {
       setScrollNav(false);
@@ -38,7 +38,9 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('scroll', changeNav);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', changeNav);
+    }
   }, []);
 
   const handleClick = (navItem: string) => {
