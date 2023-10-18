@@ -25,6 +25,8 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ShareModal from '../profile/ShareModal';
 import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirmationPopup';
+import SideTrendingpostSKeleton from '@/src/components/Skeleton/SideTrendingpostSKeleton';
+import FollowingListSkeleton from '@/src/components/Skeleton/FollowingListSkeleton';
 
 Dashboard.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
@@ -34,6 +36,7 @@ const ExperienceCard = ({
   content,
   createdAt,
   userName,
+  profilePic,
   id,
   accessToken,
   userProfile,
@@ -58,7 +61,7 @@ const ExperienceCard = ({
 
     return `${day} ${monthNames[monthIndex]}, ${year}`;
   }
-
+console.log(profilePic,"----")
   const formattedDate = formatDate(createdAt);
 
   const initialsavePost = userProfile?.savedPosts.includes(blogId);
@@ -164,7 +167,12 @@ const ExperienceCard = ({
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-
+  const handleProfileRedirect = (RedirectuserId: string) => {
+    const href = `/main/profile?userId=${RedirectuserId}`;
+    const as = `/main/profile/${RedirectuserId}`;
+    router.push(href, as);
+  };
+  
   return (
     <VerticalTimelineElement
       contentStyle={{ background: '#1d1836', color: '#fff' }}
@@ -200,7 +208,18 @@ const ExperienceCard = ({
           </h3>
         </div>
         <div className="flex justify-start items-center mt-2">
+        <div className="img w-[30px] h-[30px] mr-2">
+                <Image
+                  style={{ width: '30px', height: '30px' }}
+                  width={30}
+                  height={30}
+                  alt="Profile Picture"
+                  src={`https://api.bytebloggerbase.com/public${profilePic}`}
+                  className="xl:w-[2rem] rounded-3xl w-[25px]"
+                />
+              </div>
           <p
+          onClick={() => handleProfileRedirect(id)}
             className="text-secondary text-[16px] font-semibold"
             style={{
               margin: 0,
@@ -259,7 +278,7 @@ export default function Dashboard() {
   const [shareType, setShareType] = useState<any>('profile');
   const [shareurl, setShareUrl] = useState<any>('');
   const [searchQuery, setSearchQuery] = useState('');
-
+const [loading,SetLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -308,6 +327,7 @@ export default function Dashboard() {
 
         const followingData = await getUserFollowing(accessToken, userId);
         setFollowing(followingData?.data[0]?.following_details);
+        SetLoading(false)
       } catch (error) {
         console.error('Error fetching user profile and posts:', error);
       }
@@ -405,12 +425,12 @@ export default function Dashboard() {
       <section className="flex z-10 py-5 overflow-auto">
         <div className="order-1 w-full md:w-[75%] flex flex-col mx-auto ms:h-[100%] h-[95vh] md:pr-[30px]">
           <div className="text-white bg-[#393939] rounded-3xl py-1 px-3 mt-2 flex justify-between items-center mx-10 w-[85%]">
-            <div className="left flex gap-3">
-              <div className="search">
+            <div className="left flex gap-3 w-full">
+              <div className="search w-[90%]">
                 <input
                   type="text"
                   placeholder="Search Blog..."
-                  className="bg-[#393939] placeholder-white focus:outline-none text-sm"
+                  className="bg-[#393939] placeholder-white focus:outline-none text-sm w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -438,6 +458,7 @@ export default function Dashboard() {
                       content={post?.content}
                       createdAt={post?.createdAt}
                       img={post?.img}
+                      profilePic={post?.user_details?.img}
                       userName={post?.user_details?.name}
                       userProfile={userProfile}
                       id={post?.user_details?._id}
@@ -455,6 +476,7 @@ export default function Dashboard() {
                       content={post?.sort_content}
                       createdAt={post?.createdAt}
                       img={post?.img}
+                      profilePic={post?.user_details?.img}
                       userName={post?.user_details?.name}
                       userProfile={userProfile}
                       id={post?.user_details?._id}
@@ -506,7 +528,8 @@ export default function Dashboard() {
                   </h1>
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  {trendingpostData?.map((item: any, index: number) => (
+                  {loading ? <SideTrendingpostSKeleton/> : (
+                  trendingpostData?.map((item: any, index: number) => (
                     <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl ">
                       <div className="title" onClick={() => handleTitleClick(item?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px] cursor-pointer">{item.title}</h1>
@@ -542,7 +565,8 @@ export default function Dashboard() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))
+                  )}
                 </div>
               </div>
               <div className="flex justify-center">
@@ -560,7 +584,8 @@ export default function Dashboard() {
                   </h1>
                 </div>
                 <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide p-3">
-                  {following.map((user: any) => (
+                  {loading ? <FollowingListSkeleton/> : (
+                  following.map((user: any) => (
                     <a href="#" className="text-white flex" key={user?._id}>
                       <div className="img w-[30px] h-[30px]">
                         <Image
@@ -569,14 +594,14 @@ export default function Dashboard() {
                           height={30}
                           alt="Profile Picture"
                           src={`https://api.bytebloggerbase.com/public${user?.img}`}
-                          className="xl:w-[2rem] rounded-3xl w-[25px]"
+                          className="xl:w-[2rem] rounded-3xl w-[25px] mt-2"
                         />
                       </div>
 
                       <h5 className="inline-block mt-2 ms-2">{user.name}</h5>
                       {user?.verified === 'true' ? <MdIcons.MdVerified className="fill-[blue] inline-block" /> : ''}
                     </a>
-                  ))}
+                  )))}
                 </div>
               </div>
             </div>

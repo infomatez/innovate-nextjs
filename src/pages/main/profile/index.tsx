@@ -19,7 +19,10 @@ import LogoutConfirmationPopup from '@/src/components/LogoutModal/LogoutConfirma
 ProfilePage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
 export default function ProfilePage() {
+  
   const router = useRouter();
+  const { RedirectuserId } = router.query;
+  console.log(RedirectuserId)
   const { removeAccessToken } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
@@ -128,7 +131,7 @@ export default function ProfilePage() {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user profile:', error);
-      }
+      } 
     };
 
     fetchUserProfile();
