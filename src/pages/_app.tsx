@@ -7,6 +7,8 @@ import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Loader from '../components/Loader/Loader';
+import { UserProvider } from '../context/Usercontext';
+
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
@@ -47,7 +49,9 @@ export default function MyApp(props: MyAppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+      <UserProvider>
+        <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+        </UserProvider>
     </>
   );
 }

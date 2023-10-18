@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { getUserFollowers, getUserFollowing } from '../../../services/user';
 import Cookies from 'js-cookie';
 import { followUser, unfollowUser } from '../../../services/user';
+import { useRouter } from 'next/router';
 
 const Modal = ({ userProfile, onClose }: any) => {
+  const router = useRouter();
   const accessTokenFromCookie: string | undefined = Cookies.get('accessToken');
   const [activeTab, setActiveTab] = useState('tab1');
   const [followers, setFollowers] = useState([]);
@@ -71,6 +73,11 @@ const Modal = ({ userProfile, onClose }: any) => {
     }
   };
 
+  const handleProfileRedirect = (userId: string) => {
+    closeModal()
+    router.push(`/main/profileview?userId=${userId}`);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 mx-[20px] modelbox">
       <div className="absolute inset-0 bg-[#000] opacity-50"></div>
@@ -125,7 +132,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                         alt="Profile Pic"
                       />
                       <div className="follow-info">
-                        <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide">
+                        <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide cursor-pointer"  onClick={() => handleProfileRedirect(follower._id)}>
                           {follower.username}
                         </h5>
                         <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">
@@ -164,7 +171,7 @@ const Modal = ({ userProfile, onClose }: any) => {
                         alt="Following Dp"
                       />
                       <div className="follow-info">
-                        <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide">
+                        <h5 className="text-white text-sm font-semibold leading-[1.5] tracking-wide cursor-pointer"  onClick={() => handleProfileRedirect(following?._id)}>
                           {following.username}
                         </h5>
                         <p className="text-white text-[10.80px] font-normal leading-[1.3] tracking-wide">

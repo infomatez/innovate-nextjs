@@ -4,7 +4,7 @@ const nextConfig = {
       SITE_URL: 'https://blogerbase.com',
       BASE_URL: 'https://api.blogerbase.com',
       API_BASE_URL: 'https://api.bytebloggerbase.com/api',
-      IMAGE_URl:'https://api.bytebloggerbase.com/public'
+      IMAGE_URl:'http://localhost:9000/'
     },
   images: {
     domains: ['file.rendit.io', 'images.theconversation.com', 'localhost','api.bytebloggerbase.com'],

@@ -434,6 +434,10 @@ function MainPage() {
   const imageUrl = `https://api.bytebloggerbase.com/public${userProfileData?.img}`;
   const profilePicSrc = imageUrl === 'https://api.bytebloggerbase.com/public/undefined';
 
+  const handleProfileRedirect = (userId: string) => {
+    router.push(`/main/profileview?userId=${userId}`);
+  };
+
   return (
     <>
       {showPopup && <LogoutConfirmationPopup onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />}
@@ -506,7 +510,7 @@ function MainPage() {
               <div className="flex flex-col gap-1 flex-1">
                 <div className="flex items-start md:flex-row flex-col ml-0 gap-3 md:items-start flex-1 ">
                   <div className="flex  flex-row items-center">
-                    <div className="text-sm w-full font-['Poppins'] font-medium leading-[1.2] text-[#d2d2d2] w-[auto]">
+                    <div className="text-sm w-full font-['Poppins'] font-medium leading-[1.2] text-[#d2d2d2] w-[auto] cursor-pointer" onClick={() => handleProfileRedirect(blogData?.user_details?._id)}>
                       {blogData?.user_details?.username}
                     </div>
 

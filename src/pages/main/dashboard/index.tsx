@@ -167,10 +167,9 @@ console.log(profilePic,"----")
   const handleTitleClick = (blogId: string) => {
     router.push(`/main?blog_id=${blogId}`);
   };
-  const handleProfileRedirect = (RedirectuserId: string) => {
-    const href = `/main/profile?userId=${RedirectuserId}`;
-    const as = `/main/profile/${RedirectuserId}`;
-    router.push(href, as);
+
+  const handleProfileRedirect = (userId: string) => {
+    router.push(`/main/profileview?userId=${userId}`);
   };
   
   return (
@@ -278,7 +277,8 @@ export default function Dashboard() {
   const [shareType, setShareType] = useState<any>('profile');
   const [shareurl, setShareUrl] = useState<any>('');
   const [searchQuery, setSearchQuery] = useState('');
-const [loading,SetLoading] = useState(true)
+  const [viewuserid , setViewUserID] = useState('')
+  const [loading,SetLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSkipPage, setCurrentSkipPage] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -321,7 +321,6 @@ const [loading,SetLoading] = useState(true)
         const userId = userProfileData?.message[0]?._id;
         const posts = await getAllPosts(accessToken, 10, 4, searchQuery);
         setUserPosts(posts?.data[0]?.data);
-
         const trendingpostresponse = await getTrendingPosts(accessToken, 50, 0);
         setTrendingPostdata(trendingpostresponse?.data[0]?.data);
 
@@ -402,6 +401,18 @@ const [loading,SetLoading] = useState(true)
       console.error('Error liking/disliking post:', error);
     }
   };
+
+  const handleProfileRedirect = (userId: string) => {
+    console.log(userProfile?._id , userId)
+    if (userProfile?._id && userProfile?._id === userId) {
+      console.log("--------------- ininninin")
+      router.push(`/main/profile?userId=${userId}`);
+    } else {
+      router.push(`/main/profileview?userId=${userId}`);
+    }
+  };
+  
+
   const styles = {
     paddingX: 'sm:px-16 px-6',
     paddingY: 'sm:py-16 py-6',
@@ -598,7 +609,7 @@ const [loading,SetLoading] = useState(true)
                         />
                       </div>
 
-                      <h5 className="inline-block mt-2 ms-2">{user.name}</h5>
+                      <h5 className="inline-block mt-2 ms-2"  onClick={() => handleProfileRedirect(user?._id)}>{user.name}</h5>
                       {user?.verified === 'true' ? <MdIcons.MdVerified className="fill-[blue] inline-block" /> : ''}
                     </a>
                   )))}

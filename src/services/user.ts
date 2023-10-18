@@ -17,6 +17,22 @@ export const getUserProfile = async (accessToken: string | undefined | null) => 
   }
 };
 
+export const getUserProfileById = async (accessToken: string | undefined | null, userId: string | string[]) => {
+  console.log(API_BASE_URL)
+  try {
+    const response = await axios.get(`http://localhost:9000/api/user/getUserById?user_id=${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("errrorrororo")
+    throw error;
+  }
+};
+
 export const editUserProfile = async (accessToken: string | undefined, dataToUpdate: any) => {
   try {
     const response = await axios({
@@ -33,6 +49,9 @@ export const editUserProfile = async (accessToken: string | undefined, dataToUpd
     throw error;
   }
 };
+
+
+
 
 export const getUserFollowers = async (accessToken: string | undefined, userId: string) => {
   try {
