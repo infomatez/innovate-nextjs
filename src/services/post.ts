@@ -37,8 +37,8 @@ export const updatePost = async (accessToken: string | undefined, postId: string
 
 export const getAllPostsbyUserId = async (
   accessToken: string | undefined | null,
-  userId: string,
-  loginuser: string,
+  userId: any,
+  loginuser: any,
 ) => {
   try {
     let url = `${API_BASE_URL}/post/getAllPost?user_id=${userId}`;

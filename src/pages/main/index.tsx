@@ -32,6 +32,7 @@ import BlogPostSkeleton from '@/src/components/Skeleton/BlogPostSkeleton';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { PATH_AUTH } from '@/src/routes/path';
+import SideTrendingpostSKeleton from '@/src/components/Skeleton/SideTrendingpostSKeleton';
 
 MainPage.getLayout = (page: React.ReactElement) => <UserPanelLayout>{page}</UserPanelLayout>;
 
@@ -596,7 +597,7 @@ function MainPage() {
             </div>
             <hr className="opacity-25 bg-light relative bg-white w-full h-[2px]  block mt-5" />
             <div className="flex flex-col flex-wrap gap-20 relative w-full     mt-5">
-              <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
+              <div className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
                 <div>
                   <DynamicEditor
                     editorState={editorState}
@@ -604,7 +605,7 @@ function MainPage() {
                     toolbarHidden={true} // Hide the toolbar
                   />
                 </div>
-              </p>
+              </div>
 
               <p className="text-lg font-['Poppins'] tracking-[1.6783638191223145] leading-[37.4px] text-white relative">
                 Thank You for Reading Blog{' '}
@@ -874,17 +875,20 @@ function MainPage() {
             </div>
           </div>
         )}
-        {accessTokenFromCookie && (
-          <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
-            <div className="rightwrapper py-5 flex flex-col justify-between">
-              <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">
-                <div className="title flex items-center justify-center gap-1">
-                  <h1 className="text-white text-2xl" id="aboutush2">
-                    Related Blog
-                  </h1>
-                </div>
-                <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  {relatedBlogData?.map((post: any, index: number) => (
+        {accessToken && (
+        <div className="postright order-2 w-[30%] bg-[#101010] bg-opacity-60 md:block hidden sticky top-0">
+          <div className="rightwrapper py-5 flex flex-col justify-between">
+            <div className="row2 w-[100%] h-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto">
+              <div className="title flex items-center justify-center gap-1">
+                <h1 className="text-white text-2xl" id="aboutush2">
+                  Related Blog
+                </h1>
+              </div>
+              <div className="trendingitems flex flex-col gap-3 h-[300px] lg:h-[400px] overflow-y-scroll scrollbar-hide">
+                {isLoading ? (
+                  <SideTrendingpostSKeleton />
+                ) : (
+                  relatedBlogData?.map((post: any, index: number) => (
                     <div className="eachitem flex flex-col bg-[white] p-2 rounded-2xl" key={post?._id}>
                       <div className="title cursor-pointer" onClick={() => handleTitleClick(post?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{post?.title}</h1>
@@ -930,25 +934,26 @@ function MainPage() {
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
-              <div className="flex justify-center">
-                <a
-                  href="#"
-                  className="text-base font-['Poppins'] tracking-[0.9100434494018554] leading-[9.55px] text-white mt-3 relative inline-block"
-                >
-                  See All
-                </a>
+            </div>
+            <div className="flex justify-center">
+              <span className="text-base font-['Poppins'] tracking-[0.9100434494018554] leading-[9.55px] text-white mt-3 relative inline-block">
+                See All
+              </span>
+            </div>
+            <div className="row2 w-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto mt-8">
+              <div className="title flex items-center justify-center gap-1">
+                <h1 className="text-white text-2xl" id="aboutush2">
+                  Trending
+                </h1>
               </div>
-              <div className="row2 w-[100%] mx-auto flex flex-col gap-5 p-1 rounded-2xl h-auto mt-8">
-                <div className="title flex items-center justify-center gap-1">
-                  <h1 className="text-white text-2xl" id="aboutush2">
-                    Trending
-                  </h1>
-                </div>
-                <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide">
-                  {trendingpostData?.map((item: any, index: number) => (
+              <div className="trendingitems flex flex-col gap-3 h-[300px]  lg:h-[400px] overflow-y-scroll scrollbar-hide">
+                {isLoading ? (
+                  <SideTrendingpostSKeleton />
+                ) : (
+                  trendingpostData?.map((item: any, index: number) => (
                     <div key={index} className="eachitem flex flex-col bg-[white] p-2 rounded-2xl">
                       <div className="title cursor-pointer" onClick={() => handleTitleClick(item?._id)}>
                         <h1 className="font-[600] text-[#2e2e2e] text-[12px]">{item.title}</h1>
@@ -984,19 +989,17 @@ function MainPage() {
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
             </div>
-            <div className="flex justify-center">
-              <a
-                href="#"
-                className="text-base font-['Poppins'] tracking-[0.9100434494018554] leading-[9.55px] text-white mt-3 relative inline-block"
-              >
-                See All
-              </a>
-            </div>
           </div>
+          <div className="flex justify-center">
+            <span className="text-base font-['Poppins'] tracking-[0.9100434494018554] leading-[9.55px] text-white mt-3 relative inline-block">
+              See All
+            </span>
+          </div>
+        </div>
         )}
       </section>
       {isShareModalOpen && <ShareModal shareType={shareType} onClose={closeShareModal} shareurl={shareUrl} />}
